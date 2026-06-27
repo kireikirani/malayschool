@@ -5,7 +5,7 @@ import { handleApiError, ApiError } from "@/lib/api/error-handler";
 import { ok, fail, noContent } from "@/lib/api/response";
 import { parseBody } from "@/lib/api/validate-request";
 import { requireAdmin, getSession } from "@/lib/api/with-auth";
-import { updateNewsSchema } from "@/lib/validations/news.schema";
+import { createNewsSchema, updateNewsSchema } from "@/lib/validations/news.schema";
 import { slugify } from "@/lib/validations/common.schema";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
@@ -38,7 +38,7 @@ export async function PATCH(req: Request, { params }: Params) {
     const { id } = await params;
     const body = await parseBody(req, updateNewsSchema);
 
-    const [existing] = await db.select({ id: news.id }).from(news).where(eq(news.id, id)).limit(1);
+    const [existing] = await db.select().from(news).where(eq(news.id, id)).limit(1);
     if (!existing) return fail("Not found", 404);
 
     const updates: Record<string, unknown> = { ...body };
@@ -48,6 +48,12 @@ export async function PATCH(req: Request, { params }: Params) {
       if (dup && dup.id !== id) return fail("A news article with this slug already exists", 409);
       updates.slug = slug;
     }
+
+    createNewsSchema.parse({
+      ...existing,
+      ...body,
+      ...updates,
+    });
 
     await db.update(news).set(updates).where(eq(news.id, id));
     const [row] = await db.select().from(news).where(eq(news.id, id)).limit(1);

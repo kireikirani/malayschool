@@ -24,7 +24,7 @@ export default async function PreviewNewsPage({ params }: { params: Promise<{ id
           <Image src={row.thumbnail} alt={row.title} fill className="object-cover" />
         </div>
       )}
-      <NewsContent html={row.content} />
+      <NewsContent markdown={row.content} />
     </article>
   );
 }

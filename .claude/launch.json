@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lawfirm-site",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", "/Users/kireikiranijayusman/projekriyan/lawfirm/public", "-p", "8911", "-c-1"],
+      "port": 8911
+    },
+    {
+      "name": "webclientmalayschool",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000,
+      "autoPort": true
+    }
+  ]
+}

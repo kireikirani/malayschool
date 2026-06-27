@@ -19,7 +19,6 @@ export default function GalleryListPage() {
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    setIsLoading(true);
     fetch(`/api/gallery/albums?page=${page}&limit=12`)
       .then((res) => res.json())
       .then((body) => {
@@ -30,7 +29,7 @@ export default function GalleryListPage() {
   }, [page]);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 px-4 py-10">
+    <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 md:py-14">
       <h1 className="text-2xl font-semibold">Galeri Sekolah</h1>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -50,7 +49,14 @@ export default function GalleryListPage() {
           ))}
       </div>
 
-      <PaginationControls page={page} totalPages={totalPages} onPageChange={setPage} />
+      <PaginationControls
+        page={page}
+        totalPages={totalPages}
+        onPageChange={(nextPage) => {
+          setIsLoading(true);
+          setPage(nextPage);
+        }}
+      />
     </div>
   );
 }

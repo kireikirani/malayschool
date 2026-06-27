@@ -38,7 +38,7 @@ export default function AlbumDetailPage({ params }: { params: Promise<{ id: stri
         <Skeleton className="h-8 w-48" />
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="aspect-square w-full" />
+            <Skeleton key={i} className="aspect-[4/3] w-full" />
           ))}
         </div>
       </div>
@@ -46,7 +46,7 @@ export default function AlbumDetailPage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 px-4 py-10">
+    <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 md:py-14">
       <div>
         <h1 className="text-2xl font-semibold">{album.name}</h1>
         {album.description && <p className="text-muted-foreground">{album.description}</p>}
@@ -59,7 +59,7 @@ export default function AlbumDetailPage({ params }: { params: Promise<{ id: stri
           <button
             key={item.id}
             type="button"
-            className="relative aspect-square overflow-hidden rounded-md bg-muted"
+            className="relative aspect-[4/3] overflow-hidden border border-border/70 bg-muted shadow-[0_18px_40px_-34px_rgba(35,24,16,0.5)]"
             onClick={() => setActiveImage(item)}
           >
             <Image src={item.image} alt={item.caption ?? album.name} fill className="object-cover" />
@@ -71,7 +71,7 @@ export default function AlbumDetailPage({ params }: { params: Promise<{ id: stri
         <DialogContent className="max-w-3xl">
           <DialogTitle className="sr-only">{activeImage?.caption ?? album.name}</DialogTitle>
           {activeImage && (
-            <div className="relative aspect-video w-full overflow-hidden rounded-md">
+            <div className="relative h-[70vh] w-full overflow-hidden border border-border/70 bg-muted">
               <Image src={activeImage.image} alt={activeImage.caption ?? album.name} fill className="object-contain" />
             </div>
           )}

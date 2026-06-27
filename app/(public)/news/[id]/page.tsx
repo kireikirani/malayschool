@@ -13,17 +13,17 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ id:
   if (!row || row.status !== "published") notFound();
 
   return (
-    <article className="mx-auto max-w-2xl space-y-4 px-4 py-10">
+    <article className="mx-auto max-w-2xl space-y-4 px-4 py-10 md:py-14">
       <h1 className="text-3xl font-semibold">{row.title}</h1>
       {row.publishDate && (
         <p className="text-sm text-muted-foreground">{new Date(row.publishDate).toLocaleDateString("id-ID")}</p>
       )}
       {row.thumbnail && (
-        <div className="relative aspect-video overflow-hidden rounded-md">
+        <div className="relative aspect-video overflow-hidden border border-border/70 bg-muted">
           <Image src={row.thumbnail} alt={row.title} fill className="object-cover" />
         </div>
       )}
-      <NewsContent html={row.content} />
+      <NewsContent markdown={row.content} />
       <AdSlot placement="news_detail" />
     </article>
   );

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
@@ -49,6 +49,13 @@ const CONTENT_HELP: Record<string, string> = {
   external_link: "Masukkan URL tautan tujuan.",
 };
 
+const PLACEMENT_HELP: Record<string, string> = {
+  homepage_top: "Muncul di area atas beranda.",
+  homepage_sidebar: "Muncul di area bawah konten beranda.",
+  news_detail: "Muncul di halaman detail berita.",
+  footer: "Muncul sebelum informasi footer.",
+};
+
 export function AdvertisementForm({
   adId,
   initialData,
@@ -72,7 +79,10 @@ export function AdvertisementForm({
     },
   });
 
-  const selectedType = form.watch("type");
+  const selectedType = useWatch({ control: form.control, name: "type" });
+  const selectedPlacement = useWatch({ control: form.control, name: "placement" });
+  const status = useWatch({ control: form.control, name: "status" });
+  const content = useWatch({ control: form.control, name: "content" });
 
   async function onSubmit(values: AdFormValues) {
     setIsSubmitting(true);
@@ -172,6 +182,7 @@ export function AdvertisementForm({
               <FormControl>
                 <Textarea rows={5} {...field} placeholder={CONTENT_HELP[selectedType ?? "adsense_code"]} />
               </FormControl>
+              <p className="text-xs text-muted-foreground">{PLACEMENT_HELP[selectedPlacement ?? "homepage_top"]}</p>
               <FormMessage />
             </FormItem>
           )}
@@ -258,10 +269,39 @@ export function AdvertisementForm({
                   <SelectItem value="inactive">Nonaktif</SelectItem>
                 </SelectContent>
               </Select>
+              <p className="text-xs text-muted-foreground">
+                {status === "active"
+                  ? "Iklan akan tampil di website jika masih dalam periode tayang."
+                  : "Iklan disimpan tetapi tidak akan tampil di website."}
+              </p>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        <div className="space-y-3 border border-border/70 bg-card p-4">
+          <div>
+            <p className="text-sm font-medium">Pratinjau Ringkas</p>
+            <p className="text-xs text-muted-foreground">
+              Pastikan tipe, placement, dan status tayang sudah sesuai sebelum menyimpan.
+            </p>
+          </div>
+          <div className="space-y-2 text-sm">
+            <p>
+              <span className="font-medium">Placement:</span>{" "}
+              {PLACEMENT_OPTIONS.find((option) => option.value === selectedPlacement)?.label ?? selectedPlacement}
+            </p>
+            <p>
+              <span className="font-medium">Status:</span> {status === "active" ? "Aktif" : "Nonaktif"}
+            </p>
+          </div>
+          <div className="border border-dashed border-border bg-muted/40 p-3 text-xs text-muted-foreground">
+            {selectedType === "banner_image" && (content?.trim() ? `Banner image URL: ${content}` : "URL banner akan muncul di sini.")}
+            {selectedType === "external_link" && (content?.trim() ? `Tautan eksternal: ${content}` : "Tautan eksternal akan muncul di sini.")}
+            {selectedType === "adsense_code" && (content?.trim() ? "Kode AdSense siap disimpan." : "Tempelkan kode AdSense untuk pratinjau status konten.")}
+            {selectedType === "html_script" && (content?.trim() ? "HTML/Script siap disimpan." : "Tempelkan HTML/script untuk pratinjau status konten.")}
+          </div>
+        </div>
 
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Menyimpan..." : "Simpan"}

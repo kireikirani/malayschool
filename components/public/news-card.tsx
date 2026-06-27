@@ -15,12 +15,12 @@ export function NewsCard({
 }) {
   return (
     <Link href={`/news/${id}`}>
-      <Card className="h-full overflow-hidden transition-colors hover:bg-muted/50">
-        <div className="relative aspect-video bg-muted">
+      <Card className="h-full overflow-hidden border-border/70 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_18px_36px_-28px_rgba(35,24,16,0.55)]">
+        <div className="relative aspect-[4/3] border-b border-border/70 bg-muted">
           {thumbnail && <Image src={thumbnail} alt={title} fill className="object-cover" />}
         </div>
-        <CardContent className="space-y-1 pt-4">
-          <h3 className="line-clamp-2 font-medium">{title}</h3>
+        <CardContent className="space-y-2 pt-5 pb-1">
+          <h3 className="line-clamp-2 text-lg font-medium tracking-tight">{title}</h3>
           {publishDate && (
             <p className="text-sm text-muted-foreground">{new Date(publishDate).toLocaleDateString("id-ID")}</p>
           )}

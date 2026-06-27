@@ -17,11 +17,16 @@ export async function PATCH(req: Request, { params }: Params) {
       return fail("Too many requests", 429);
     }
 
-    const { itemId } = await params;
+    const { id: albumId, itemId } = await params;
     const body = await parseBody(req, updateGalleryItemSchema);
 
-    const [existing] = await db.select({ id: galleryItems.id }).from(galleryItems).where(eq(galleryItems.id, itemId)).limit(1);
+    const [existing] = await db
+      .select({ id: galleryItems.id, albumId: galleryItems.albumId })
+      .from(galleryItems)
+      .where(eq(galleryItems.id, itemId))
+      .limit(1);
     if (!existing) return fail("Not found", 404);
+    if (existing.albumId !== albumId) return fail("Item does not belong to this album", 400);
 
     await db.update(galleryItems).set(body).where(eq(galleryItems.id, itemId));
     const [row] = await db.select().from(galleryItems).where(eq(galleryItems.id, itemId)).limit(1);
@@ -38,9 +43,14 @@ export async function DELETE(req: Request, { params }: Params) {
       return fail("Too many requests", 429);
     }
 
-    const { itemId } = await params;
-    const [existing] = await db.select({ id: galleryItems.id }).from(galleryItems).where(eq(galleryItems.id, itemId)).limit(1);
+    const { id: albumId, itemId } = await params;
+    const [existing] = await db
+      .select({ id: galleryItems.id, albumId: galleryItems.albumId })
+      .from(galleryItems)
+      .where(eq(galleryItems.id, itemId))
+      .limit(1);
     if (!existing) throw new ApiError("Not found", 404);
+    if (existing.albumId !== albumId) return fail("Item does not belong to this album", 400);
 
     await db.delete(galleryItems).where(eq(galleryItems.id, itemId));
     return noContent();

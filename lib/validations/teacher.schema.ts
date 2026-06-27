@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { paginationSchema } from "./common.schema";
+import { imagePathSchema, optionalTrimmedString, paginationSchema, trimmedString } from "./common.schema";
 
 const teacherFields = z.object({
-  name: z.string().trim().min(1).max(255),
-  position: z.string().max(255).optional(),
-  photo: z.string().url().max(2048).optional(),
-  biography: z.string().optional(),
+  name: trimmedString(1, 255),
+  position: optionalTrimmedString(255),
+  photo: imagePathSchema.optional(),
+  biography: optionalTrimmedString(5000),
   status: z.enum(["active", "inactive"]),
 });
 

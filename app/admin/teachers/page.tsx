@@ -50,7 +50,6 @@ export default function TeachersListPage() {
   const [status, setStatus] = useState<string>("all");
 
   function load() {
-    setIsLoading(true);
     const params = new URLSearchParams({ page: String(page), limit: "20" });
     if (search) params.set("q", search);
     if (status !== "all") params.set("status", status);
@@ -69,6 +68,7 @@ export default function TeachersListPage() {
   }, [page, status]);
 
   async function handleDelete(id: string) {
+    setIsLoading(true);
     try {
       await apiSend(`/api/teachers/${id}`, "DELETE");
       toast.success("Guru dihapus");
@@ -79,6 +79,7 @@ export default function TeachersListPage() {
   }
 
   async function handleToggle(id: string) {
+    setIsLoading(true);
     try {
       await apiSend(`/api/teachers/${id}/toggle-status`, "PATCH");
       toast.success("Status diperbarui");
@@ -145,18 +146,36 @@ export default function TeachersListPage() {
         isLoading={isLoading}
         page={page}
         totalPages={totalPages}
-        onPageChange={setPage}
+        onPageChange={(nextPage) => {
+          setIsLoading(true);
+          setPage(nextPage);
+        }}
         emptyMessage="Belum ada data guru."
         toolbar={
           <>
             <Input
               placeholder="Cari nama..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && load()}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setIsLoading(true);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setIsLoading(true);
+                  load();
+                }
+              }}
               className="max-w-xs"
             />
-            <Select value={status} onValueChange={setStatus}>
+            <Select
+              value={status}
+              onValueChange={(value) => {
+                setIsLoading(true);
+                setPage(1);
+                setStatus(value);
+              }}
+            >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>

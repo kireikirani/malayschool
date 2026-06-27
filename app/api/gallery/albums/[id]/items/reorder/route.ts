@@ -5,7 +5,7 @@ import { handleApiError } from "@/lib/api/error-handler";
 import { fail, ok } from "@/lib/api/response";
 import { parseBody } from "@/lib/api/validate-request";
 import { requireAdmin } from "@/lib/api/with-auth";
-import { reorderItemsSchema } from "@/lib/validations/gallery.schema";
+import { strictReorderItemsSchema } from "@/lib/validations/gallery.schema";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 type Params = { params: Promise<{ id: string }> };
@@ -18,7 +18,15 @@ export async function POST(req: Request, { params }: Params) {
     }
 
     const { id: albumId } = await params;
-    const updates = await parseBody(req, reorderItemsSchema);
+    const updates = await parseBody(req, strictReorderItemsSchema);
+    const existingItems = await db.select({ id: galleryItems.id }).from(galleryItems).where(eq(galleryItems.albumId, albumId));
+    const existingIds = new Set(existingItems.map((item) => item.id));
+
+    for (const { itemId } of updates) {
+      if (!existingIds.has(itemId)) {
+        return fail("Reorder payload contains an item that does not belong to this album", 400);
+      }
+    }
 
     await db.transaction(async (tx) => {
       for (const { itemId, order } of updates) {

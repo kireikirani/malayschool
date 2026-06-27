@@ -1,108 +1,128 @@
 import Link from "next/link";
-import { desc, eq } from "drizzle-orm";
+import { ArrowRight } from "lucide-react";
+import { and, count, desc, eq, like } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { news, galleryAlbums, teachers } from "@/db/schema";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { NewsCard } from "@/components/public/news-card";
 import { GalleryAlbumCard } from "@/components/public/gallery-album-card";
-import { TeacherCard } from "@/components/public/teacher-card";
 import { AdSlot } from "@/components/public/ad-slot";
+import { Hero } from "@/components/public/home/hero";
+import { WhyChooseUs } from "@/components/public/home/why-choose-us";
+import { AcademicPrograms } from "@/components/public/home/academic-programs";
+import { PrincipalMessage } from "@/components/public/home/principal-message";
+import { FacilitiesPreview } from "@/components/public/home/facilities-preview";
+import { AdmissionsCta } from "@/components/public/home/admissions-cta";
+import { ContactSection } from "@/components/public/home/contact-section";
+import { StatsCounter } from "@/components/public/home/stats-counter";
+import { PibgDonation } from "@/components/public/home/pibg-donation";
 
 export default async function HomePage() {
-  const [latestNews, latestAlbums, activeTeachers] = await Promise.all([
-    db.select().from(news).where(eq(news.status, "published")).orderBy(desc(news.publishDate)).limit(4),
-    db.select().from(galleryAlbums).orderBy(desc(galleryAlbums.createdAt)).limit(3),
-    db.select().from(teachers).where(eq(teachers.status, "active")).orderBy(desc(teachers.createdAt)).limit(4),
+  const [latestNews, latestAlbums, [teacherCount], [principal]] = await Promise.all([
+    db.select().from(news).where(eq(news.status, "published")).orderBy(desc(news.publishDate)).limit(3),
+    db.select().from(galleryAlbums).orderBy(desc(galleryAlbums.createdAt)).limit(6),
+    db.select({ value: count() }).from(teachers).where(eq(teachers.status, "active")),
+    db
+      .select()
+      .from(teachers)
+      .where(and(eq(teachers.status, "active"), like(teachers.position, "%Pengetua%")))
+      .limit(1),
   ]);
 
   return (
-    <div className="space-y-16 py-10">
-      <section className="mx-auto max-w-6xl space-y-4 px-4 text-center">
-        <h1 className="text-4xl font-semibold">Selamat Datang di Sekolah Kita</h1>
-        <p className="mx-auto max-w-xl text-muted-foreground">
-          Membentuk generasi unggul melalui pendidikan yang berkualitas, berkarakter, dan berwawasan luas.
-        </p>
-        <div className="flex justify-center gap-3">
-          <Button asChild>
-            <Link href="/about">Tentang Kami</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href="/contact">Kontak</Link>
-          </Button>
-        </div>
-      </section>
+    <div>
+      <Hero />
 
-      <section className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-4 pt-12">
         <AdSlot placement="homepage_top" />
-      </section>
+      </div>
 
-      <section className="mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-[2fr_1fr]">
-        <div className="space-y-8">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Berita Terbaru</h2>
-              <Link href="/news" className="text-sm text-primary hover:underline">
-                Lihat semua
-              </Link>
+      <StatsCounter teacherCount={teacherCount.value} />
+      <WhyChooseUs />
+      <AcademicPrograms />
+      {principal && (
+        <PrincipalMessage
+          name={principal.name}
+          position={principal.position}
+          photo={principal.photo}
+          message={principal.biography}
+        />
+      )}
+      <FacilitiesPreview />
+      <PibgDonation />
+
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <span className="text-sm font-semibold tracking-wide text-primary uppercase">Berita & Pengumuman</span>
+              <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
+                Perkembangan Terkini Sekolah
+              </h2>
             </div>
-            {latestNews.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Belum ada berita.</p>
-            ) : (
-              <div className="grid gap-6 sm:grid-cols-2">
-                {latestNews.map((row) => (
+            <Link href="/news" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+              Lihat semua berita
+              <ArrowRight className="size-4" />
+            </Link>
+          </div>
+
+          {latestNews.length === 0 ? (
+            <p className="mt-8 text-sm text-muted-foreground">Belum ada berita.</p>
+          ) : (
+            <div className="mt-10 grid gap-6 sm:grid-cols-3">
+              {latestNews.map((row) => (
+                <div key={row.id} className="relative">
+                  <Badge className="absolute top-3 left-3 z-10">
+                    {row.publishDate ? new Date(row.publishDate).toLocaleDateString("ms-MY") : "Baharu"}
+                  </Badge>
                   <NewsCard
-                    key={row.id}
                     id={row.id}
                     title={row.title}
                     thumbnail={row.thumbnail}
                     publishDate={row.publishDate?.toISOString() ?? null}
                   />
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Galeri</h2>
-              <Link href="/gallery" className="text-sm text-primary hover:underline">
-                Lihat semua
-              </Link>
+                </div>
+              ))}
             </div>
-            {latestAlbums.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Belum ada album.</p>
-            ) : (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {latestAlbums.map((row) => (
-                  <GalleryAlbumCard key={row.id} id={row.id} name={row.name} coverImage={row.coverImage} />
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Guru Kami</h2>
-              <Link href="/teachers" className="text-sm text-primary hover:underline">
-                Lihat semua
-              </Link>
-            </div>
-            {activeTeachers.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Belum ada data guru.</p>
-            ) : (
-              <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
-                {activeTeachers.map((row) => (
-                  <TeacherCard key={row.id} id={row.id} name={row.name} position={row.position} photo={row.photo} />
-                ))}
-              </div>
-            )}
-          </div>
+          )}
         </div>
-
-        <aside className="space-y-4">
-          <AdSlot placement="homepage_sidebar" />
-        </aside>
       </section>
+
+      <section className="border-b border-border/60 py-16 md:py-24">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <span className="text-sm font-semibold tracking-wide text-primary uppercase">Galeri</span>
+              <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
+                Detik-detik di Sekolah Kami
+              </h2>
+            </div>
+            <Link href="/gallery" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+              Lihat galeri penuh
+              <ArrowRight className="size-4" />
+            </Link>
+          </div>
+
+          {latestAlbums.length === 0 ? (
+            <p className="mt-8 text-sm text-muted-foreground">Belum ada album.</p>
+          ) : (
+            <div className="mt-10 grid gap-6 sm:grid-cols-3 lg:grid-cols-6">
+              {latestAlbums.map((row, i) => (
+                <div key={row.id} className={i === 0 ? "col-span-2 row-span-2 sm:col-span-1" : ""}>
+                  <GalleryAlbumCard id={row.id} name={row.name} coverImage={row.coverImage} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <AdmissionsCta />
+      <ContactSection />
+
+      <div className="mx-auto max-w-6xl px-4 pb-16">
+        <AdSlot placement="homepage_sidebar" />
+      </div>
     </div>
   );
 }

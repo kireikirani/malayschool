@@ -7,6 +7,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -50,12 +51,12 @@ export default function AdvertisementsListPage() {
   const router = useRouter();
   const [rows, setRows] = useState<AdRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [placement, setPlacement] = useState<string>("all");
 
   function load() {
-    setIsLoading(true);
     const params = new URLSearchParams({ page: String(page), limit: "20" });
     if (placement !== "all") params.set("placement", placement);
     fetchAds(params)
@@ -64,7 +65,7 @@ export default function AdvertisementsListPage() {
         setTotalPages(totalPages);
       })
       .catch((err) => toast.error(err.message))
-      .finally(() => setIsLoading(false));
+        .finally(() => setIsLoading(false));
   }
 
   useEffect(() => {
@@ -73,6 +74,7 @@ export default function AdvertisementsListPage() {
   }, [page, placement]);
 
   async function handleDelete(id: string) {
+    setIsLoading(true);
     try {
       await apiSend(`/api/advertisements/${id}`, "DELETE");
       toast.success("Iklan dihapus");
@@ -83,12 +85,16 @@ export default function AdvertisementsListPage() {
   }
 
   async function handleToggle(id: string) {
+    setTogglingId(id);
+    setIsLoading(true);
     try {
       await apiSend(`/api/advertisements/${id}/toggle-status`, "PATCH");
       toast.success("Status diperbarui");
       load();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Gagal memperbarui status");
+    } finally {
+      setTogglingId(null);
     }
   }
 
@@ -103,6 +109,22 @@ export default function AdvertisementsListPage() {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => <StatusBadge status={row.original.status} />,
+    },
+    {
+      id: "isLive",
+      header: "Tayang",
+      cell: ({ row }) => (
+        <div className="flex items-center gap-3">
+          <Switch
+            checked={row.original.status === "active"}
+            disabled={togglingId === row.original.id}
+            onCheckedChange={() => handleToggle(row.original.id)}
+          />
+          <span className="text-sm text-muted-foreground">
+            {row.original.status === "active" ? "Aktif" : "Nonaktif"}
+          </span>
+        </div>
+      ),
     },
     {
       id: "actions",
@@ -153,10 +175,20 @@ export default function AdvertisementsListPage() {
         isLoading={isLoading}
         page={page}
         totalPages={totalPages}
-        onPageChange={setPage}
+        onPageChange={(nextPage) => {
+          setIsLoading(true);
+          setPage(nextPage);
+        }}
         emptyMessage="Belum ada iklan."
         toolbar={
-          <Select value={placement} onValueChange={setPlacement}>
+          <Select
+            value={placement}
+            onValueChange={(value) => {
+              setIsLoading(true);
+              setPage(1);
+              setPlacement(value);
+            }}
+          >
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Penempatan" />
             </SelectTrigger>

@@ -15,7 +15,7 @@ export function AdSlot({ placement }: { placement: Placement }) {
   const [ads, setAds] = useState<Advertisement[]>([]);
 
   useEffect(() => {
-    fetch(`/api/advertisements?placement=${placement}&status=active`)
+    fetch(`/api/advertisements?placement=${placement}&status=active`, { cache: "no-store" })
       .then((res) => res.json())
       .then((body) => setAds(body.data ?? []))
       .catch(() => setAds([]));
@@ -28,7 +28,7 @@ export function AdSlot({ placement }: { placement: Placement }) {
       {ads.map((ad) => {
         if (ad.type === "banner_image") {
           return (
-            <div key={ad.id} className="relative aspect-[3/1] w-full overflow-hidden rounded-md bg-muted">
+            <div key={ad.id} className="relative aspect-[3/1] w-full overflow-hidden border border-border/70 bg-muted shadow-[0_18px_40px_-34px_rgba(35,24,16,0.45)]">
               <Image src={ad.content} alt="Iklan" fill className="object-cover" />
             </div>
           );
@@ -41,7 +41,7 @@ export function AdSlot({ placement }: { placement: Placement }) {
               href={ad.content}
               target="_blank"
               rel="noopener noreferrer"
-              className="block rounded-md border p-4 text-center text-sm font-medium text-primary hover:underline"
+              className="block border border-border/70 bg-card px-4 py-4 text-center text-sm font-medium text-primary shadow-[0_18px_40px_-34px_rgba(35,24,16,0.45)] hover:underline"
             >
               {ad.content}
             </a>

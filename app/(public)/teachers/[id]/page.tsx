@@ -11,9 +11,9 @@ export default async function TeacherDetailPage({ params }: { params: Promise<{ 
   if (!row || row.status !== "active") notFound();
 
   return (
-    <article className="mx-auto max-w-2xl space-y-4 px-4 py-10">
+    <article className="mx-auto max-w-2xl space-y-4 px-4 py-10 md:py-14">
       <div className="flex items-center gap-4">
-        <div className="relative size-24 shrink-0 overflow-hidden rounded-full bg-muted">
+        <div className="relative size-24 shrink-0 overflow-hidden border border-border/70 bg-muted">
           {row.photo && <Image src={row.photo} alt={row.name} fill className="object-cover" />}
         </div>
         <div>

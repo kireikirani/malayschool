@@ -21,7 +21,6 @@ export default function PublicNewsListPage() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    setIsLoading(true);
     const params = new URLSearchParams({ page: String(page), limit: "12" });
     if (search) params.set("q", search);
 
@@ -35,17 +34,18 @@ export default function PublicNewsListPage() {
   }, [page, search]);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 px-4 py-10">
-      <div className="flex items-center justify-between">
+    <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 md:py-14">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-semibold">Berita Sekolah</h1>
         <Input
           placeholder="Cari berita..."
           value={search}
           onChange={(e) => {
+            setIsLoading(true);
             setSearch(e.target.value);
             setPage(1);
           }}
-          className="max-w-xs"
+          className="max-w-xs bg-card"
         />
       </div>
 
@@ -61,7 +61,14 @@ export default function PublicNewsListPage() {
           ))}
       </div>
 
-      <PaginationControls page={page} totalPages={totalPages} onPageChange={setPage} />
+      <PaginationControls
+        page={page}
+        totalPages={totalPages}
+        onPageChange={(nextPage) => {
+          setIsLoading(true);
+          setPage(nextPage);
+        }}
+      />
     </div>
   );
 }

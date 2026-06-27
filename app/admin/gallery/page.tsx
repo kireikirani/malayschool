@@ -40,7 +40,6 @@ export default function GalleryAlbumsPage() {
   const [search, setSearch] = useState("");
 
   function load() {
-    setIsLoading(true);
     const params = new URLSearchParams({ page: String(page), limit: "20" });
     if (search) params.set("q", search);
     fetchAlbums(params)
@@ -58,6 +57,7 @@ export default function GalleryAlbumsPage() {
   }, [page]);
 
   async function handleDelete(id: string) {
+    setIsLoading(true);
     try {
       await apiSend(`/api/gallery/albums/${id}`, "DELETE");
       toast.success("Album dihapus");
@@ -119,14 +119,25 @@ export default function GalleryAlbumsPage() {
         isLoading={isLoading}
         page={page}
         totalPages={totalPages}
-        onPageChange={setPage}
+        onPageChange={(nextPage) => {
+          setIsLoading(true);
+          setPage(nextPage);
+        }}
         emptyMessage="Belum ada album."
         toolbar={
           <Input
             placeholder="Cari album..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && load()}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setIsLoading(true);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setIsLoading(true);
+                load();
+              }
+            }}
             className="max-w-xs"
           />
         }

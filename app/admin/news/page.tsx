@@ -24,7 +24,7 @@ import {
 import { DataTable } from "@/components/admin/data-table";
 import { DeleteConfirmDialog } from "@/components/admin/delete-confirm-dialog";
 import { StatusBadge } from "@/components/admin/status-badge";
-import { apiGet, apiSend } from "@/lib/fetcher";
+import { apiSend } from "@/lib/fetcher";
 
 type NewsRow = {
   id: string;
@@ -53,7 +53,6 @@ export default function NewsListPage() {
   const [status, setStatus] = useState<string>("all");
 
   function load() {
-    setIsLoading(true);
     const params = new URLSearchParams({ page: String(page), limit: "20" });
     if (search) params.set("q", search);
     if (status !== "all") params.set("status", status);
@@ -72,6 +71,7 @@ export default function NewsListPage() {
   }, [page, status]);
 
   async function handleDelete(id: string) {
+    setIsLoading(true);
     try {
       await apiSend(`/api/news/${id}`, "DELETE");
       toast.success("Berita dihapus");
@@ -143,18 +143,36 @@ export default function NewsListPage() {
         isLoading={isLoading}
         page={page}
         totalPages={totalPages}
-        onPageChange={setPage}
+        onPageChange={(nextPage) => {
+          setIsLoading(true);
+          setPage(nextPage);
+        }}
         emptyMessage="Belum ada berita."
         toolbar={
           <>
             <Input
               placeholder="Cari judul..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && load()}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setIsLoading(true);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setIsLoading(true);
+                  load();
+                }
+              }}
               className="max-w-xs"
             />
-            <Select value={status} onValueChange={setStatus}>
+            <Select
+              value={status}
+              onValueChange={(value) => {
+                setIsLoading(true);
+                setPage(1);
+                setStatus(value);
+              }}
+            >
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
