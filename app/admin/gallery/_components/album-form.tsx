@@ -80,7 +80,7 @@ export function AlbumForm({
             <FormItem>
               <FormLabel>Deskripsi</FormLabel>
               <FormControl>
-                <Textarea rows={4} {...field} />
+                <Textarea rows={4} {...field} value={field.value as string} />
               </FormControl>
               <FormMessage />
             </FormItem>

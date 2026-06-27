@@ -99,7 +99,7 @@ export function NewsForm({
             <FormItem>
               <FormLabel>Slug (opsional)</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Otomatis dari judul jika dikosongkan" />
+                <Input {...field} value={field.value as string} placeholder="Otomatis dari judul jika dikosongkan" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -196,7 +196,7 @@ export function NewsForm({
             <FormItem>
               <FormLabel>Meta Title (SEO)</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} value={field.value as string} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -210,7 +210,7 @@ export function NewsForm({
             <FormItem>
               <FormLabel>Meta Description (SEO)</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea {...field} value={field.value as string} />
               </FormControl>
               <FormMessage />
             </FormItem>

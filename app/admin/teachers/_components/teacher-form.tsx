@@ -89,7 +89,7 @@ export function TeacherForm({
             <FormItem>
               <FormLabel>Jabatan</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} value={field.value as string} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -117,7 +117,7 @@ export function TeacherForm({
             <FormItem>
               <FormLabel>Biografi</FormLabel>
               <FormControl>
-                <Textarea rows={5} {...field} />
+                <Textarea rows={5} {...field} value={field.value as string} />
               </FormControl>
               <FormMessage />
             </FormItem>
