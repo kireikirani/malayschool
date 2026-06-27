@@ -5,7 +5,14 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "mysql",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    host: new URL(process.env.DATABASE_URL!.replace("?ssl=true", "")).hostname,
+    port: Number(new URL(process.env.DATABASE_URL!.replace("?ssl=true", "")).port) || 4000,
+    user: new URL(process.env.DATABASE_URL!.replace("?ssl=true", "")).username,
+    password: new URL(process.env.DATABASE_URL!.replace("?ssl=true", "")).password,
+    database: new URL(process.env.DATABASE_URL!.replace("?ssl=true", "")).pathname.slice(1),
+    ssl: process.env.DATABASE_URL?.includes("tidbcloud.com")
+      ? { rejectUnauthorized: true }
+      : undefined,
   },
   strict: true,
   verbose: true,
