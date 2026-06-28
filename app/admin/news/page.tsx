@@ -126,9 +126,12 @@ export default function NewsListPage() {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Berita</h1>
+        <div>
+          <h1 className="text-2xl font-semibold">Berita</h1>
+          <p className="text-sm text-muted-foreground">Kelola artikel dan pengumuman website sekolah</p>
+        </div>
         <Button asChild>
           <Link href="/admin/news/new">
             <Plus />

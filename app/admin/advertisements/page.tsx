@@ -158,9 +158,12 @@ export default function AdvertisementsListPage() {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Iklan</h1>
+        <div>
+          <h1 className="text-2xl font-semibold">Iklan</h1>
+          <p className="text-sm text-muted-foreground">Kelola banner dan iklan yang tampil di website</p>
+        </div>
         <Button asChild>
           <Link href="/admin/advertisements/new">
             <Plus />

@@ -79,9 +79,9 @@ export default function SchoolDocumentsAdminPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="space-y-1">
+        <div>
           <h1 className="text-2xl font-semibold">Dokumen Sekolah</h1>
           <p className="text-sm text-muted-foreground">
             Upload file sekolah melalui UploadThing. Metadata sahaja disimpan di database utama.

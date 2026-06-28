@@ -129,9 +129,12 @@ export default function TeachersListPage() {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Guru</h1>
+        <div>
+          <h1 className="text-2xl font-semibold">Guru</h1>
+          <p className="text-sm text-muted-foreground">Kelola data dan status guru sekolah</p>
+        </div>
         <Button asChild>
           <Link href="/admin/teachers/new">
             <Plus />

@@ -102,9 +102,12 @@ export default function GalleryAlbumsPage() {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Galeri</h1>
+        <div>
+          <h1 className="text-2xl font-semibold">Galeri</h1>
+          <p className="text-sm text-muted-foreground">Kelola album dan foto galeri sekolah</p>
+        </div>
         <Button asChild>
           <Link href="/admin/gallery/new">
             <Plus />

@@ -68,9 +68,9 @@ export default function MediaLibraryPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <div className="space-y-1">
+        <div>
           <h1 className="text-2xl font-semibold">Media</h1>
           <p className="text-sm text-muted-foreground">Perpustakaan aset umum seperti gambar untuk galeri, berita, dan banner.</p>
         </div>

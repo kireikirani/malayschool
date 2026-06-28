@@ -24,9 +24,9 @@ export async function GET(req: Request) {
       db.select({ total: count() }).from(teachers),
       db.select({ total: count() }).from(advertisements),
       db.select({ total: count() }).from(media),
-      db.select().from(news).orderBy(desc(news.updatedAt)).limit(5),
-      db.select().from(teachers).orderBy(desc(teachers.updatedAt)).limit(5),
-      db.select().from(advertisements).orderBy(desc(advertisements.updatedAt)).limit(5),
+      db.select().from(news).orderBy(desc(news.updatedAt)).limit(15),
+      db.select().from(teachers).orderBy(desc(teachers.updatedAt)).limit(15),
+      db.select().from(advertisements).orderBy(desc(advertisements.updatedAt)).limit(15),
     ]);
 
     const recentActivity = [
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
       ...recentAdvertisements.map((row) => ({ type: "advertisement" as const, id: row.id, title: row.name, updatedAt: row.updatedAt })),
     ]
       .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
-      .slice(0, 5);
+      .slice(0, 30);
 
     return ok({
       counts: {
