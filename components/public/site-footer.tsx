@@ -10,6 +10,7 @@ const QUICK_LINKS = [
   { href: "/news", label: "Berita & Pengumuman" },
   { href: "/gallery", label: "Galeri" },
   { href: "/dokumen-sekolah", label: "Dokumen Sekolah" },
+  { href: "/login", label: "Login Admin" },
 ];
 
 export function SiteFooter() {

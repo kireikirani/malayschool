@@ -16,7 +16,7 @@ const NAV_LINKS = [
   { href: "/teachers", label: "Guru & Staf" },
   { href: "/news", label: "Berita" },
   { href: "/gallery", label: "Galeri" },
-  { href: "/contact", label: "Hubungi Kami" },
+  { href: "/contact", label: "Kontak" },
 ];
 
 export function SiteHeader() {
@@ -49,13 +49,7 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <div className="hidden items-center gap-4 md:flex">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Login Admin
-            </Link>
+          <div className="hidden md:block">
             <Button asChild className="px-4">
               <Link href="/dokumen-sekolah">Dokumen Sekolah</Link>
             </Button>
