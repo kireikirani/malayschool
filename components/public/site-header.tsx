@@ -49,7 +49,13 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <div className="hidden md:block">
+          <div className="hidden items-center gap-4 md:flex">
+            <Link
+              href="/login"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Login Admin
+            </Link>
             <Button asChild className="px-4">
               <Link href="/dokumen-sekolah">Dokumen Sekolah</Link>
             </Button>
@@ -79,6 +85,13 @@ export function SiteHeader() {
                 <Button asChild className="mt-2" onClick={() => setOpen(false)}>
                   <Link href="/dokumen-sekolah">Dokumen Sekolah</Link>
                 </Button>
+                <Link
+                  href="/login"
+                  onClick={() => setOpen(false)}
+                  className="pt-2 text-sm font-medium text-muted-foreground hover:text-primary"
+                >
+                  Login Admin
+                </Link>
               </nav>
             </SheetContent>
           </Sheet>
