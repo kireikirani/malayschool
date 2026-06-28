@@ -3,4 +3,5 @@ import { paginationSchema } from "./common.schema";
 
 export const mediaQuerySchema = paginationSchema.extend({
   folder: z.enum(["general", "documents"]).optional(),
+  category: z.enum(["spreadsheet", "pdf", "document"]).optional(),
 });

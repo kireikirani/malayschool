@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Trash2 } from "lucide-react";
+import { ImageIcon, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import { DeleteConfirmDialog } from "@/components/admin/delete-confirm-dialog";
 import { PaginationControls } from "@/components/public/pagination-controls";
 import { DocumentPreview } from "@/components/public/document-preview";
@@ -24,6 +25,7 @@ type MediaItem = {
 };
 
 async function fetchMedia(params: URLSearchParams): Promise<{ rows: MediaItem[]; totalPages: number }> {
+  params.set("folder", "general");
   const res = await fetch(`/api/media?${params.toString()}`);
   const body = await res.json();
   if (!res.ok) throw new Error(body.error?.message ?? "Gagal memuat data");
@@ -68,31 +70,21 @@ export default function MediaLibraryPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Media</h1>
-        <div className="flex flex-wrap gap-3">
-          <UploadButton
-            endpoint="mediaUploader"
-            onClientUploadComplete={() => {
-              setIsLoading(true);
-              toast.success("Gambar berhasil diunggah");
-              load();
-            }}
-            onUploadError={(err) => {
-              toast.error(err.message);
-            }}
-          />
-          <UploadButton
-            endpoint="documentUploader"
-            onClientUploadComplete={() => {
-              setIsLoading(true);
-              toast.success("Dokumen berhasil diunggah");
-              load();
-            }}
-            onUploadError={(err) => {
-              toast.error(err.message);
-            }}
-          />
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold">Media</h1>
+          <p className="text-sm text-muted-foreground">Perpustakaan aset umum seperti gambar untuk galeri, berita, dan banner.</p>
         </div>
+        <UploadButton
+          endpoint="mediaUploader"
+          onClientUploadComplete={() => {
+            setIsLoading(true);
+            toast.success("Gambar berhasil diunggah");
+            load();
+          }}
+          onUploadError={(err) => {
+            toast.error(err.message);
+          }}
+        />
       </div>
 
       <Input
@@ -115,7 +107,12 @@ export default function MediaLibraryPage() {
         {isLoading &&
           Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-64 w-full" />)}
         {!isLoading && rows.length === 0 && (
-          <p className="col-span-full text-center text-muted-foreground">Belum ada media.</p>
+          <EmptyState
+            icon={ImageIcon}
+            title="Belum ada media"
+            description="Upload gambar melalui UploadThing untuk digunakan di galeri, berita, banner, atau konten lainnya."
+            className="col-span-full"
+          />
         )}
         {!isLoading &&
           rows.map((item) => (

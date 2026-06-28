@@ -1,4 +1,4 @@
-import { and, count, desc, eq, like } from "drizzle-orm";
+import { and, count, desc, eq, like, or } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { media } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
@@ -11,11 +11,31 @@ export async function GET(req: Request) {
   try {
     await requireAdmin(req);
 
-    const { page, limit, q, folder } = parseQuery(new URL(req.url).searchParams, mediaQuerySchema);
+    const { page, limit, q, folder, category } = parseQuery(new URL(req.url).searchParams, mediaQuerySchema);
 
     const conditions = [];
     if (folder) conditions.push(eq(media.folder, folder));
     if (q) conditions.push(like(media.fileName, `%${q}%`));
+    if (category === "spreadsheet") {
+      conditions.push(
+        or(like(media.fileName, "%.xlsx"), like(media.fileName, "%.xls"), like(media.fileName, "%.csv")),
+      );
+    }
+    if (category === "pdf") {
+      conditions.push(like(media.fileName, "%.pdf"));
+    }
+    if (category === "document") {
+      conditions.push(
+        or(
+          like(media.fileName, "%.doc"),
+          like(media.fileName, "%.docx"),
+          like(media.fileName, "%.ppt"),
+          like(media.fileName, "%.pptx"),
+          like(media.fileName, "%.txt"),
+          like(media.fileName, "%.rtf"),
+        ),
+      );
+    }
     const where = conditions.length ? and(...conditions) : undefined;
 
     const [rows, [{ total }]] = await Promise.all([

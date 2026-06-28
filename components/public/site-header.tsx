@@ -51,7 +51,7 @@ export function SiteHeader() {
 
           <div className="hidden md:block">
             <Button asChild className="px-4">
-              <Link href="/admissions">Daftar Sekarang</Link>
+              <Link href="/dokumen-sekolah">Dokumen Sekolah</Link>
             </Button>
           </div>
 
@@ -77,7 +77,7 @@ export function SiteHeader() {
                   </Link>
                 ))}
                 <Button asChild className="mt-2" onClick={() => setOpen(false)}>
-                  <Link href="/admissions">Daftar Sekarang</Link>
+                  <Link href="/dokumen-sekolah">Dokumen Sekolah</Link>
                 </Button>
               </nav>
             </SheetContent>

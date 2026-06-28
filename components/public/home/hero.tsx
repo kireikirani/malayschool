@@ -31,8 +31,8 @@ export function Hero() {
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button size="lg" asChild>
-              <Link href="/admissions">
-                Daftar Sekarang
+              <Link href="/dokumen-sekolah">
+                Lihat Dokumen
                 <ArrowRight />
               </Link>
             </Button>

@@ -1,14 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FileWarning, TableProperties } from "lucide-react";
 import { getExtension, isPdfLink, isSpreadsheetLink, isTextPreviewLink } from "@/lib/file-type";
 import { parseTextPreviewFromUrl, parseXlsxFromUrl, type SheetTable } from "@/lib/xlsx-table";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function SheetGrid({ sheet }: { sheet: SheetTable }) {
   if (sheet.headers.length === 0) {
-    return <p className="text-sm text-muted-foreground">Helaian ini kosong.</p>;
+    return (
+      <EmptyState
+        compact
+        icon={TableProperties}
+        title="Helaian kosong"
+        description="Spreadsheet ini berjaya dibaca, tetapi helaian yang dipilih tidak mempunyai data."
+      />
+    );
   }
 
   return (
@@ -85,7 +94,7 @@ export function DocumentPreview({ url }: { url: string }) {
 
   if (isSpreadsheetLink(url)) {
     if (error) {
-      return <p className="border border-border/70 bg-muted px-4 py-3 text-sm text-muted-foreground">{error}</p>;
+      return <EmptyState compact icon={FileWarning} title="Pratinjau gagal dimuatkan" description={error} />;
     }
     if (!sheets) {
       return <div className="h-32 animate-pulse border border-border/70 bg-muted" />;
@@ -113,7 +122,7 @@ export function DocumentPreview({ url }: { url: string }) {
 
   if (isTextPreviewLink(url)) {
     if (error) {
-      return <p className="border border-border/70 bg-muted px-4 py-3 text-sm text-muted-foreground">{error}</p>;
+      return <EmptyState compact icon={FileWarning} title="Pratinjau gagal dimuatkan" description={error} />;
     }
     if (!textLines) {
       return <div className="h-32 animate-pulse border border-border/70 bg-muted" />;
@@ -129,8 +138,13 @@ export function DocumentPreview({ url }: { url: string }) {
   const ext = getExtension(url);
 
   return (
-    <p className="border border-dashed border-border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
-      {ext ? `Pratinjau inline untuk fail .${ext} belum tersedia.` : "Pratinjau inline untuk fail ini belum tersedia."}
-    </p>
+    <EmptyState
+      compact
+      icon={FileWarning}
+      title="Pratinjau belum tersedia"
+      description={
+        ext ? `Pratinjau inline untuk fail .${ext} belum tersedia.` : "Pratinjau inline untuk fail ini belum tersedia."
+      }
+    />
   );
 }

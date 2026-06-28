@@ -9,7 +9,7 @@ const QUICK_LINKS = [
   { href: "/teachers", label: "Guru & Staf" },
   { href: "/news", label: "Berita & Pengumuman" },
   { href: "/gallery", label: "Galeri" },
-  { href: "/admissions", label: "Permohonan Pendaftaran" },
+  { href: "/dokumen-sekolah", label: "Dokumen Sekolah" },
 ];
 
 export function SiteFooter() {

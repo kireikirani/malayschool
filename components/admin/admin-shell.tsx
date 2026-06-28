@@ -9,6 +9,7 @@ import {
   Megaphone,
   Images,
   FolderOpen,
+  FileSpreadsheet,
   LogOut,
 } from "lucide-react";
 import {
@@ -42,6 +43,7 @@ const NAV_ITEMS = [
   { href: "/admin/advertisements", label: "Iklan", icon: Megaphone },
   { href: "/admin/gallery", label: "Galeri", icon: Images },
   { href: "/admin/media", label: "Media", icon: FolderOpen },
+  { href: "/admin/documents", label: "Dokumen Sekolah", icon: FileSpreadsheet },
 ];
 
 function initials(name: string) {

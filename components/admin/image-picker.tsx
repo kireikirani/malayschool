@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Dialog,
   DialogContent,
@@ -28,7 +30,7 @@ export function ImagePicker({
 
   useEffect(() => {
     if (open && media === null) {
-      apiGet<MediaItem[]>("/api/media")
+      apiGet<MediaItem[]>(`/api/media?folder=general`)
         .then(setMedia)
         .catch(() => setMedia([]));
     }
@@ -73,7 +75,16 @@ export function ImagePicker({
               <p className="mb-2 text-sm font-medium text-muted-foreground">Atau pilih dari media yang sudah ada</p>
               <div className="grid max-h-64 grid-cols-4 gap-2 overflow-y-auto">
                 {media === null && <p className="text-sm text-muted-foreground">Memuat...</p>}
-                {media?.length === 0 && <p className="text-sm text-muted-foreground">Belum ada media.</p>}
+                {media?.length === 0 && (
+                  <div className="col-span-full">
+                    <EmptyState
+                      compact
+                      icon={ImageIcon}
+                      title="Belum ada gambar"
+                      description="Upload gambar terlebih dahulu agar dapat dipilih dari perpustakaan media."
+                    />
+                  </div>
+                )}
                 {media?.map((item) => (
                   <button
                     key={item.id}
