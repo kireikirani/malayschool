@@ -1,5 +1,6 @@
 import { Mail, MapPin, Phone, Printer } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { PageHeader } from "@/components/public/page-header";
 import { SCHOOL_ADDRESS, SCHOOL_EMAIL, SCHOOL_FAX, SCHOOL_PHONE } from "@/lib/brand";
 
 const CONTACT_ITEMS = [
@@ -11,13 +12,14 @@ const CONTACT_ITEMS = [
 
 export default function ContactPage() {
   return (
-    <div className="mx-auto max-w-3xl space-y-6 px-4 py-10 md:py-14">
-      <h1 className="text-3xl font-semibold">Hubungi Kami</h1>
-      <p className="text-muted-foreground">
-        Sila hubungi kami melalui maklumat berikut untuk sebarang pertanyaan lanjut.
-      </p>
+    <div>
+      <PageHeader
+        eyebrow="Hubungi Kami"
+        title="Hubungi Kami"
+        description="Sila hubungi kami melalui maklumat berikut untuk sebarang pertanyaan lanjut."
+      />
 
-      <div className="space-y-4">
+      <div className="mx-auto max-w-3xl space-y-4 px-4 py-10 md:py-14">
         {CONTACT_ITEMS.map((item) => (
           <Card key={item.label}>
             <CardContent className="flex items-center gap-4 py-4">

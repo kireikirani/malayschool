@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { NewsCard } from "@/components/public/news-card";
 import { PaginationControls } from "@/components/public/pagination-controls";
+import { PageHeader } from "@/components/public/page-header";
 
 type NewsRow = {
   id: string;
@@ -34,9 +35,12 @@ export default function PublicNewsListPage() {
   }, [page, search]);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 md:py-14">
+    <div>
+      <PageHeader eyebrow="Berita" title="Berita Sekolah" description="Perkembangan dan pengumuman terkini dari sekolah kami." />
+
+      <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 md:py-14">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-semibold">Berita Sekolah</h1>
+        <h2 className="font-heading text-lg font-semibold text-foreground">Senarai Berita</h2>
         <Input
           placeholder="Cari berita..."
           value={search}
@@ -69,6 +73,7 @@ export default function PublicNewsListPage() {
           setPage(nextPage);
         }}
       />
+      </div>
     </div>
   );
 }

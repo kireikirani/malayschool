@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TeacherCard } from "@/components/public/teacher-card";
 import { PaginationControls } from "@/components/public/pagination-controls";
+import { PageHeader } from "@/components/public/page-header";
 
 type TeacherRow = {
   id: string;
@@ -34,9 +35,12 @@ export default function TeacherDirectoryPage() {
   }, [page, search]);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 px-4 pb-10 md:pb-14">
+    <div>
+      <PageHeader eyebrow="Tenaga Pengajar" title="Direktori Guru" description="Kenali guru dan staf yang berdedikasi membimbing pelajar kami." />
+
+      <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 md:py-14">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-semibold">Direktori Guru</h1>
+        <h2 className="font-heading text-lg font-semibold text-foreground">Senarai Guru</h2>
         <Input
           placeholder="Cari nama guru..."
           value={search}
@@ -68,6 +72,7 @@ export default function TeacherDirectoryPage() {
           setPage(nextPage);
         }}
       />
+      </div>
     </div>
   );
 }

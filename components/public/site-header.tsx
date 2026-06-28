@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { motion } from "motion/react";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -23,7 +24,12 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="sticky top-0 z-50">
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className="sticky top-0 z-50"
+    >
       <AnnouncementBar />
       <header className="border-b border-border/90 bg-background">
         <div className="mx-auto flex h-18 max-w-6xl items-center justify-between px-4">
@@ -41,7 +47,7 @@ export function SiteHeader() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "text-muted-foreground transition-colors hover:text-foreground",
+                  "relative text-muted-foreground transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:text-foreground hover:after:w-full",
                 )}
               >
                 {link.label}
@@ -91,6 +97,6 @@ export function SiteHeader() {
           </Sheet>
         </div>
       </header>
-    </div>
+    </motion.div>
   );
 }

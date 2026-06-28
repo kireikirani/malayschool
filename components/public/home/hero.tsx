@@ -1,9 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "motion/react";
 import { ArrowRight, GraduationCap, ShieldCheck, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { SCHOOL_NAME } from "@/lib/brand";
+import { SchoolLogo } from "@/components/public/school-logo";
+import { SCHOOL_NAME, SCHOOL_TAGLINE } from "@/lib/brand";
 
 const TRUST_INDICATORS = [
   { icon: GraduationCap, label: "30+ Tahun Pengalaman" },
@@ -11,60 +15,96 @@ const TRUST_INDICATORS = [
   { icon: ShieldCheck, label: "Persekitaran Selamat" },
 ];
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 export function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-border/70">
-      <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 md:grid-cols-[1.1fr_1fr] md:items-center md:py-24">
-        <div className="space-y-6">
-          <Badge variant="secondary" className="border border-gold/30 bg-gold/12 text-gold-foreground">
+    <section className="relative overflow-hidden bg-primary">
+      <Image
+        src="/gallery/sekolah/bangunan-sekolah.jpg"
+        alt={`Bangunan ${SCHOOL_NAME}`}
+        fill
+        priority
+        className="object-cover object-[78%_40%] opacity-30"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/90 to-primary" />
+
+      <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 py-24 text-center md:py-32">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: EASE }}
+        >
+          <SchoolLogo className="size-20 md:size-24" />
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: EASE, delay: 0.08 }}
+          className="font-heading mt-6 text-3xl leading-[1.15] font-semibold tracking-tight text-primary-foreground md:text-5xl"
+        >
+          {SCHOOL_NAME}
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: EASE, delay: 0.16 }}
+          className="mt-4 max-w-xl text-base text-primary-foreground/80 md:text-lg"
+        >
+          {SCHOOL_TAGLINE}
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: EASE, delay: 0.24 }}
+          className="mt-2"
+        >
+          <Badge
+            variant="secondary"
+            className="border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground"
+          >
             Sesi Persekolahan 2026/2027
           </Badge>
-          <h1 className="font-heading text-4xl leading-[1.1] font-semibold tracking-tight text-foreground md:text-5xl lg:text-6xl">
-            Cemerlang Akademik,
-            <br />
-            Gemilang Sahsiah
-          </h1>
-          <p className="max-w-lg text-lg text-muted-foreground">
-            {SCHOOL_NAME} memadukan kecemerlangan akademik dengan pembinaan sahsiah
-            unggul, didokong oleh tenaga pengajar berpengalaman dan kemudahan
-            pembelajaran moden.
-          </p>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Button size="lg" asChild>
-              <Link href="/dokumen-sekolah">
-                Lihat Dokumen
-                <ArrowRight />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/contact">Tempah Lawatan</Link>
-            </Button>
-          </div>
-          <div className="flex flex-wrap gap-x-6 gap-y-3 pt-4">
-            {TRUST_INDICATORS.map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                <Icon className="size-4 text-primary" />
-                {label}
-              </div>
-            ))}
-          </div>
-        </div>
+        </motion.div>
 
-        <div className="relative mx-auto w-full max-w-lg">
-          <div className="relative aspect-[16/10] w-full overflow-hidden border border-border/70 bg-muted shadow-[0_24px_60px_-40px_rgba(35,24,16,0.5)]">
-            <Image
-              src="/gallery/sekolah/bangunan-sekolah.jpg"
-              alt={`Bangunan ${SCHOOL_NAME}`}
-              fill
-              priority
-              className="object-cover"
-            />
-          </div>
-          <div className="absolute -bottom-5 -left-5 hidden border border-border/70 bg-card px-5 py-4 shadow-[0_18px_40px_-30px_rgba(35,24,16,0.55)] sm:block">
-            <p className="font-heading text-2xl font-semibold text-primary">98%</p>
-            <p className="text-xs text-muted-foreground">Kelulusan SPM Cemerlang</p>
-          </div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: EASE, delay: 0.32 }}
+          className="mt-8 flex flex-col gap-3 sm:flex-row"
+        >
+          <Button size="lg" variant="secondary" asChild>
+            <Link href="/dokumen-sekolah">
+              Lihat Dokumen
+              <ArrowRight />
+            </Link>
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            asChild
+            className="border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+          >
+            <Link href="/contact">Tempah Lawatan</Link>
+          </Button>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: EASE, delay: 0.4 }}
+          className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3"
+        >
+          {TRUST_INDICATORS.map(({ icon: Icon, label }) => (
+            <div key={label} className="flex items-center gap-2 text-sm font-medium text-primary-foreground/80">
+              <Icon className="size-4" />
+              {label}
+            </div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
