@@ -20,14 +20,24 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-primary">
-      <Image
-        src="/gallery/sekolah/bangunan-sekolah.jpg"
-        alt={`Bangunan ${SCHOOL_NAME}`}
-        fill
-        priority
-        className="object-cover object-[78%_40%] opacity-30"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/90 to-primary" />
+      <motion.div
+        initial={{ scale: 1.08, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1.1, ease: EASE }}
+        className="absolute inset-0"
+      >
+        <Image
+          src="/gallery/sekolah/bangunan-sekolah.jpg"
+          alt={`Bangunan ${SCHOOL_NAME}`}
+          fill
+          priority
+          className="object-cover object-[78%_40%]"
+        />
+      </motion.div>
+      {/* duotone navy tint over the photo, vivid but still on-brand */}
+      <div className="absolute inset-0 bg-primary/55 mix-blend-color" />
+      <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/55 to-primary/20" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/40 via-transparent to-primary/40" />
 
       <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 py-24 text-center md:py-32">
         <motion.div
@@ -35,7 +45,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: EASE }}
         >
-          <SchoolLogo className="size-20 md:size-24" />
+          <SchoolLogo className="size-20 md:size-24 drop-shadow-[0_8px_24px_rgba(5,23,71,0.45)]" />
         </motion.div>
 
         <motion.h1

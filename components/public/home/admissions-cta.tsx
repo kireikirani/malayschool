@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ScrollAnimation } from "@/components/ui/scroll-animation";
 
 export function AdmissionsCta() {
   return (
     <section className="border-y border-border/60 py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="overflow-hidden border border-border/70 bg-card px-6 py-14 text-center shadow-[0_24px_60px_-44px_rgba(35,24,16,0.5)] md:px-12 md:py-20">
+        <ScrollAnimation direction="up" className="overflow-hidden border border-border/70 bg-card px-6 py-14 text-center shadow-[0_24px_60px_-44px_rgba(35,24,16,0.5)] md:px-12 md:py-20">
           <span className="text-sm font-semibold tracking-wide text-primary uppercase">Dokumen Sekolah</span>
           <h2 className="mx-auto mt-3 max-w-xl font-heading text-3xl font-semibold tracking-tight md:text-4xl">
             Akses Borang, Jadual, dan Data Rasmi Sekolah
@@ -34,7 +35,7 @@ export function AdmissionsCta() {
               </Link>
             </Button>
           </div>
-        </div>
+        </ScrollAnimation>
       </div>
     </section>
   );

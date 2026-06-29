@@ -16,8 +16,8 @@ export function GalleryAlbumCard({
   return (
     <Link href={`/gallery/${id}`}>
       <Card className="h-full overflow-hidden border-border/70 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_18px_36px_-28px_rgba(35,24,16,0.55)]">
-        <div className="relative aspect-[4/3] border-b border-border/70 bg-[color-mix(in_oklch,var(--muted),white_55%)] p-3">
-          {coverImage && <Image src={coverImage} alt={name} fill className="object-contain p-3" />}
+        <div className="relative aspect-[4/3] border-b border-border/70 bg-muted">
+          {coverImage && <Image src={coverImage} alt={name} fill className="object-cover" />}
         </div>
         <CardContent className="space-y-2 pt-5 pb-1">
           <h3 className="text-lg font-medium tracking-tight">{name}</h3>

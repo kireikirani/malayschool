@@ -1,5 +1,6 @@
 import { BookOpenCheck, HeartHandshake, MessageCircle, Shield, Sparkles, Users2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { ScrollAnimation } from "@/components/ui/scroll-animation";
 
 const REASONS = [
   {
@@ -38,24 +39,26 @@ export function WhyChooseUs() {
   return (
     <section className="py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="mx-auto max-w-2xl text-center">
+        <ScrollAnimation direction="up" className="mx-auto max-w-2xl text-center">
           <span className="text-sm font-semibold tracking-wide text-primary uppercase">Mengapa Pilih Kami</span>
           <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
             Pendidikan yang Seimbang Antara Ilmu dan Akhlak
           </h2>
-        </div>
+        </ScrollAnimation>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {REASONS.map(({ icon: Icon, title, desc }) => (
-            <Card key={title}>
-              <CardContent className="space-y-3">
-                <span className="flex size-11 items-center justify-center border border-primary/15 bg-primary/8 text-primary">
-                  <Icon className="size-5" />
-                </span>
-                <h3 className="font-heading text-lg font-semibold">{title}</h3>
-                <p className="text-sm text-muted-foreground">{desc}</p>
-              </CardContent>
-            </Card>
+          {REASONS.map(({ icon: Icon, title, desc }, i) => (
+            <ScrollAnimation key={title} direction="up" delay={(i % 3) * 0.08}>
+              <Card>
+                <CardContent className="space-y-3">
+                  <span className="flex size-11 items-center justify-center border border-primary/15 bg-primary/8 text-primary">
+                    <Icon className="size-5" />
+                  </span>
+                  <h3 className="font-heading text-lg font-semibold">{title}</h3>
+                  <p className="text-sm text-muted-foreground">{desc}</p>
+                </CardContent>
+              </Card>
+            </ScrollAnimation>
           ))}
         </div>
       </div>

@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { GalleryAlbumCard } from "@/components/public/gallery-album-card";
 import { PaginationControls } from "@/components/public/pagination-controls";
 import { PageHeader } from "@/components/public/page-header";
+import { ScrollAnimation } from "@/components/ui/scroll-animation";
 
 type AlbumRow = {
   id: string;
@@ -40,14 +41,15 @@ export default function GalleryListPage() {
           <p className="col-span-full text-center text-muted-foreground">Belum ada album.</p>
         )}
         {!isLoading &&
-          rows.map((row) => (
-            <GalleryAlbumCard
-              key={row.id}
-              id={row.id}
-              name={row.name}
-              coverImage={row.coverImage}
-              itemCount={row.itemCount}
-            />
+          rows.map((row, i) => (
+            <ScrollAnimation key={row.id} direction="up" delay={(i % 6) * 0.06}>
+              <GalleryAlbumCard
+                id={row.id}
+                name={row.name}
+                coverImage={row.coverImage}
+                itemCount={row.itemCount}
+              />
+            </ScrollAnimation>
           ))}
       </div>
 

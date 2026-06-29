@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Quote } from "lucide-react";
 import { SCHOOL_NAME } from "@/lib/brand";
+import { ScrollAnimation } from "@/components/ui/scroll-animation";
 
 const DEFAULT_MESSAGE =
   "Kejayaan sebenar seorang pelajar bukan hanya diukur melalui keputusan peperiksaan, tetapi " +
@@ -22,19 +23,19 @@ export function PrincipalMessage({
     <section className="py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-4">
         <div className="grid items-center gap-12 border border-border/70 bg-card px-6 py-12 shadow-[0_24px_60px_-44px_rgba(35,24,16,0.5)] md:grid-cols-[0.8fr_1.2fr] md:px-12 md:py-16">
-          <div className="mx-auto w-full max-w-[260px]">
+          <ScrollAnimation direction="left" className="mx-auto w-full max-w-[260px]">
             <div className="relative aspect-[4/5] w-full overflow-hidden border border-border/70 bg-muted">
               {photo && <Image src={photo} alt={name} fill className="object-cover" />}
             </div>
-          </div>
-          <div className="space-y-5">
+          </ScrollAnimation>
+          <ScrollAnimation direction="right" delay={0.1} className="space-y-5">
             <Quote className="size-8 text-primary" />
             <p className="font-heading text-xl leading-relaxed text-foreground md:text-2xl">&ldquo;{message || DEFAULT_MESSAGE}&rdquo;</p>
             <div>
               <p className="font-semibold text-foreground">{name}</p>
               <p className="text-sm text-muted-foreground">{position || "Pengetua"}, {SCHOOL_NAME}</p>
             </div>
-          </div>
+          </ScrollAnimation>
         </div>
       </div>
     </section>

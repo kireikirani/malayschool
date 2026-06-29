@@ -17,13 +17,21 @@ export function PageHeader({
 }) {
   return (
     <section className="relative overflow-hidden bg-primary">
-      <Image
-        src="/gallery/sekolah/bangunan-sekolah.jpg"
-        alt={`Bangunan ${SCHOOL_NAME}`}
-        fill
-        className="object-cover object-[78%_40%] opacity-20"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/90 via-primary/90 to-primary" />
+      <motion.div
+        initial={{ scale: 1.06, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.9, ease: EASE }}
+        className="absolute inset-0"
+      >
+        <Image
+          src="/gallery/sekolah/bangunan-sekolah.jpg"
+          alt={`Bangunan ${SCHOOL_NAME}`}
+          fill
+          className="object-cover object-[78%_40%]"
+        />
+      </motion.div>
+      <div className="absolute inset-0 bg-primary/60 mix-blend-color" />
+      <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/65 to-primary/25" />
 
       <div className="relative mx-auto max-w-3xl px-4 py-14 text-center md:py-20">
         <motion.div

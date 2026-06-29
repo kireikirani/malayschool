@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TeacherCard } from "@/components/public/teacher-card";
 import { PaginationControls } from "@/components/public/pagination-controls";
 import { PageHeader } from "@/components/public/page-header";
+import { ScrollAnimation } from "@/components/ui/scroll-animation";
 
 type TeacherRow = {
   id: string;
@@ -59,8 +60,10 @@ export default function TeacherDirectoryPage() {
           <p className="col-span-full text-center text-muted-foreground">Belum ada data guru.</p>
         )}
         {!isLoading &&
-          rows.map((row) => (
-            <TeacherCard key={row.id} id={row.id} name={row.name} position={row.position} photo={row.photo} />
+          rows.map((row, i) => (
+            <ScrollAnimation key={row.id} direction="up" delay={(i % 8) * 0.05}>
+              <TeacherCard id={row.id} name={row.name} position={row.position} photo={row.photo} />
+            </ScrollAnimation>
           ))}
       </div>
 

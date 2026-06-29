@@ -16,6 +16,7 @@ import { AdmissionsCta } from "@/components/public/home/admissions-cta";
 import { ContactSection } from "@/components/public/home/contact-section";
 import { StatsCounter } from "@/components/public/home/stats-counter";
 import { PibgDonation } from "@/components/public/home/pibg-donation";
+import { ScrollAnimation } from "@/components/ui/scroll-animation";
 
 export default async function HomePage() {
   const [latestNews, latestAlbums, [teacherCount], [principal]] = await Promise.all([
@@ -53,7 +54,7 @@ export default async function HomePage() {
 
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-6xl px-4">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+          <ScrollAnimation direction="up" className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <span className="text-sm font-semibold tracking-wide text-primary uppercase">Berita & Pengumuman</span>
               <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
@@ -64,14 +65,14 @@ export default async function HomePage() {
               Lihat semua berita
               <ArrowRight className="size-4" />
             </Link>
-          </div>
+          </ScrollAnimation>
 
           {latestNews.length === 0 ? (
             <p className="mt-8 text-sm text-muted-foreground">Belum ada berita.</p>
           ) : (
             <div className="mt-10 grid gap-6 sm:grid-cols-3">
-              {latestNews.map((row) => (
-                <div key={row.id} className="relative">
+              {latestNews.map((row, i) => (
+                <ScrollAnimation key={row.id} direction="up" delay={i * 0.08} className="relative">
                   <Badge className="absolute top-3 left-3 z-10">
                     {row.publishDate ? new Date(row.publishDate).toLocaleDateString("ms-MY") : "Baharu"}
                   </Badge>
@@ -81,7 +82,7 @@ export default async function HomePage() {
                     thumbnail={row.thumbnail}
                     publishDate={row.publishDate?.toISOString() ?? null}
                   />
-                </div>
+                </ScrollAnimation>
               ))}
             </div>
           )}
@@ -90,7 +91,7 @@ export default async function HomePage() {
 
       <section className="border-b border-border/60 py-16 md:py-24">
         <div className="mx-auto max-w-6xl px-4">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+          <ScrollAnimation direction="up" className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <span className="text-sm font-semibold tracking-wide text-primary uppercase">Galeri</span>
               <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
@@ -101,16 +102,21 @@ export default async function HomePage() {
               Lihat galeri penuh
               <ArrowRight className="size-4" />
             </Link>
-          </div>
+          </ScrollAnimation>
 
           {latestAlbums.length === 0 ? (
             <p className="mt-8 text-sm text-muted-foreground">Belum ada album.</p>
           ) : (
             <div className="mt-10 grid gap-6 sm:grid-cols-3 lg:grid-cols-6">
               {latestAlbums.map((row, i) => (
-                <div key={row.id} className={i === 0 ? "col-span-2 row-span-2 sm:col-span-1" : ""}>
+                <ScrollAnimation
+                  key={row.id}
+                  direction="up"
+                  delay={(i % 6) * 0.06}
+                  className={i === 0 ? "col-span-2 row-span-2 sm:col-span-1" : ""}
+                >
                   <GalleryAlbumCard id={row.id} name={row.name} coverImage={row.coverImage} />
-                </div>
+                </ScrollAnimation>
               ))}
             </div>
           )}

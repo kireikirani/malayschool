@@ -3,12 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Menu } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { AnnouncementBar } from "@/components/public/announcement-bar";
 import { SchoolLogo } from "@/components/public/school-logo";
 import { SCHOOL_NAME, SCHOOL_TAGLINE } from "@/lib/brand";
+import { UNITS } from "@/lib/units";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -18,6 +25,11 @@ const NAV_LINKS = [
   { href: "/news", label: "Berita" },
   { href: "/gallery", label: "Galeri" },
   { href: "/contact", label: "Kontak" },
+];
+
+const UNIT_LINKS = [
+  ...UNITS.map((unit) => ({ href: `/${unit.slug}`, label: unit.navLabel })),
+  { href: "/borang", label: "Borang" },
 ];
 
 export function SiteHeader() {
@@ -53,6 +65,20 @@ export function SiteHeader() {
                 {link.label}
               </Link>
             ))}
+
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 text-muted-foreground transition-colors outline-none hover:text-foreground">
+                Unit Pengurusan
+                <ChevronDown className="size-3.5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {UNIT_LINKS.map((link) => (
+                  <DropdownMenuItem key={link.href} asChild>
+                    <Link href={link.href}>{link.label}</Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
 
           <div className="hidden md:block">
@@ -73,6 +99,19 @@ export function SiteHeader() {
               </SheetHeader>
               <nav className="flex flex-col gap-4 px-4">
                 {NAV_LINKS.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="text-sm font-medium text-muted-foreground hover:text-primary"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <p className="pt-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                  Unit Pengurusan
+                </p>
+                {UNIT_LINKS.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}

@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { NewsCard } from "@/components/public/news-card";
 import { PaginationControls } from "@/components/public/pagination-controls";
 import { PageHeader } from "@/components/public/page-header";
+import { ScrollAnimation } from "@/components/ui/scroll-animation";
 
 type NewsRow = {
   id: string;
@@ -60,8 +61,10 @@ export default function PublicNewsListPage() {
           <p className="col-span-full text-center text-muted-foreground">Belum ada berita.</p>
         )}
         {!isLoading &&
-          rows.map((row) => (
-            <NewsCard key={row.id} id={row.id} title={row.title} thumbnail={row.thumbnail} publishDate={row.publishDate} />
+          rows.map((row, i) => (
+            <ScrollAnimation key={row.id} direction="up" delay={(i % 6) * 0.06}>
+              <NewsCard id={row.id} title={row.title} thumbnail={row.thumbnail} publishDate={row.publishDate} />
+            </ScrollAnimation>
           ))}
       </div>
 
