@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { and, count, desc, eq, gte, isNull, or } from "drizzle-orm";
 import { ArrowRight, Lock } from "lucide-react";

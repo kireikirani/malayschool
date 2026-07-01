@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { asc, desc, eq } from "drizzle-orm";
 import { FolderOpen } from "lucide-react";
