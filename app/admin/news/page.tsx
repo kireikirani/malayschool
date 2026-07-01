@@ -74,7 +74,7 @@ export default function NewsListPage() {
     setIsLoading(true);
     try {
       await apiSend(`/api/news/${id}`, "DELETE");
-      toast.success("Berita dihapus");
+      toast.success("Berita dipadam");
       load();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Gagal menghapus");
@@ -82,7 +82,7 @@ export default function NewsListPage() {
   }
 
   const columns: ColumnDef<NewsRow, unknown>[] = [
-    { accessorKey: "title", header: "Judul" },
+    { accessorKey: "title", header: "Tajuk" },
     {
       accessorKey: "status",
       header: "Status",
@@ -90,9 +90,9 @@ export default function NewsListPage() {
     },
     {
       accessorKey: "publishDate",
-      header: "Tanggal Terbit",
+      header: "Tarikh Terbit",
       cell: ({ row }) =>
-        row.original.publishDate ? new Date(row.original.publishDate).toLocaleDateString("id-ID") : "-",
+        row.original.publishDate ? new Date(row.original.publishDate).toLocaleDateString("ms-MY") : "-",
     },
     {
       id: "actions",
@@ -181,7 +181,7 @@ export default function NewsListPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Semua Status</SelectItem>
-                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="draft">Draf</SelectItem>
                 <SelectItem value="published">Diterbitkan</SelectItem>
               </SelectContent>
             </Select>

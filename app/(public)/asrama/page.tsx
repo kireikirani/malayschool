@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { and, count, desc, eq, gte, isNull, or } from "drizzle-orm";
-import { ArrowRight, Lock } from "lucide-react";
+import { ArrowRight, Lock, Users } from "lucide-react";
 import { db } from "@/lib/db";
 import { asramaPelajar, news, pengumuman } from "@/db/schema";
 import { PageHeader } from "@/components/public/page-header";
@@ -10,7 +10,7 @@ import { ContentSectionRenderer } from "@/components/public/content-section-rend
 import { ScrollAnimation } from "@/components/ui/scroll-animation";
 import { CountUp } from "@/components/ui/count-up";
 import { SCHOOL_NAME } from "@/lib/brand";
-import { ASRAMA_STATS } from "@/lib/asrama";
+import { ASRAMA_STATS, WARDENS, JK_ASRAMA, ASRAMA_FASILITI } from "@/lib/asrama";
 import { getPublicContent } from "@/lib/content";
 
 function StudentTable({
@@ -114,6 +114,79 @@ export default async function AsramaPage() {
         {sections.map((section) => (
           <ContentSectionRenderer key={`${section.sectionKey}-${section.sortOrder}`} section={section} />
         ))}
+
+        {/* Fasiliti */}
+        <section>
+          <ScrollAnimation direction="up">
+            <span className="text-sm font-semibold tracking-wide text-primary uppercase">Kemudahan</span>
+            <h2 className="mt-2 font-heading text-2xl font-semibold tracking-tight md:text-3xl">Fasiliti Asrama</h2>
+          </ScrollAnimation>
+          <div className="mt-6 grid gap-4 grid-cols-2 sm:grid-cols-4">
+            {ASRAMA_FASILITI.map((item, i) => (
+              <ScrollAnimation key={item.label} direction="up" delay={i * 0.05}>
+                <div className="flex flex-col items-center gap-3 border border-border/70 bg-card px-4 py-6 text-center">
+                  <span className="flex size-11 items-center justify-center bg-primary/8 text-primary">
+                    <item.icon className="size-5" />
+                  </span>
+                  <p className="text-sm font-medium">{item.label}</p>
+                </div>
+              </ScrollAnimation>
+            ))}
+          </div>
+        </section>
+
+        {/* Warden Cards */}
+        <section>
+          <ScrollAnimation direction="up" className="flex items-center gap-3">
+            <Users className="size-5 text-primary" />
+            <div>
+              <span className="text-sm font-semibold tracking-wide text-primary uppercase">Kakitangan</span>
+              <h2 className="font-heading text-2xl font-semibold tracking-tight md:text-3xl">Warden Asrama</h2>
+            </div>
+          </ScrollAnimation>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {WARDENS.map((warden, i) => (
+              <ScrollAnimation key={warden.name} direction="up" delay={i * 0.06}>
+                <div className="border border-border/70 bg-card px-5 py-5">
+                  <p className="font-heading text-base font-semibold">{warden.name}</p>
+                  <p className="mt-1 text-sm text-primary">{warden.position}</p>
+                  {warden.phone ? <p className="mt-1 text-xs text-muted-foreground">{warden.phone}</p> : null}
+                </div>
+              </ScrollAnimation>
+            ))}
+          </div>
+        </section>
+
+        {/* JK Asrama Table */}
+        <section>
+          <ScrollAnimation direction="up">
+            <span className="text-sm font-semibold tracking-wide text-primary uppercase">Organisasi</span>
+            <h2 className="mt-2 font-heading text-2xl font-semibold tracking-tight md:text-3xl">Jawatankuasa Asrama</h2>
+          </ScrollAnimation>
+          <div className="mt-6 overflow-x-auto border border-border/70 bg-card">
+            <div className="border-b border-border/70 bg-muted/40 px-5 py-3">
+              <span className="font-heading text-sm font-semibold">JK Pengurusan Asrama</span>
+            </div>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border/50">
+                  <th className="w-8 px-5 py-2 text-left text-xs font-medium text-muted-foreground">#</th>
+                  <th className="px-5 py-2 text-left text-xs font-medium text-muted-foreground">Nama</th>
+                  <th className="px-5 py-2 text-left text-xs font-medium text-muted-foreground">Jawatan</th>
+                </tr>
+              </thead>
+              <tbody>
+                {JK_ASRAMA.map((member, idx) => (
+                  <tr key={member.name} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
+                    <td className="px-5 py-3 text-muted-foreground">{idx + 1}</td>
+                    <td className="px-5 py-3 font-medium">{member.name}</td>
+                    <td className="px-5 py-3 text-muted-foreground">{member.jawatan}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
 
         <section>
           <ScrollAnimation direction="up" className="flex items-center gap-3">

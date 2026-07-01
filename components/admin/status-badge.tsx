@@ -1,10 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 
 const LABELS: Record<string, string> = {
-  draft: "Draft",
+  draft: "Draf",
   published: "Diterbitkan",
   active: "Aktif",
-  inactive: "Nonaktif",
+  inactive: "Tidak Aktif",
 };
 
 const VARIANTS: Record<string, "default" | "secondary" | "outline"> = {

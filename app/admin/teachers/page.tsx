@@ -71,7 +71,7 @@ export default function TeachersListPage() {
     setIsLoading(true);
     try {
       await apiSend(`/api/teachers/${id}`, "DELETE");
-      toast.success("Guru dihapus");
+      toast.success("Guru dipadam");
       load();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Gagal menghapus");
@@ -82,7 +82,7 @@ export default function TeachersListPage() {
     setIsLoading(true);
     try {
       await apiSend(`/api/teachers/${id}/toggle-status`, "PATCH");
-      toast.success("Status diperbarui");
+      toast.success("Status dikemaskini");
       load();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Gagal memperbarui status");
@@ -91,7 +91,7 @@ export default function TeachersListPage() {
 
   const columns: ColumnDef<TeacherRow, unknown>[] = [
     { accessorKey: "name", header: "Nama" },
-    { accessorKey: "position", header: "Jabatan", cell: ({ row }) => row.original.position ?? "-" },
+    { accessorKey: "position", header: "Jawatan", cell: ({ row }) => row.original.position ?? "-" },
     {
       accessorKey: "status",
       header: "Status",

@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
-import { UTApi } from "uploadthing/server";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { s3Client } from "@/lib/r2";
 import { db } from "@/lib/db";
 import { media } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
@@ -8,12 +9,6 @@ import { requireAdmin } from "@/lib/api/with-auth";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 type Params = { params: Promise<{ id: string }> };
-
-let utapi: UTApi | undefined;
-function getUtApi() {
-  utapi ??= new UTApi();
-  return utapi;
-}
 
 export async function GET(req: Request, { params }: Params) {
   try {
@@ -41,9 +36,14 @@ export async function DELETE(req: Request, { params }: Params) {
     await db.delete(media).where(eq(media.id, id));
 
     try {
-      await getUtApi().deleteFiles(row.fileKey);
+      await s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME || "dummy-bucket",
+          Key: row.fileKey,
+        })
+      );
     } catch (err) {
-      console.error("Failed to delete remote file from uploadthing:", err);
+      console.error("Failed to delete remote file from Cloudflare R2:", err);
     }
 
     return noContent();

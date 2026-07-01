@@ -2,7 +2,7 @@ import { and, count, desc, eq, like, or } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { media } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
-import { paginated } from "@/lib/api/response";
+import { fail, ok, paginated } from "@/lib/api/response";
 import { parseQuery } from "@/lib/api/validate-request";
 import { requireAdmin } from "@/lib/api/with-auth";
 import { mediaQuerySchema } from "@/lib/validations/media.schema";
@@ -44,6 +44,44 @@ export async function GET(req: Request) {
     ]);
 
     return paginated(rows, { page, limit, total, totalPages: Math.ceil(total / limit) });
+  } catch (err) {
+    return handleApiError(err);
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    const session = await requireAdmin(req);
+
+    const body = await req.json();
+    const { fileName, filePath, fileKey, fileType, fileSize, folder } = body as {
+      fileName: string;
+      filePath: string;
+      fileKey: string;
+      fileType?: string;
+      fileSize?: number;
+      folder?: string;
+    };
+
+    if (!fileName || !filePath || !fileKey) {
+      return fail("Missing required fields: fileName, filePath, fileKey", 400);
+    }
+
+    const newId = crypto.randomUUID();
+    const item = {
+      id: newId,
+      fileName,
+      filePath,
+      fileKey,
+      fileType: fileType || null,
+      fileSize: fileSize || null,
+      folder: folder || "general",
+      uploadedBy: session.user.id,
+    };
+
+    await db.insert(media).values(item);
+
+    return ok({ ...item, uploadedAt: new Date().toISOString() });
   } catch (err) {
     return handleApiError(err);
   }
