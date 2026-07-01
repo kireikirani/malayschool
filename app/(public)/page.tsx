@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { and, count, desc, eq, like } from "drizzle-orm";
+import { and, count, desc, eq, like, or, isNull, gte } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { news, galleryAlbums, teachers } from "@/db/schema";
+import { galleryAlbums, news, pengumuman, teachers } from "@/db/schema";
 import { Badge } from "@/components/ui/badge";
 import { NewsCard } from "@/components/public/news-card";
 import { GalleryAlbumCard } from "@/components/public/gallery-album-card";
@@ -16,12 +16,26 @@ import { AdmissionsCta } from "@/components/public/home/admissions-cta";
 import { ContactSection } from "@/components/public/home/contact-section";
 import { StatsCounter } from "@/components/public/home/stats-counter";
 import { PibgDonation } from "@/components/public/home/pibg-donation";
+import { CountdownSpm } from "@/components/public/home/countdown-spm";
 import { ScrollAnimation } from "@/components/ui/scroll-animation";
+import { getPublicContentSection } from "@/lib/content";
+import { getSettings } from "@/lib/site-settings";
 
 export default async function HomePage() {
-  const [latestNews, latestAlbums, [teacherCount], [principal]] = await Promise.all([
+  const now = new Date();
+  const [settings, heroSection, profileSection, pibgSection, latestNews, latestAlbums, announcements, [teacherCount], [principal]] = await Promise.all([
+    getSettings(),
+    getPublicContentSection("home", "hero"),
+    getPublicContentSection("home", "school-profile"),
+    getPublicContentSection("home", "pibg-profile"),
     db.select().from(news).where(eq(news.status, "published")).orderBy(desc(news.publishDate)).limit(3),
     db.select().from(galleryAlbums).orderBy(desc(galleryAlbums.createdAt)).limit(6),
+    db
+      .select()
+      .from(pengumuman)
+      .where(and(eq(pengumuman.aktif, true), or(isNull(pengumuman.tamatPada), gte(pengumuman.tamatPada, now))))
+      .orderBy(pengumuman.sortOrder, desc(pengumuman.createdAt))
+      .limit(3),
     db.select({ value: count() }).from(teachers).where(eq(teachers.status, "active")),
     db
       .select()
@@ -32,13 +46,38 @@ export default async function HomePage() {
 
   return (
     <div>
-      <Hero />
+      <Hero
+        title={heroSection?.title ?? settings.schoolName}
+        tagline={heroSection?.subtitle ?? settings.schoolTagline}
+        badgeText={heroSection?.body ?? "Sesi Persekolahan 2026/2027"}
+        imageUrl={heroSection?.imageUrl ?? "/gallery/sekolah/bangunan-sekolah.jpg"}
+        primaryLinkLabel={heroSection?.linkLabel ?? "Lihat Dokumen"}
+        primaryLinkUrl={heroSection?.linkUrl ?? "/dokumen-sekolah"}
+        secondaryLinkLabel="Tempah Lawatan"
+        secondaryLinkUrl="/contact"
+        indicators={heroSection?.items.map((item) => item.title ?? item.label ?? "Info Sekolah") ?? ["30+ Tahun Pengalaman", "1,200+ Pelajar Aktif", "Persekitaran Selamat"]}
+      />
 
       <div className="mx-auto max-w-6xl px-4 pt-12">
         <AdSlot placement="homepage_top" />
       </div>
 
-      <StatsCounter teacherCount={teacherCount.value} />
+      <StatsCounter
+        teacherCount={teacherCount.value}
+        students={settings.statsStudents}
+        supportStaff={settings.statsSupportStaff}
+        classes={settings.statsClasses}
+        spmCandidates={settings.statsSpmCandidates}
+      />
+
+      {profileSection ? (
+        <section className="pb-4">
+          <div className="mx-auto max-w-5xl px-4 text-center">
+            <p className="text-sm text-muted-foreground">{profileSection.body ?? profileSection.subtitle}</p>
+          </div>
+        </section>
+      ) : null}
+
       <WhyChooseUs />
       <AcademicPrograms />
       {principal && (
@@ -50,7 +89,56 @@ export default async function HomePage() {
         />
       )}
       <FacilitiesPreview />
-      <PibgDonation />
+      <CountdownSpm spmDate={settings.spmDate} />
+
+      <section className="py-16 md:py-20">
+        <div className="mx-auto max-w-6xl px-4">
+          <ScrollAnimation direction="up" className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <span className="text-sm font-semibold tracking-wide text-primary uppercase">Terkini</span>
+              <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
+                Info & Pengumuman
+              </h2>
+            </div>
+            <Link href="/news" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+              Lihat semua berita
+              <ArrowRight className="size-4" />
+            </Link>
+          </ScrollAnimation>
+          {announcements.length === 0 ? (
+            <div className="mt-8 border border-dashed border-border/70 bg-muted/30 px-6 py-10 text-center">
+              <p className="text-sm font-medium">Belum ada poster info terkini</p>
+              <p className="mt-1 text-xs text-muted-foreground">Admin boleh menambah poster melalui menu Pengumuman.</p>
+            </div>
+          ) : (
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {announcements.map((item, index) => (
+                <ScrollAnimation key={item.id} direction="up" delay={index * 0.08}>
+                  <Link href={item.linkUrl || "/news"} className="group block overflow-hidden border border-border/70 bg-card">
+                    <div className="relative aspect-[3/4] w-full overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={item.imageUrl} alt={item.tajuk} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
+                    </div>
+                    <div className="space-y-2 p-4">
+                      <h3 className="font-heading text-lg font-semibold">{item.tajuk}</h3>
+                      {item.deskripsi ? <p className="text-sm text-muted-foreground">{item.deskripsi}</p> : null}
+                    </div>
+                  </Link>
+                </ScrollAnimation>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <PibgDonation
+        title={pibgSection?.title ?? "Sumbangan Anda Membina Masa Depan Mereka"}
+        subtitle={pibgSection?.subtitle ?? undefined}
+        body={pibgSection?.body ?? undefined}
+        accountName={settings.pibgAccountName}
+        bankName={settings.pibgBankName}
+        accountNumber={settings.pibgAccountNumber}
+      />
 
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-6xl px-4">

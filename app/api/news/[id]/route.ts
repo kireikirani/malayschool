@@ -49,8 +49,12 @@ export async function PATCH(req: Request, { params }: Params) {
       updates.slug = slug;
     }
 
+    const cleanedExisting = Object.fromEntries(
+      Object.entries(existing).map(([k, v]) => [k, v === null ? undefined : v])
+    );
+
     createNewsSchema.parse({
-      ...existing,
+      ...cleanedExisting,
       ...body,
       ...updates,
     });

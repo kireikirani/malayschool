@@ -60,6 +60,8 @@ export async function DELETE(req: Request, { params }: Params) {
     const [existing] = await db.select({ id: galleryAlbums.id }).from(galleryAlbums).where(eq(galleryAlbums.id, id)).limit(1);
     if (!existing) throw new ApiError("Not found", 404);
 
+    // Cascade: remove child items first to avoid orphaned records
+    await db.delete(galleryItems).where(eq(galleryItems.albumId, id));
     await db.delete(galleryAlbums).where(eq(galleryAlbums.id, id));
     return noContent();
   } catch (err) {

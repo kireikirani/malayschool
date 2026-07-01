@@ -29,6 +29,7 @@ const NAV_LINKS = [
 
 const UNIT_LINKS = [
   ...UNITS.map((unit) => ({ href: `/${unit.slug}`, label: unit.navLabel })),
+  { href: "/asrama", label: "Asrama" },
   { href: "/borang", label: "Borang" },
 ];
 

@@ -10,7 +10,13 @@ import {
   Images,
   FolderOpen,
   FileSpreadsheet,
+  Settings,
   LogOut,
+  BedDouble,
+  Bell,
+  FolderArchive,
+  Layers3,
+  PanelsTopLeft,
 } from "lucide-react";
 import {
   Sidebar,
@@ -36,15 +42,44 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/auth-client";
 
-const NAV_ITEMS = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/news", label: "Berita", icon: Newspaper },
-  { href: "/admin/teachers", label: "Guru", icon: GraduationCap },
-  { href: "/admin/advertisements", label: "Iklan", icon: Megaphone },
-  { href: "/admin/gallery", label: "Galeri", icon: Images },
-  { href: "/admin/media", label: "Media", icon: FolderOpen },
-  { href: "/admin/documents", label: "Dokumen Sekolah", icon: FileSpreadsheet },
-];
+const NAV_GROUPS = [
+  {
+    label: "Overview",
+    items: [{ href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard }],
+  },
+  {
+    label: "Public Content",
+    items: [
+      { href: "/admin/content", label: "Public Content", icon: PanelsTopLeft },
+      { href: "/admin/pengumuman", label: "Pengumuman", icon: Bell },
+      { href: "/admin/news", label: "Berita", icon: Newspaper },
+      { href: "/admin/gallery", label: "Galeri", icon: Images },
+      { href: "/admin/advertisements", label: "Iklan", icon: Megaphone },
+    ],
+  },
+  {
+    label: "Media & Files",
+    items: [
+      { href: "/admin/media", label: "Media", icon: FolderOpen },
+      { href: "/admin/documents", label: "Dokumen Sekolah", icon: FileSpreadsheet },
+      { href: "/admin/unit-dokumen", label: "Dokumen Unit", icon: FolderArchive },
+    ],
+  },
+  {
+    label: "Units",
+    items: [
+      { href: "/admin/units", label: "Unit Sections", icon: Layers3 },
+      { href: "/admin/teachers", label: "Guru", icon: GraduationCap },
+    ],
+  },
+  {
+    label: "School Data",
+    items: [
+      { href: "/admin/asrama-pelajar", label: "Pelajar Asrama", icon: BedDouble },
+      { href: "/admin/settings", label: "Tetapan Laman", icon: Settings },
+    ],
+  },
+] as const;
 
 function initials(name: string) {
   return name
@@ -77,25 +112,30 @@ export function AdminShell({
           <span className="px-2 text-sm font-semibold">Sekolah CMS</span>
         </SidebarHeader>
         <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {NAV_ITEMS.map((item) => {
-                  const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-                  return (
-                    <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton asChild isActive={isActive}>
-                        <Link href={item.href}>
-                          <item.icon />
-                          <span>{item.label}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          {NAV_GROUPS.map((group) => (
+            <SidebarGroup key={group.label}>
+              <div className="px-2 pb-2 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+                {group.label}
+              </div>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {group.items.map((item) => {
+                    const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+                    return (
+                      <SidebarMenuItem key={item.href}>
+                        <SidebarMenuButton asChild isActive={isActive}>
+                          <Link href={item.href}>
+                            <item.icon />
+                            <span>{item.label}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ))}
         </SidebarContent>
         <SidebarFooter>
           <DropdownMenu>

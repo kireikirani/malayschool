@@ -1,22 +1,30 @@
 import { QrCode } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollAnimation } from "@/components/ui/scroll-animation";
-import { PIBG_ACCOUNT_NAME, PIBG_ACCOUNT_NUMBER, PIBG_BANK_NAME } from "@/lib/brand";
 
-export function PibgDonation() {
+export function PibgDonation({
+  title,
+  subtitle,
+  body,
+  accountName,
+  bankName,
+  accountNumber,
+}: {
+  title: string;
+  subtitle?: string | null;
+  body?: string | null;
+  accountName: string;
+  bankName: string;
+  accountNumber: string;
+}) {
   return (
     <section className="py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-4">
         <ScrollAnimation direction="up" className="mx-auto max-w-2xl text-center">
           <span className="text-sm font-semibold tracking-wide text-primary uppercase">Tabung PIBG & Sumbangan</span>
-          <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
-            Sumbangan Anda Membina Masa Depan Mereka
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            Sumbangan ihsan anda amat bermakna bagi melancarkan program pembangunan pendidikan, sahsiah, dan
-            penyelenggaraan fasiliti demi keselesaan anak-anak kita menuntut ilmu. Sila tulis rujukan{" "}
-            <span className="font-medium text-foreground">NAMA ANAK &amp; KELAS</span>.
-          </p>
+          <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">{title}</h2>
+          <p className="mt-4 text-muted-foreground">{subtitle ?? body ?? "Maklumat sumbangan PIBG akan dikemaskini oleh pihak sekolah."}</p>
+          {body && subtitle ? <p className="mt-3 text-sm text-muted-foreground">{body}</p> : null}
         </ScrollAnimation>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2">
@@ -27,15 +35,15 @@ export function PibgDonation() {
                 <dl className="space-y-3 text-sm">
                   <div>
                     <dt className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">Nama Akaun</dt>
-                    <dd>{PIBG_ACCOUNT_NAME}</dd>
+                    <dd>{accountName}</dd>
                   </div>
                   <div>
                     <dt className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">Bank</dt>
-                    <dd>{PIBG_BANK_NAME}</dd>
+                    <dd>{bankName}</dd>
                   </div>
                   <div>
                     <dt className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">No. Akaun</dt>
-                    <dd>{PIBG_ACCOUNT_NUMBER}</dd>
+                    <dd>{accountNumber}</dd>
                   </div>
                 </dl>
               </CardContent>

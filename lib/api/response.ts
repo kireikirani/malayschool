@@ -22,3 +22,7 @@ export function noContent() {
 export function fail(message: string, status = 400, fieldErrors?: Record<string, string[]>) {
   return NextResponse.json({ error: { message, fieldErrors } }, { status });
 }
+
+export function notFound(message = "Not found") {
+  return NextResponse.json({ error: { message } }, { status: 404 });
+}

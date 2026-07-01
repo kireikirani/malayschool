@@ -28,4 +28,8 @@ export const SCHOOL_STATS = {
   supportStaff: 45,
   students: 1_200,
   classes: 32,
+  spmCandidates: 287,
 };
+
+// SPM 2026 start date — update when MoE publishes official schedule
+export const SCHOOL_SPM_DATE = "2026-11-09";

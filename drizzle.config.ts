@@ -1,18 +1,28 @@
+import "dotenv/config";
 import { defineConfig } from "drizzle-kit";
+
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error(
+    "DATABASE_URL is not set. Copy .env.local.example to .env.local and fill in DATABASE_URL before running Drizzle commands.",
+  );
+}
+
+const normalizedUrl = databaseUrl.replace("?ssl=true", "");
+const parsedUrl = new URL(normalizedUrl);
 
 export default defineConfig({
   schema: "./db/schema/index.ts",
   out: "./drizzle",
   dialect: "mysql",
   dbCredentials: {
-    host: new URL(process.env.DATABASE_URL!.replace("?ssl=true", "")).hostname,
-    port: Number(new URL(process.env.DATABASE_URL!.replace("?ssl=true", "")).port) || 4000,
-    user: new URL(process.env.DATABASE_URL!.replace("?ssl=true", "")).username,
-    password: new URL(process.env.DATABASE_URL!.replace("?ssl=true", "")).password,
-    database: new URL(process.env.DATABASE_URL!.replace("?ssl=true", "")).pathname.slice(1),
-    ssl: process.env.DATABASE_URL?.includes("tidbcloud.com")
-      ? { rejectUnauthorized: true }
-      : undefined,
+    host: parsedUrl.hostname,
+    port: Number(parsedUrl.port) || 4000,
+    user: parsedUrl.username,
+    password: parsedUrl.password,
+    database: parsedUrl.pathname.slice(1),
+    ssl: databaseUrl.includes("tidbcloud.com") ? { rejectUnauthorized: true } : undefined,
   },
   strict: true,
   verbose: true,

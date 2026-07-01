@@ -35,8 +35,12 @@ export async function PATCH(req: Request, { params }: Params) {
     const [existing] = await db.select().from(advertisements).where(eq(advertisements.id, id)).limit(1);
     if (!existing) return fail("Not found", 404);
 
+    const cleanedExisting = Object.fromEntries(
+      Object.entries(existing).map(([k, v]) => [k, v === null ? undefined : v])
+    );
+
     createAdvertisementSchema.parse({
-      ...existing,
+      ...cleanedExisting,
       ...body,
     });
 

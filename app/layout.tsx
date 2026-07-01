@@ -4,6 +4,8 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { SCHOOL_LOGO_URL, SCHOOL_NAME, SCHOOL_OG_IMAGE_URL } from "@/lib/brand";
+import { getSettings } from "@/lib/site-settings";
+import { THEME_PRESETS } from "@/lib/theme";
 
 const bodyFont = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -31,16 +33,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSettings();
+  const theme = THEME_PRESETS[settings.themeColor] ?? THEME_PRESETS.navy;
+  const isCustomTheme = settings.themeColor !== "navy";
+
   return (
     <html
       lang="ms"
       className={cn("h-full", "antialiased", geistMono.variable, "font-sans", bodyFont.variable, headingFont.variable)}
     >
+      <head>
+        {isCustomTheme && (
+          <style>{`:root { --primary: ${theme.primary}; --primary-foreground: ${theme.primaryFg}; --ring: ${theme.primary}; }`}</style>
+        )}
+      </head>
       <body className="min-h-full flex flex-col">
         {children}
         <Toaster />
