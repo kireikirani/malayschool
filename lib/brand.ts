@@ -8,7 +8,10 @@ export const SCHOOL_EMAIL = "bea1069@moe.edu.my";
 export const SCHOOL_PHONE = "03-3122 7123";
 export const SCHOOL_FAX = "03-3122 8124";
 export const SCHOOL_ADDRESS = "Jalan Sekolah, Batu 9, Telok Panglima Garang, 42500 Kuala Langat, Selangor Darul Ehsan";
+export const SCHOOL_MAPS_EMBED_URL =
+  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.3475220677567!2d101.46695347614747!3d2.9101343970660455!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cdaf0940000001%3A0xa53f6a598e9302af!2sSMK%20Telok%20Panglima%20Garang!5e0!3m2!1sms!2smy!4v1719876543210!5m2!1sms!2smy";
 export const SCHOOL_WHATSAPP_URL = "https://wa.me/60331227123";
+
 
 // Self-hosted in /public — the original Google Sites URLs are session-locked and return 403
 // for outside visitors, so the crest was downloaded from the school's official site and

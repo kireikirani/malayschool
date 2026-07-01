@@ -3,7 +3,7 @@ import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollAnimation } from "@/components/ui/scroll-animation";
-import { SCHOOL_ADDRESS, SCHOOL_EMAIL, SCHOOL_PHONE, SCHOOL_WHATSAPP_URL } from "@/lib/brand";
+import { SCHOOL_ADDRESS, SCHOOL_EMAIL, SCHOOL_MAPS_EMBED_URL, SCHOOL_PHONE, SCHOOL_WHATSAPP_URL } from "@/lib/brand";
 
 export function ContactSection() {
   const CONTACT_ITEMS = [
@@ -47,9 +47,18 @@ export function ContactSection() {
             </Card>
           </ScrollAnimation>
 
-          <ScrollAnimation direction="right" delay={0.1}>
-            <div className="flex min-h-[280px] items-center justify-center border border-border/70 bg-muted text-sm text-muted-foreground shadow-[0_18px_40px_-34px_rgba(35,24,16,0.5)]">
-              Peta Google Maps
+          <ScrollAnimation direction="right" delay={0.1} className="h-full">
+            <div className="overflow-hidden border border-border/70 shadow-[0_18px_40px_-34px_rgba(35,24,16,0.5)] h-full min-h-[300px]">
+              <iframe
+                src={SCHOOL_MAPS_EMBED_URL}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full min-h-[300px]"
+              />
             </div>
           </ScrollAnimation>
         </div>

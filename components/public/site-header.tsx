@@ -46,15 +46,19 @@ export function SiteHeader() {
       <AnnouncementBar />
       <header className="border-b border-border/90 bg-background">
         <div className="mx-auto flex h-18 max-w-6xl items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-3">
-            <SchoolLogo className="size-10" />
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+            <SchoolLogo className="size-9 sm:size-10" />
             <span className="flex flex-col leading-tight">
-              <span className="font-heading text-base font-semibold text-foreground">{SCHOOL_NAME}</span>
-              <span className="text-[11px] tracking-wide text-muted-foreground">{SCHOOL_TAGLINE}</span>
+              <span className="font-heading text-sm sm:text-base font-semibold text-foreground">
+                {SCHOOL_NAME}
+              </span>
+              <span className="hidden sm:block text-[11px] tracking-wide text-muted-foreground">
+                {SCHOOL_TAGLINE}
+              </span>
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-7 text-sm font-medium md:flex">
+          <nav className="hidden items-center gap-5 lg:gap-7 text-sm font-medium lg:flex">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
@@ -82,7 +86,7 @@ export function SiteHeader() {
             </DropdownMenu>
           </nav>
 
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <Button asChild className="px-4">
               <Link href="/dokumen-sekolah">Dokumen Sekolah</Link>
             </Button>
@@ -90,13 +94,13 @@ export function SiteHeader() {
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon-sm" className="md:hidden">
+              <Button variant="ghost" size="icon-sm" className="lg:hidden">
                 <Menu />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
+            <SheetContent side="right" className="overflow-y-auto pb-8">
               <SheetHeader>
-                <SheetTitle className="font-heading">{SCHOOL_NAME}</SheetTitle>
+                <SheetTitle className="font-heading text-left">{SCHOOL_NAME}</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-4 px-4">
                 {NAV_LINKS.map((link) => (
@@ -104,7 +108,7 @@ export function SiteHeader() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="text-sm font-medium text-muted-foreground hover:text-primary"
+                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -117,7 +121,7 @@ export function SiteHeader() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="text-sm font-medium text-muted-foreground hover:text-primary"
+                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -128,7 +132,7 @@ export function SiteHeader() {
                 <Link
                   href="/login"
                   onClick={() => setOpen(false)}
-                  className="pt-2 text-sm font-medium text-muted-foreground hover:text-primary"
+                  className="pt-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
                 >
                   Login Admin
                 </Link>
