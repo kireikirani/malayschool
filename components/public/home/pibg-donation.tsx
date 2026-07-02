@@ -18,13 +18,13 @@ export function PibgDonation({
   accountNumber: string;
 }) {
   return (
-    <section className="py-16 md:py-24">
+    <section className="bg-primary text-primary-foreground py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-4">
         <ScrollAnimation direction="up" className="mx-auto max-w-2xl text-center">
-          <span className="text-sm font-semibold tracking-wide text-primary uppercase">Tabung PIBG & Sumbangan</span>
-          <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">{title}</h2>
-          <p className="mt-4 text-muted-foreground">{subtitle ?? body ?? "Maklumat sumbangan PIBG akan dikemaskini oleh pihak sekolah."}</p>
-          {body && subtitle ? <p className="mt-3 text-sm text-muted-foreground">{body}</p> : null}
+          <span className="text-sm font-semibold tracking-wide text-primary-foreground/85 uppercase">Tabung PIBG & Sumbangan</span>
+          <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight text-primary-foreground md:text-4xl">{title}</h2>
+          <p className="mt-4 text-primary-foreground/80">{subtitle ?? body ?? "Maklumat sumbangan PIBG akan dikemaskini oleh pihak sekolah."}</p>
+          {body && subtitle ? <p className="mt-3 text-sm text-primary-foreground/70">{body}</p> : null}
         </ScrollAnimation>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2">

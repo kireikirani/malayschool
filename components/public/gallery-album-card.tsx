@@ -15,7 +15,7 @@ export function GalleryAlbumCard({
 }) {
   return (
     <Link href={`/gallery/${id}`}>
-      <Card className="h-full overflow-hidden border-border/70 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_18px_36px_-28px_rgba(35,24,16,0.55)]">
+      <Card className="pt-0! h-full overflow-hidden border-border/70 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_18px_36px_-28px_rgba(35,24,16,0.55)]">
         <div className="relative aspect-[4/3] border-b border-border/70 bg-muted">
           {coverImage && <Image src={coverImage} alt={name} fill className="object-cover" />}
         </div>

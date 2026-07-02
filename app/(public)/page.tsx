@@ -179,23 +179,23 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="border-b border-border/60 py-16 md:py-24">
+      <section className="bg-primary text-primary-foreground py-16 md:py-24">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollAnimation direction="up" className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <span className="text-sm font-semibold tracking-wide text-primary uppercase">Galeri</span>
-              <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
+              <span className="text-sm font-semibold tracking-wide text-primary-foreground/80 uppercase">Galeri</span>
+              <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight text-primary-foreground md:text-4xl">
                 Detik-detik di Sekolah Kami
               </h2>
             </div>
-            <Link href="/gallery" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+            <Link href="/gallery" className="inline-flex items-center gap-1 text-sm font-medium text-primary-foreground/90 hover:text-primary-foreground hover:underline">
               Lihat galeri penuh
               <ArrowRight className="size-4" />
             </Link>
           </ScrollAnimation>
 
           {latestAlbums.length === 0 ? (
-            <p className="mt-8 text-sm text-muted-foreground">Belum ada album.</p>
+            <p className="mt-8 text-sm text-primary-foreground/70">Belum ada album.</p>
           ) : (
             <div className="mt-10 grid gap-6 sm:grid-cols-3 lg:grid-cols-6">
               {latestAlbums.map((row, i) => (

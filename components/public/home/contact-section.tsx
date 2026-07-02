@@ -13,11 +13,11 @@ export function ContactSection() {
   ];
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="bg-primary text-primary-foreground py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-4">
         <ScrollAnimation direction="up" className="mx-auto max-w-2xl text-center">
-          <span className="text-sm font-semibold tracking-wide text-primary uppercase">Hubungi Kami</span>
-          <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
+          <span className="text-sm font-semibold tracking-wide text-primary-foreground/85 uppercase">Hubungi Kami</span>
+          <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight text-primary-foreground md:text-4xl">
             Kami Sedia Membantu Pertanyaan Anda
           </h2>
         </ScrollAnimation>

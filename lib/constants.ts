@@ -1,4 +1,4 @@
-export const ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
+export const ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"] as const;
 export const ALLOWED_DOCUMENT_MIME_TYPES = [
   "application/pdf",
   "text/plain",

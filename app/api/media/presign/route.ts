@@ -5,28 +5,17 @@ import { requireAdmin } from "@/lib/api/with-auth";
 import { handleApiError } from "@/lib/api/error-handler";
 import { fail, ok } from "@/lib/api/response";
 import { ALLOWED_DOCUMENT_MIME_TYPES, ALLOWED_IMAGE_MIME_TYPES } from "@/lib/constants";
+import { parseBody } from "@/lib/api/validate-request";
+import { presignMediaSchema } from "@/lib/validations/media.schema";
 
 export async function POST(req: Request) {
   try {
     // 1. Ensure the user is an admin
     const session = await requireAdmin(req);
 
-    // 2. Parse request body
-    const body = await req.json();
-    const { fileName, fileType, fileSize, folder } = body as {
-      fileName: string;
-      fileType: string;
-      fileSize: number;
-      folder: "general" | "documents";
-    };
-
-    if (!fileName || !fileType || !fileSize || !folder) {
-      return fail("Missing required fields: fileName, fileType, fileSize, folder", 400);
-    }
-
-    if (folder !== "general" && folder !== "documents") {
-      return fail("Invalid folder type. Must be 'general' or 'documents'", 400);
-    }
+    // 2. Parse request body and validate
+    const body = await parseBody(req, presignMediaSchema);
+    const { fileName, fileType, fileSize, folder } = body;
 
     // 3. Validate file types and size constraints
     if (folder === "general") {

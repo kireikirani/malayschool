@@ -7,6 +7,8 @@ import { fail, ok } from "@/lib/api/response";
 import { requireAdmin } from "@/lib/api/with-auth";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
+import { parseBody } from "@/lib/api/validate-request";
+
 // Validate settings payload: flat object where every key and value must be a non-empty string.
 const settingsSchema = z
   .record(z.string().min(1).max(100), z.string().min(1).max(5000))
@@ -31,13 +33,8 @@ export async function POST(req: Request) {
       return fail("Too many requests", 429);
     }
 
-    const raw = await req.json();
-    const parsed = settingsSchema.safeParse(raw);
-    if (!parsed.success) {
-      return fail("Validation failed", 400);
-    }
-
-    const entries = Object.entries(parsed.data);
+    const data = await parseBody(req, settingsSchema);
+    const entries = Object.entries(data);
     for (const [key, value] of entries) {
       await db
         .insert(siteSettings)

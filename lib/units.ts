@@ -359,6 +359,34 @@ export const UNITS: Unit[] = [
       },
     ],
   },
+  {
+    slug: "ubk",
+    navLabel: "UBK",
+    title: "Unit Bimbingan & Kaunseling (UBK)",
+    headName: "Puan Nurulhuda binti Hassan",
+    headPosition: "Guru Bimbingan & Kaunseling Sepenuh Masa",
+    kpis: [
+      { label: "Sesi Kaunseling Individu", value: 120 },
+      { label: "Sesi Kaunseling Kelompok", value: 45 },
+      { label: "Program Pembangunan Sahsiah", value: 12 },
+    ],
+    jkTables: [
+      {
+        title: "Jawatankuasa Unit Bimbingan & Kaunseling",
+        members: [
+          { name: "Puan Hanizam binti Kassim", jawatan: "Pengerusi (Pengetua)" },
+          { name: "Puan Norliza binti Jais", jawatan: "Timbalan Pengerusi (GPK HEM)" },
+          { name: "Puan Nurulhuda binti Hassan", jawatan: "Setiausaha (Guru Bimbingan & Kaunseling)" },
+          { name: "Puan Asma binti Che Mat", jawatan: "Ahli" },
+          { name: "Semua Guru Kanan Mata Pelajaran", jawatan: "Ahli" },
+        ],
+      },
+    ],
+    dokumen: [
+      { label: "Modul Minda Sihat", desc: "Saringan dan panduan kesihatan mental" },
+      { label: "Brosur Laluan Kerjaya", desc: "Hala tuju pendidikan selepas SPM" },
+    ],
+  },
 ];
 
 export const ASRAMA_DOCUMENT_CATEGORIES = [

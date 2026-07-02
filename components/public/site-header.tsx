@@ -18,19 +18,23 @@ import { SCHOOL_NAME, SCHOOL_TAGLINE } from "@/lib/brand";
 import { UNITS } from "@/lib/units";
 import { cn } from "@/lib/utils";
 
-const NAV_LINKS = [
-  { href: "/", label: "Utama" },
-  { href: "/about", label: "Tentang Sekolah" },
+const ABOUT_LINKS = [
+  { href: "/about", label: "Profil Sekolah" },
   { href: "/teachers", label: "Guru & Staf" },
-  { href: "/news", label: "Berita" },
-  { href: "/gallery", label: "Galeri" },
-  { href: "/contact", label: "Kontak" },
+  { href: "/contact", label: "Hubungi Kami" },
 ];
 
-const UNIT_LINKS = [
-  ...UNITS.map((unit) => ({ href: `/${unit.slug}`, label: unit.navLabel })),
-  { href: "/asrama", label: "Asrama" },
-  { href: "/borang", label: "Borang" },
+const NEWS_GALLERY_LINKS = [
+  { href: "/news", label: "Berita" },
+  { href: "/gallery", label: "Galeri" },
+];
+
+const MANAGEMENT_LINKS = [
+  { href: "/kurikulum", label: "Kurikulum" },
+  { href: "/hem", label: "Hal Ehwal Murid" },
+  { href: "/kokurikulum", label: "Kokurikulum" },
+  { href: "/tingkatan-6", label: "Tingkatan 6" },
+  { href: "/pentadbiran", label: "Pentadbiran" },
 ];
 
 export function SiteHeader() {
@@ -59,31 +63,82 @@ export function SiteHeader() {
           </Link>
 
           <nav className="hidden items-center gap-5 lg:gap-7 text-sm font-medium lg:flex">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "relative text-muted-foreground transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:text-foreground hover:after:w-full",
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {/* 1. Utama */}
+            <Link
+              href="/"
+              className="relative text-muted-foreground transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:text-foreground hover:after:w-full"
+            >
+              Utama
+            </Link>
 
+            {/* 2. Tentang Kami */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-muted-foreground transition-colors outline-none hover:text-foreground">
-                Unit Pengurusan
+              <DropdownMenuTrigger className="flex items-center gap-1 text-muted-foreground transition-colors cursor-pointer outline-none hover:text-foreground">
+                Tentang Kami
                 <ChevronDown className="size-3.5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                {UNIT_LINKS.map((link) => (
+                {ABOUT_LINKS.map((link) => (
                   <DropdownMenuItem key={link.href} asChild>
                     <Link href={link.href}>{link.label}</Link>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* 3. Berita & Galeri */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 text-muted-foreground transition-colors cursor-pointer outline-none hover:text-foreground">
+                Berita & Galeri
+                <ChevronDown className="size-3.5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {NEWS_GALLERY_LINKS.map((link) => (
+                  <DropdownMenuItem key={link.href} asChild>
+                    <Link href={link.href}>{link.label}</Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* 4. Asrama */}
+            <Link
+              href="/asrama"
+              className="relative text-muted-foreground transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:text-foreground hover:after:w-full"
+            >
+              Asrama
+            </Link>
+
+            {/* 5. Pengurusan & Pentadbiran */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 text-muted-foreground transition-colors cursor-pointer outline-none hover:text-foreground">
+                Pengurusan & Pentadbiran
+                <ChevronDown className="size-3.5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {MANAGEMENT_LINKS.map((link) => (
+                  <DropdownMenuItem key={link.href} asChild>
+                    <Link href={link.href}>{link.label}</Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* 6. UBK */}
+            <Link
+              href="/ubk"
+              className="relative text-muted-foreground transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:text-foreground hover:after:w-full"
+            >
+              UBK
+            </Link>
+
+            {/* 7. Borang */}
+            <Link
+              href="/borang"
+              className="relative text-muted-foreground transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:text-foreground hover:after:w-full"
+            >
+              Borang
+            </Link>
           </nav>
 
           <div className="hidden lg:block">
@@ -102,40 +157,112 @@ export function SiteHeader() {
               <SheetHeader>
                 <SheetTitle className="font-heading text-left">{SCHOOL_NAME}</SheetTitle>
               </SheetHeader>
-              <nav className="flex flex-col gap-4 px-4">
-                {NAV_LINKS.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-                <p className="pt-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-                  Unit Pengurusan
-                </p>
-                {UNIT_LINKS.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-                <Button asChild className="mt-2" onClick={() => setOpen(false)}>
-                  <Link href="/dokumen-sekolah">Dokumen Sekolah</Link>
-                </Button>
+              <nav className="flex flex-col gap-5 px-4 my-4">
+                {/* Utama */}
                 <Link
-                  href="/login"
+                  href="/"
                   onClick={() => setOpen(false)}
-                  className="pt-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                  className="text-base font-semibold text-foreground hover:text-primary transition-colors"
                 >
-                  Login Admin
+                  Utama
                 </Link>
+
+                {/* Tentang Kami */}
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+                    Tentang Kami
+                  </p>
+                  <div className="flex flex-col gap-2 pl-3 border-l border-border">
+                    {ABOUT_LINKS.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setOpen(false)}
+                        className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Berita & Galeri */}
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+                    Berita & Galeri
+                  </p>
+                  <div className="flex flex-col gap-2 pl-3 border-l border-border">
+                    {NEWS_GALLERY_LINKS.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setOpen(false)}
+                        className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Asrama */}
+                <Link
+                  href="/asrama"
+                  onClick={() => setOpen(false)}
+                  className="text-base font-semibold text-foreground hover:text-primary transition-colors"
+                >
+                  Asrama
+                </Link>
+
+                {/* Pengurusan & Pentadbiran */}
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+                    Pengurusan & Pentadbiran
+                  </p>
+                  <div className="flex flex-col gap-2 pl-3 border-l border-border">
+                    {MANAGEMENT_LINKS.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setOpen(false)}
+                        className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* UBK */}
+                <Link
+                  href="/ubk"
+                  onClick={() => setOpen(false)}
+                  className="text-base font-semibold text-foreground hover:text-primary transition-colors"
+                >
+                  UBK
+                </Link>
+
+                {/* Borang */}
+                <Link
+                  href="/borang"
+                  onClick={() => setOpen(false)}
+                  className="text-base font-semibold text-foreground hover:text-primary transition-colors"
+                >
+                  Borang
+                </Link>
+
+                <div className="pt-4 border-t border-border flex flex-col gap-3">
+                  <Button asChild className="w-full" onClick={() => setOpen(false)}>
+                    <Link href="/dokumen-sekolah">Dokumen Sekolah</Link>
+                  </Button>
+                  <Link
+                    href="/login"
+                    onClick={() => setOpen(false)}
+                    className="text-center text-xs font-medium text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Login Admin
+                  </Link>
+                </div>
               </nav>
             </SheetContent>
           </Sheet>

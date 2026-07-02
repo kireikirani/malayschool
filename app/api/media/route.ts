@@ -3,9 +3,9 @@ import { db } from "@/lib/db";
 import { media } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
 import { fail, ok, paginated } from "@/lib/api/response";
-import { parseQuery } from "@/lib/api/validate-request";
+import { parseBody, parseQuery } from "@/lib/api/validate-request";
 import { requireAdmin } from "@/lib/api/with-auth";
-import { mediaQuerySchema } from "@/lib/validations/media.schema";
+import { createMediaSchema, mediaQuerySchema } from "@/lib/validations/media.schema";
 
 export async function GET(req: Request) {
   try {
@@ -53,19 +53,8 @@ export async function POST(req: Request) {
   try {
     const session = await requireAdmin(req);
 
-    const body = await req.json();
-    const { fileName, filePath, fileKey, fileType, fileSize, folder } = body as {
-      fileName: string;
-      filePath: string;
-      fileKey: string;
-      fileType?: string;
-      fileSize?: number;
-      folder?: string;
-    };
-
-    if (!fileName || !filePath || !fileKey) {
-      return fail("Missing required fields: fileName, filePath, fileKey", 400);
-    }
+    const body = await parseBody(req, createMediaSchema);
+    const { fileName, filePath, fileKey, fileType, fileSize, folder } = body;
 
     const newId = crypto.randomUUID();
     const item = {
