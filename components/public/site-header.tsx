@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { ChevronDown, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,23 @@ const MANAGEMENT_LINKS = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isUtamaActive = pathname === "/";
+  const isAboutActive = ABOUT_LINKS.some((link) => pathname === link.href || pathname.startsWith(link.href + "/"));
+  const isNewsGalleryActive = NEWS_GALLERY_LINKS.some((link) => pathname === link.href || pathname.startsWith(link.href + "/"));
+  const isAsramaActive = pathname === "/asrama" || pathname.startsWith("/asrama/");
+  const isManagementActive = MANAGEMENT_LINKS.some((link) => pathname === link.href || pathname.startsWith(link.href + "/"));
+  const isUbkActive = pathname === "/ubk" || pathname.startsWith("/ubk/");
+  const isBorangActive = pathname === "/borang" || pathname.startsWith("/borang/");
+
+  const getLinkClass = (isActive: boolean) =>
+    cn(
+      "px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200 outline-none",
+      isActive
+        ? "bg-primary text-primary-foreground shadow-sm"
+        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+    );
 
   return (
     <motion.div
@@ -49,7 +67,7 @@ export function SiteHeader() {
     >
       <AnnouncementBar />
       <header className="border-b border-border/90 bg-background">
-        <div className="mx-auto flex h-18 max-w-6xl items-center justify-between px-4">
+        <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 shrink-0">
             <SchoolLogo className="size-9 sm:size-10" />
             <span className="flex flex-col leading-tight">
@@ -62,94 +80,87 @@ export function SiteHeader() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-5 lg:gap-7 text-sm font-medium lg:flex">
+          <nav className="hidden items-center gap-4 xl:gap-6 text-sm font-medium xl:flex">
             {/* 1. Utama */}
-            <Link
-              href="/"
-              className="relative text-muted-foreground transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:text-foreground hover:after:w-full"
-            >
+            <Link href="/" className={getLinkClass(isUtamaActive)}>
               Utama
             </Link>
 
             {/* 2. Tentang Kami */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-muted-foreground transition-colors cursor-pointer outline-none hover:text-foreground">
+              <DropdownMenuTrigger className={getLinkClass(isAboutActive) + " flex items-center gap-1.5 cursor-pointer"}>
                 Tentang Kami
                 <ChevronDown className="size-3.5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                {ABOUT_LINKS.map((link) => (
-                  <DropdownMenuItem key={link.href} asChild>
-                    <Link href={link.href}>{link.label}</Link>
-                  </DropdownMenuItem>
-                ))}
+                {ABOUT_LINKS.map((link) => {
+                  const isLinkActive = pathname === link.href || pathname.startsWith(link.href + "/");
+                  return (
+                    <DropdownMenuItem key={link.href} asChild className={cn(isLinkActive && "bg-muted font-medium")}>
+                      <Link href={link.href}>{link.label}</Link>
+                    </DropdownMenuItem>
+                  );
+                })}
               </DropdownMenuContent>
             </DropdownMenu>
 
             {/* 3. Berita & Galeri */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-muted-foreground transition-colors cursor-pointer outline-none hover:text-foreground">
+              <DropdownMenuTrigger className={getLinkClass(isNewsGalleryActive) + " flex items-center gap-1.5 cursor-pointer"}>
                 Berita & Galeri
                 <ChevronDown className="size-3.5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                {NEWS_GALLERY_LINKS.map((link) => (
-                  <DropdownMenuItem key={link.href} asChild>
-                    <Link href={link.href}>{link.label}</Link>
-                  </DropdownMenuItem>
-                ))}
+                {NEWS_GALLERY_LINKS.map((link) => {
+                  const isLinkActive = pathname === link.href || pathname.startsWith(link.href + "/");
+                  return (
+                    <DropdownMenuItem key={link.href} asChild className={cn(isLinkActive && "bg-muted font-medium")}>
+                      <Link href={link.href}>{link.label}</Link>
+                    </DropdownMenuItem>
+                  );
+                })}
               </DropdownMenuContent>
             </DropdownMenu>
 
             {/* 4. Asrama */}
-            <Link
-              href="/asrama"
-              className="relative text-muted-foreground transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:text-foreground hover:after:w-full"
-            >
+            <Link href="/asrama" className={getLinkClass(isAsramaActive)}>
               Asrama
             </Link>
 
             {/* 5. Pengurusan & Pentadbiran */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-muted-foreground transition-colors cursor-pointer outline-none hover:text-foreground">
+              <DropdownMenuTrigger className={getLinkClass(isManagementActive) + " flex items-center gap-1.5 cursor-pointer"}>
                 Pengurusan & Pentadbiran
                 <ChevronDown className="size-3.5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                {MANAGEMENT_LINKS.map((link) => (
-                  <DropdownMenuItem key={link.href} asChild>
-                    <Link href={link.href}>{link.label}</Link>
-                  </DropdownMenuItem>
-                ))}
+                {MANAGEMENT_LINKS.map((link) => {
+                  const isLinkActive = pathname === link.href || pathname.startsWith(link.href + "/");
+                  return (
+                    <DropdownMenuItem key={link.href} asChild className={cn(isLinkActive && "bg-muted font-medium")}>
+                      <Link href={link.href}>{link.label}</Link>
+                    </DropdownMenuItem>
+                  );
+                })}
               </DropdownMenuContent>
             </DropdownMenu>
 
             {/* 6. UBK */}
-            <Link
-              href="/ubk"
-              className="relative text-muted-foreground transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:text-foreground hover:after:w-full"
-            >
+            <Link href="/ubk" className={getLinkClass(isUbkActive)}>
               UBK
             </Link>
 
             {/* 7. Borang */}
-            <Link
-              href="/borang"
-              className="relative text-muted-foreground transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:text-foreground hover:after:w-full"
-            >
+            <Link href="/borang" className={getLinkClass(isBorangActive)}>
               Borang
             </Link>
           </nav>
 
-          <div className="hidden lg:block">
-            <Button asChild className="px-4">
-              <Link href="/dokumen-sekolah">Dokumen Sekolah</Link>
-            </Button>
-          </div>
+
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon-sm" className="lg:hidden">
+              <Button variant="ghost" size="icon-sm" className="xl:hidden">
                 <Menu />
               </Button>
             </SheetTrigger>
@@ -162,46 +173,67 @@ export function SiteHeader() {
                 <Link
                   href="/"
                   onClick={() => setOpen(false)}
-                  className="text-base font-semibold text-foreground hover:text-primary transition-colors"
+                  className={cn(
+                    "text-base font-semibold transition-colors",
+                    isUtamaActive ? "text-primary font-bold" : "text-foreground hover:text-primary"
+                  )}
                 >
                   Utama
                 </Link>
 
                 {/* Tentang Kami */}
                 <div className="space-y-2">
-                  <p className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+                  <p className={cn(
+                    "text-sm font-semibold tracking-wide uppercase transition-colors",
+                    isAboutActive ? "text-primary font-bold" : "text-muted-foreground"
+                  )}>
                     Tentang Kami
                   </p>
                   <div className="flex flex-col gap-2 pl-3 border-l border-border">
-                    {ABOUT_LINKS.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setOpen(false)}
-                        className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
+                    {ABOUT_LINKS.map((link) => {
+                      const isLinkActive = pathname === link.href || pathname.startsWith(link.href + "/");
+                      return (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          onClick={() => setOpen(false)}
+                          className={cn(
+                            "text-sm font-medium transition-colors",
+                            isLinkActive ? "text-primary font-bold" : "text-muted-foreground hover:text-primary"
+                          )}
+                        >
+                          {link.label}
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* Berita & Galeri */}
                 <div className="space-y-2">
-                  <p className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+                  <p className={cn(
+                    "text-sm font-semibold tracking-wide uppercase transition-colors",
+                    isNewsGalleryActive ? "text-primary font-bold" : "text-muted-foreground"
+                  )}>
                     Berita & Galeri
                   </p>
                   <div className="flex flex-col gap-2 pl-3 border-l border-border">
-                    {NEWS_GALLERY_LINKS.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setOpen(false)}
-                        className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
+                    {NEWS_GALLERY_LINKS.map((link) => {
+                      const isLinkActive = pathname === link.href || pathname.startsWith(link.href + "/");
+                      return (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          onClick={() => setOpen(false)}
+                          className={cn(
+                            "text-sm font-medium transition-colors",
+                            isLinkActive ? "text-primary font-bold" : "text-muted-foreground hover:text-primary"
+                          )}
+                        >
+                          {link.label}
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -209,27 +241,39 @@ export function SiteHeader() {
                 <Link
                   href="/asrama"
                   onClick={() => setOpen(false)}
-                  className="text-base font-semibold text-foreground hover:text-primary transition-colors"
+                  className={cn(
+                    "text-base font-semibold transition-colors",
+                    isAsramaActive ? "text-primary font-bold" : "text-foreground hover:text-primary"
+                  )}
                 >
                   Asrama
                 </Link>
 
                 {/* Pengurusan & Pentadbiran */}
                 <div className="space-y-2">
-                  <p className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+                  <p className={cn(
+                    "text-sm font-semibold tracking-wide uppercase transition-colors",
+                    isManagementActive ? "text-primary font-bold" : "text-muted-foreground"
+                  )}>
                     Pengurusan & Pentadbiran
                   </p>
                   <div className="flex flex-col gap-2 pl-3 border-l border-border">
-                    {MANAGEMENT_LINKS.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setOpen(false)}
-                        className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
+                    {MANAGEMENT_LINKS.map((link) => {
+                      const isLinkActive = pathname === link.href || pathname.startsWith(link.href + "/");
+                      return (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          onClick={() => setOpen(false)}
+                          className={cn(
+                            "text-sm font-medium transition-colors",
+                            isLinkActive ? "text-primary font-bold" : "text-muted-foreground hover:text-primary"
+                          )}
+                        >
+                          {link.label}
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -237,7 +281,10 @@ export function SiteHeader() {
                 <Link
                   href="/ubk"
                   onClick={() => setOpen(false)}
-                  className="text-base font-semibold text-foreground hover:text-primary transition-colors"
+                  className={cn(
+                    "text-base font-semibold transition-colors",
+                    isUbkActive ? "text-primary font-bold" : "text-foreground hover:text-primary"
+                  )}
                 >
                   UBK
                 </Link>
@@ -246,15 +293,15 @@ export function SiteHeader() {
                 <Link
                   href="/borang"
                   onClick={() => setOpen(false)}
-                  className="text-base font-semibold text-foreground hover:text-primary transition-colors"
+                  className={cn(
+                    "text-base font-semibold transition-colors",
+                    isBorangActive ? "text-primary font-bold" : "text-foreground hover:text-primary"
+                  )}
                 >
                   Borang
                 </Link>
 
                 <div className="pt-4 border-t border-border flex flex-col gap-3">
-                  <Button asChild className="w-full" onClick={() => setOpen(false)}>
-                    <Link href="/dokumen-sekolah">Dokumen Sekolah</Link>
-                  </Button>
                   <Link
                     href="/login"
                     onClick={() => setOpen(false)}

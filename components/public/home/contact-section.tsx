@@ -28,9 +28,7 @@ export function ContactSection() {
               <CardContent className="space-y-6">
                 {CONTACT_ITEMS.map(({ icon: Icon, label, value }) => (
                   <div key={label} className="flex gap-3">
-                    <span className="flex size-10 shrink-0 items-center justify-center border border-primary/15 bg-primary/8 text-primary">
-                      <Icon className="size-4" />
-                    </span>
+                    <Icon className="size-6 text-primary shrink-0 mt-0.5" />
                     <div>
                       <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{label}</p>
                       <p className="text-sm">{value}</p>

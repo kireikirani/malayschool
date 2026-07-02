@@ -36,6 +36,7 @@ export type ContentItem = {
   imageUrl?: string | null;
   meta?: Record<string, unknown> | null;
   sortOrder: number;
+  createdAt?: string | Date | null;
 };
 
 export type ContentSection = {
@@ -67,7 +68,7 @@ function parseMetaJson(value: string | null): Record<string, unknown> | null {
 
 function withItems<T extends { id: number; sectionKey: string; type: SectionType; title: string | null; subtitle: string | null; body: string | null; imageUrl: string | null; linkLabel: string | null; linkUrl: string | null; isActive: boolean; sortOrder: number }>(
   rows: T[],
-  items: Array<{ id: number; label: string | null; title: string | null; value: string | null; body: string | null; url: string | null; fileUrl: string | null; imageUrl: string | null; metaJson: string | null; sortOrder: number; contentId?: number; sectionId?: number }>,
+  items: Array<{ id: number; label: string | null; title: string | null; value: string | null; body: string | null; url: string | null; fileUrl: string | null; imageUrl: string | null; metaJson: string | null; sortOrder: number; contentId?: number; sectionId?: number; createdAt?: Date | string | null }>,
   linkField: "contentId" | "sectionId",
 ): ContentSection[] {
   return rows.map((row) => ({
@@ -96,6 +97,7 @@ function withItems<T extends { id: number; sectionKey: string; type: SectionType
         imageUrl: item.imageUrl,
         meta: parseMetaJson(item.metaJson),
         sortOrder: item.sortOrder,
+        createdAt: item.createdAt,
       })),
   }));
 }
@@ -286,6 +288,7 @@ async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> 
       fileUrl: uploaded?.fileUrl ?? null,
       value: uploaded ? "Tersedia" : "Belum tersedia",
       sortOrder: index,
+      createdAt: uploaded?.createdAt ?? null,
     };
   }) ?? [];
 
@@ -303,7 +306,7 @@ async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> 
     {
       sectionKey: "kpi",
       type: "stats",
-      title: `KPI ${unit.title}`,
+      title: unit.slug === "pentadbiran" ? "Hala Tuju 2026-2030" : `KPI ${unit.title}`,
       isActive: true,
       sortOrder: 10,
       items: unit.kpis.map((kpi, index) => ({
@@ -312,6 +315,23 @@ async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> 
         sortOrder: index,
       })),
     },
+    ...(unitSlug === "pentadbiran"
+      ? [
+          {
+            sectionKey: "log-harian-pengetua",
+            type: "text_block" as const,
+            title: "Log Harian Pengetua",
+            subtitle: null,
+            body: "Akses dan semak maklumat log harian, perancangan strategik, takwim pengurusan, serta pelan pentadbiran pengetua sekolah secara interaktif melalui paparan Canva.",
+            imageUrl: null,
+            linkLabel: "Buka Log Harian Pengetua",
+            linkUrl: "https://pengurusandanpentadbiran.my.canva.site/plannerpengetua",
+            isActive: true,
+            sortOrder: 15,
+            items: [],
+          },
+        ]
+      : []),
     ...(unit.pencapaian?.length
       ? [
           {
@@ -390,6 +410,8 @@ export const getPublicContent = cache(async (pageKey: string): Promise<ContentSe
 
 export const getUnitSections = cache(async (unitSlug: string): Promise<ContentSection[]> => {
   try {
+    const defaults = await defaultUnitSections(unitSlug);
+
     const rows = await db
       .select()
       .from(unitSections)
@@ -397,7 +419,7 @@ export const getUnitSections = cache(async (unitSlug: string): Promise<ContentSe
       .orderBy(asc(unitSections.sortOrder), asc(unitSections.createdAt));
 
     if (!rows.length) {
-      return defaultUnitSections(unitSlug);
+      return defaults;
     }
 
     const itemRows = await db
@@ -406,7 +428,17 @@ export const getUnitSections = cache(async (unitSlug: string): Promise<ContentSe
       .where(inArray(unitSectionItems.sectionId, rows.map((row) => row.id)))
       .orderBy(asc(unitSectionItems.sortOrder), asc(unitSectionItems.createdAt));
 
-    return withItems(rows, itemRows, "sectionId").filter((section) => section.isActive);
+    const dbSections = withItems(rows, itemRows, "sectionId").filter((section) => section.isActive);
+
+    const merged = [...dbSections];
+    for (const defSec of defaults) {
+      if (!dbSections.some((s) => s.sectionKey === defSec.sectionKey)) {
+        merged.push(defSec);
+      }
+    }
+
+    merged.sort((a, b) => a.sortOrder - b.sortOrder);
+    return merged;
   } catch {
     return defaultUnitSections(unitSlug);
   }

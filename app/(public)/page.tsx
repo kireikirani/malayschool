@@ -51,18 +51,10 @@ export default async function HomePage() {
       <Hero
         title={heroSection?.title ?? settings.schoolName}
         tagline={heroSection?.subtitle ?? settings.schoolTagline}
-        badgeText={heroSection?.body ?? "Sesi Persekolahan 2026/2027"}
         imageUrl={heroSection?.imageUrl ?? "/gallery/sekolah/bangunan-sekolah.jpg"}
-        primaryLinkLabel={heroSection?.linkLabel ?? "Lihat Dokumen"}
-        primaryLinkUrl={heroSection?.linkUrl ?? "/dokumen-sekolah"}
-        secondaryLinkLabel="Tempah Lawatan"
-        secondaryLinkUrl="/contact"
-        indicators={heroSection?.items.map((item) => item.title ?? item.label ?? "Info Sekolah") ?? ["30+ Tahun Pengalaman", "1,200+ Pelajar Aktif", "Persekitaran Selamat"]}
       />
 
-      <div className="mx-auto max-w-6xl px-4 pt-12">
-        <AdSlot placement="homepage_top" />
-      </div>
+      <AdSlot placement="homepage_top" className="mx-auto max-w-7xl px-4 sm:px-6 pt-12" />
 
       <StatsCounter
         teacherCount={teacherCount.value}
@@ -216,9 +208,7 @@ export default async function HomePage() {
       <AdmissionsCta />
       <ContactSection />
 
-      <div className="mx-auto max-w-6xl px-4 pb-16">
-        <AdSlot placement="homepage_sidebar" />
-      </div>
+      <AdSlot placement="homepage_sidebar" className="mx-auto max-w-7xl px-4 sm:px-6 pb-16" />
     </div>
   );
 }

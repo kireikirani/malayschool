@@ -3,6 +3,8 @@ import Image from "next/image";
 import { ArrowRight, FileText, Link2, Network, Upload } from "lucide-react";
 import type { ContentSection } from "@/lib/content";
 import { FileCard } from "@/components/public/file-card";
+import { UnitDocumentsList } from "@/components/public/unit-documents-list";
+import { Button } from "@/components/ui/button";
 
 function SectionHeading({
   title,
@@ -28,15 +30,44 @@ function EmptyFileState() {
         <p className="text-sm font-medium">Fail belum dimuat naik</p>
         <p className="text-xs text-muted-foreground">Admin boleh memuat naik fail melalui dashboard.</p>
       </div>
-      <span className="flex size-10 items-center justify-center bg-primary/8 text-primary">
-        <Upload className="size-4" />
-      </span>
+      <Upload className="size-6 text-primary shrink-0" />
     </div>
   );
 }
 
 export function ContentSectionRenderer({ section }: { section: ContentSection }) {
   if (!section.isActive) return null;
+
+  if (section.sectionKey === "log-harian-pengetua" || (section.type === "text_block" && section.linkUrl?.includes("canva.site"))) {
+    return (
+      <section className="relative overflow-hidden bg-slate-900 text-white p-8 md:p-12 text-center flex flex-col items-center justify-center border border-border/20 rounded-md">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 to-slate-900 opacity-95 z-0" />
+        <div className="relative z-10 flex flex-col items-center max-w-2xl">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-500 text-xs font-semibold border border-yellow-500/20 mb-6 uppercase tracking-wider">
+            ✨ Created by Cikgu Hannani and Cikgu Hasyrul
+          </span>
+          <h2 className="font-heading text-2xl md:text-4xl font-bold tracking-tight text-white mb-4">
+            {section.title || "Log Harian Pengetua"}
+          </h2>
+          <p className="text-sm md:text-base text-slate-300 leading-relaxed mb-8">
+            {section.body || "Akses dan semak maklumat log harian, perancangan strategik, takwim pengurusan, serta pelan pentadbiran pengetua sekolah secara interaktif melalui paparan Canva."}
+          </p>
+          <Button
+            asChild
+            className="bg-white hover:bg-slate-100 text-slate-900 font-semibold h-11 px-8 rounded-full shadow-lg hover:shadow-xl transition-all"
+          >
+            <a
+              href={section.linkUrl || "https://pengurusandanpentadbiran.my.canva.site/plannerpengetua"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {section.linkLabel || "Buka Log Harian Pengetua"}
+            </a>
+          </Button>
+        </div>
+      </section>
+    );
+  }
 
   if (section.type === "text_block") {
     return (
@@ -175,34 +206,11 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
 
   if (section.type === "file_list") {
     return (
-      <section>
-        <SectionHeading title={section.title} subtitle={section.subtitle} />
-        <div className="space-y-4">
-          {section.items.map((item) =>
-            item.fileUrl ? (
-              <FileCard
-                key={`${section.sectionKey}-${item.sortOrder}`}
-                name={item.title ?? item.label ?? "Dokumen"}
-                url={item.fileUrl}
-                showTable={false}
-              />
-            ) : (
-              <div key={`${section.sectionKey}-${item.sortOrder}`} className="space-y-2">
-                <div className="flex items-start gap-4 border border-border/70 bg-card px-5 py-4">
-                  <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center bg-primary/8 text-primary">
-                    <FileText className="size-4" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium">{item.title ?? item.label}</p>
-                    {item.body ? <p className="mt-0.5 text-xs text-muted-foreground">{item.body}</p> : null}
-                  </div>
-                </div>
-                <EmptyFileState />
-              </div>
-            ),
-          )}
-        </div>
-      </section>
+      <UnitDocumentsList
+        items={section.items}
+        title={section.title}
+        subtitle={section.subtitle}
+      />
     );
   }
 

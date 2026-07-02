@@ -61,9 +61,7 @@ export async function SchoolDocumentsPage() {
               <Card key={title}>
                 <CardContent className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="flex size-11 items-center justify-center border border-primary/15 bg-primary/8 text-primary">
-                      <Icon className="size-5" />
-                    </span>
+                    <Icon className="size-7 text-primary" />
                     <span className="font-heading text-sm font-semibold text-gold">{`0${i + 1}`}</span>
                   </div>
                   <h3 className="font-heading text-lg font-semibold">{title}</h3>

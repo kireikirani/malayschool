@@ -125,9 +125,7 @@ export default async function AsramaPage() {
             {ASRAMA_FASILITI.map((item, i) => (
               <ScrollAnimation key={item.label} direction="up" delay={i * 0.05}>
                 <div className="flex flex-col items-center gap-3 border border-border/70 bg-card px-4 py-6 text-center">
-                  <span className="flex size-11 items-center justify-center bg-primary/8 text-primary">
-                    <item.icon className="size-5" />
-                  </span>
+                  <item.icon className="size-7 text-primary" />
                   <p className="text-sm font-medium">{item.label}</p>
                 </div>
               </ScrollAnimation>

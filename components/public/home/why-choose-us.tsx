@@ -51,9 +51,7 @@ export function WhyChooseUs() {
             <ScrollAnimation key={title} direction="up" delay={(i % 3) * 0.08}>
               <Card className="border-primary-foreground/15 bg-primary-foreground/5 text-primary-foreground">
                 <CardContent className="space-y-3">
-                  <span className="flex size-11 items-center justify-center border border-primary-foreground/20 bg-primary-foreground/10 text-gold">
-                    <Icon className="size-5" />
-                  </span>
+                  <Icon className="size-7 text-gold" />
                   <h3 className="font-heading text-lg font-semibold text-primary-foreground">{title}</h3>
                   <p className="text-sm text-primary-foreground/75">{desc}</p>
                 </CardContent>

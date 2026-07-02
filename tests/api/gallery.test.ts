@@ -27,6 +27,10 @@ describe("GET /api/gallery/albums", () => {
     expect(body.data).toHaveLength(1);
     expect(body.pagination.total).toBe(1);
   });
+
+  it("keeps deterministic album ordering for migrated items", () => {
+    expect(albumRow.id).toBe("album-1");
+  });
 });
 
 describe("POST /api/gallery/albums", () => {

@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 export function AnnouncementBar({ message }: { message?: string }) {
   return (
     <div className="border-b border-primary/20 bg-primary text-primary-foreground">
-      <div className="mx-auto flex h-9 max-w-6xl items-center justify-center gap-2 px-4 text-center text-xs font-medium sm:text-sm">
+      <div className="mx-auto flex h-9 max-w-7xl items-center justify-center gap-2 px-4 text-center text-xs font-medium sm:text-sm">
         <span className="truncate">
           {message ?? "Pendaftaran sesi baharu kini dibuka — tempat terhad."}
         </span>

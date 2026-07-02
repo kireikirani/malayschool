@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { Separator } from "@/components/ui/separator";
 
 type Advertisement = {
   id: string;
@@ -11,7 +12,15 @@ type Advertisement = {
 
 type Placement = "homepage_top" | "homepage_sidebar" | "news_detail" | "footer";
 
-export function AdSlot({ placement }: { placement: Placement }) {
+export function AdSlot({
+  placement,
+  className,
+  showSeparatorAfter = false,
+}: {
+  placement: Placement;
+  className?: string;
+  showSeparatorAfter?: boolean;
+}) {
   const [ads, setAds] = useState<Advertisement[]>([]);
 
   useEffect(() => {
@@ -24,7 +33,9 @@ export function AdSlot({ placement }: { placement: Placement }) {
   if (ads.length === 0) return null;
 
   return (
-    <div className="space-y-4">
+    <>
+      <div className={className}>
+        <div className="space-y-4">
       {ads.map((ad) => {
         if (ad.type === "banner_image") {
           return (
@@ -51,6 +62,9 @@ export function AdSlot({ placement }: { placement: Placement }) {
         // adsense_code / html_script: admin-authored trusted content, not arbitrary user input.
         return <div key={ad.id} dangerouslySetInnerHTML={{ __html: ad.content }} />;
       })}
-    </div>
+        </div>
+      </div>
+      {showSeparatorAfter && <Separator className="bg-border" />}
+    </>
   );
 }

@@ -16,11 +16,12 @@ const QUICK_LINKS = [
 export function SiteFooter() {
   return (
     <footer className="mt-auto border-t border-border/80 bg-background text-foreground">
-      <div className="mx-auto max-w-6xl px-4 py-6">
-        <AdSlot placement="footer" />
-      </div>
-      <Separator className="bg-border" />
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
+      <AdSlot
+        placement="footer"
+        className="mx-auto max-w-7xl px-4 sm:px-6 py-6"
+        showSeparatorAfter
+      />
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-3 lg:col-span-2">
           <span className="font-heading text-lg font-semibold">{SCHOOL_NAME}</span>
           <p className="max-w-sm text-sm text-muted-foreground">
@@ -71,7 +72,7 @@ export function SiteFooter() {
         </div>
       </div>
       <Separator className="bg-border" />
-      <p className="mx-auto max-w-6xl px-4 py-6 text-xs text-muted-foreground">
+      <p className="mx-auto max-w-7xl px-4 sm:px-6 py-6 text-xs text-muted-foreground">
         &copy; {new Date().getFullYear()} {SCHOOL_NAME}. Seluruh hak cipta dilindungi.
       </p>
     </footer>

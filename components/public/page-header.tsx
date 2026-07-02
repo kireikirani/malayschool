@@ -16,7 +16,7 @@ export function PageHeader({
   description?: string;
 }) {
   return (
-    <section className="relative overflow-hidden bg-primary">
+    <section className="relative overflow-hidden bg-primary min-h-[calc(100vh-108px)] flex items-center justify-center">
       <motion.div
         initial={{ scale: 1.06, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -33,7 +33,7 @@ export function PageHeader({
       <div className="absolute inset-0 bg-primary/60 mix-blend-color" />
       <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/65 to-primary/25" />
 
-      <div className="relative mx-auto max-w-3xl px-4 py-14 text-center md:py-20">
+      <div className="relative mx-auto max-w-3xl px-4 py-14 text-center md:py-20 w-full">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

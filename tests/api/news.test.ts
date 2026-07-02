@@ -47,8 +47,6 @@ function makeRequest(method: string, url: string, body?: unknown): Request {
   });
 }
 
-// ── GET /api/news ─────────────────────────────────────────────────────────────
-
 describe("GET /api/news", () => {
   it("returns paginated news list", async () => {
     (db as any).select = vi.fn()
@@ -61,9 +59,11 @@ describe("GET /api/news", () => {
     const body = await res.json();
     expect(body).toHaveProperty("pagination");
   });
-});
 
-// ── POST /api/news ────────────────────────────────────────────────────────────
+  it("retains legacy-style slugs after migration", () => {
+    expect(newsRow.slug).toBe("test-news");
+  });
+});
 
 describe("POST /api/news", () => {
   beforeEach(() => {
@@ -107,8 +107,6 @@ describe("POST /api/news", () => {
   });
 });
 
-// ── GET /api/news/[id] ────────────────────────────────────────────────────────
-
 describe("GET /api/news/[id]", () => {
   it("returns news by id", async () => {
     (db as any).select = vi.fn(() => ({ from: vi.fn(() => ({ where: vi.fn(() => ({ limit: vi.fn(() => Promise.resolve([newsRow])) })) })) }));
@@ -129,8 +127,6 @@ describe("GET /api/news/[id]", () => {
   });
 });
 
-// ── PATCH /api/news/[id] ──────────────────────────────────────────────────────
-
 describe("PATCH /api/news/[id]", () => {
   it("updates and returns news", async () => {
     (db as any).select = vi.fn()
@@ -146,8 +142,6 @@ describe("PATCH /api/news/[id]", () => {
     expect(body.data.title).toBe("Updated");
   });
 });
-
-// ── DELETE /api/news/[id] ─────────────────────────────────────────────────────
 
 describe("DELETE /api/news/[id]", () => {
   it("deletes news and returns 204", async () => {

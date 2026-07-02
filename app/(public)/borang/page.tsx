@@ -33,9 +33,7 @@ export default async function BorangPage() {
               <ScrollAnimation key={category} direction="up" delay={(i % 6) * 0.06}>
                 <Card className="h-full">
                   <CardContent className="flex h-full flex-col gap-4">
-                    <span className="flex size-11 items-center justify-center border border-primary/15 bg-primary/8 text-primary">
-                      <FolderOpen className="size-5" />
-                    </span>
+                    <FolderOpen className="size-7 text-primary" />
                     <div className="flex-1">
                       <h3 className="font-heading text-base font-semibold">{category}</h3>
                       <p className="mt-1 text-sm text-muted-foreground">Kategori dokumentasi asrama untuk hebahan dan rujukan dalaman.</p>
