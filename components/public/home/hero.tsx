@@ -63,7 +63,7 @@ export function Hero({
         }}
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 py-24 md:py-32 w-full">
+      <div className="relative mx-auto max-w-6xl px-4 py-24 md:py-32 w-full">
         <div className="flex max-w-2xl flex-col items-start text-left">
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
             <SchoolLogo className="size-20 md:size-24 drop-shadow-[0_8px_24px_rgba(5,23,71,0.45)]" />
@@ -88,6 +88,7 @@ export function Hero({
           </motion.p>
         </div>
       </div>
+
     </section>
   );
 }

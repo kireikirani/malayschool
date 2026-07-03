@@ -1,7 +1,7 @@
-import { UnitPage } from "@/components/public/unit-page";
-import { UNITS } from "@/lib/units";
+export const dynamic = "force-dynamic";
+
+import { PentadbiranClientPage } from "./client-page";
 
 export default function PentadbiranPage() {
-  const unit = UNITS.find((u) => u.slug === "pentadbiran")!;
-  return <UnitPage unit={unit} />;
+  return <PentadbiranClientPage />;
 }

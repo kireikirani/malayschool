@@ -23,6 +23,8 @@ export type SiteSettings = {
   pibgAccountNumber: string;
   spmDate: string;
   themeColor: ThemeColor;
+  asramaPassword?: string;
+  pentadbiranPassword?: string;
 };
 
 const DEFAULTS: SiteSettings = {
@@ -44,6 +46,8 @@ const DEFAULTS: SiteSettings = {
   pibgAccountNumber: brand.PIBG_ACCOUNT_NUMBER,
   spmDate: brand.SCHOOL_SPM_DATE,
   themeColor: "navy",
+  asramaPassword: "ASRAMA2026",
+  pentadbiranPassword: "PENTADBIRAN2026",
 };
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {
@@ -71,6 +75,8 @@ export const getSettings = cache(async (): Promise<SiteSettings> => {
       pibgAccountNumber: map.pibgAccountNumber ?? DEFAULTS.pibgAccountNumber,
       spmDate: map.spmDate ?? DEFAULTS.spmDate,
       themeColor: (map.themeColor as ThemeColor) ?? DEFAULTS.themeColor,
+      asramaPassword: map.asramaPassword ?? DEFAULTS.asramaPassword,
+      pentadbiranPassword: map.pentadbiranPassword ?? DEFAULTS.pentadbiranPassword,
     };
   } catch {
     return DEFAULTS;

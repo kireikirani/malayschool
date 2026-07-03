@@ -82,6 +82,7 @@ export default function SettingsPage() {
           <TabsTrigger value="hubungi">Hubungi</TabsTrigger>
           <TabsTrigger value="statistik">Statistik</TabsTrigger>
           <TabsTrigger value="pibg">PIBG</TabsTrigger>
+          <TabsTrigger value="akses">Akses Terhad</TabsTrigger>
           <TabsTrigger value="tema">Tema</TabsTrigger>
         </TabsList>
 
@@ -224,6 +225,41 @@ export default function SettingsPage() {
                   <Label>Nombor Akaun</Label>
                   <Input value={val("pibgAccountNumber")} onChange={(e) => set("pibgAccountNumber", e.target.value)} />
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="akses" className="mt-4 space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Keselamatan & Akses Halaman</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-1.5">
+                <Label>Kata Laluan Halaman Pentadbiran</Label>
+                <Input
+                  type="text"
+                  placeholder="Masukkan kata laluan untuk halaman pentadbiran"
+                  value={val("pentadbiranPassword")}
+                  onChange={(e) => set("pentadbiranPassword", e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Kata laluan ini diperlukan untuk mengakses halaman Pentadbiran dari bahagian awam.
+                </p>
+              </div>
+
+              <div className="space-y-1.5 border-t border-border/60 pt-4">
+                <Label>Kata Laluan Senarai Pelajar Asrama</Label>
+                <Input
+                  type="text"
+                  placeholder="Masukkan kata laluan untuk senarai pelajar asrama"
+                  value={val("asramaPassword")}
+                  onChange={(e) => set("asramaPassword", e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Kata laluan ini diperlukan untuk mengakses halaman Senarai Pelajar Asrama.
+                </p>
               </div>
             </CardContent>
           </Card>

@@ -2,13 +2,15 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { and, count, desc, eq, gte, isNull, or } from "drizzle-orm";
-import { ArrowRight, Lock, Users } from "lucide-react";
+import { ArrowRight, Lock, Unlock, Users } from "lucide-react";
 import { db } from "@/lib/db";
 import { asramaPelajar, news, pengumuman } from "@/db/schema";
 import { PageHeader } from "@/components/public/page-header";
 import { ContentSectionRenderer } from "@/components/public/content-section-renderer";
 import { ScrollAnimation } from "@/components/ui/scroll-animation";
 import { CountUp } from "@/components/ui/count-up";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { SCHOOL_NAME } from "@/lib/brand";
 import { ASRAMA_STATS, WARDENS, JK_ASRAMA, ASRAMA_FASILITI } from "@/lib/asrama";
 import { getPublicContent } from "@/lib/content";
@@ -67,10 +69,8 @@ function StudentTable({
 
 export default async function AsramaPage() {
   const now = new Date();
-  const [sections, maleRows, femaleRows, [maleCount], [femaleCount], latestAnnouncements, latestNews] = await Promise.all([
+  const [sections, [maleCount], [femaleCount], latestAnnouncements, latestNews] = await Promise.all([
     getPublicContent("asrama"),
-    db.select().from(asramaPelajar).where(and(eq(asramaPelajar.status, "active"), eq(asramaPelajar.jantina, "lelaki"))).limit(20),
-    db.select().from(asramaPelajar).where(and(eq(asramaPelajar.status, "active"), eq(asramaPelajar.jantina, "perempuan"))).limit(20),
     db.select({ value: count() }).from(asramaPelajar).where(and(eq(asramaPelajar.status, "active"), eq(asramaPelajar.jantina, "lelaki"))),
     db.select({ value: count() }).from(asramaPelajar).where(and(eq(asramaPelajar.status, "active"), eq(asramaPelajar.jantina, "perempuan"))),
     db.select().from(pengumuman).where(and(eq(pengumuman.aktif, true), or(isNull(pengumuman.tamatPada), gte(pengumuman.tamatPada, now)))).orderBy(pengumuman.sortOrder, desc(pengumuman.createdAt)).limit(3),
@@ -187,21 +187,28 @@ export default async function AsramaPage() {
         </section>
 
         <section>
-          <ScrollAnimation direction="up" className="flex items-center gap-3">
-            <Lock className="size-5 text-muted-foreground" />
-            <div>
-              <span className="text-sm font-semibold tracking-wide text-primary uppercase">Data Pelajar</span>
-              <h2 className="font-heading text-2xl font-semibold tracking-tight md:text-3xl">Senarai Pelajar Asrama</h2>
-            </div>
+          <ScrollAnimation direction="up">
+            <Card className="border-border/70 shadow-sm overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-900/10">
+              <CardContent className="flex flex-col items-center text-center p-8 md:p-12 space-y-4 max-w-2xl mx-auto">
+                <div className="flex size-14 items-center justify-center rounded-full bg-primary/5 text-primary border border-primary/10">
+                  <Lock className="size-6 text-primary" />
+                </div>
+                <div className="space-y-1">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-primary">Data Sulit Pelajar</span>
+                  <h2 className="font-heading text-2xl font-bold tracking-tight">Senarai Pelajar Asrama</h2>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Senarai penuh penghuni asrama (Aspura & Aspuri) adalah dilindungi bagi memelihara maklumat peribadi. Sila gunakan kata laluan rasmi asrama untuk menyahkunci dan mengakses senarai pelajar.
+                </p>
+                <Button asChild className="gap-2 h-10 px-6 rounded-full font-medium">
+                  <Link href="/asrama/senarai-pelajar">
+                    <Unlock className="size-4" />
+                    Akses Senarai Pelajar
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
           </ScrollAnimation>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Senarai penghuni asrama yang dikemaskini melalui dashboard admin.
-          </p>
-
-          <div className="mt-8 space-y-8">
-            <StudentTable title="Aspura (Pelajar Lelaki)" rows={maleRows} total={totalMale} />
-            <StudentTable title="Aspuri (Pelajar Perempuan)" rows={femaleRows} total={totalFemale} />
-          </div>
         </section>
 
         <section>

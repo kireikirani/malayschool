@@ -31,11 +31,11 @@ const NEWS_GALLERY_LINKS = [
 ];
 
 const MANAGEMENT_LINKS = [
+  { href: "/pentadbiran", label: "Pentadbiran" },
   { href: "/kurikulum", label: "Kurikulum" },
   { href: "/hem", label: "Hal Ehwal Murid" },
   { href: "/kokurikulum", label: "Kokurikulum" },
   { href: "/tingkatan-6", label: "Tingkatan 6" },
-  { href: "/pentadbiran", label: "Pentadbiran" },
 ];
 
 export function SiteHeader() {
