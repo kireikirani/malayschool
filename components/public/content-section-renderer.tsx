@@ -88,7 +88,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {section.items.map((item) => (
-            <div key={`${section.sectionKey}-${item.sortOrder}`} className="border border-border/70 bg-card px-5 py-6 text-center">
+            <div key={`${section.sectionKey}-${item.sortOrder}`} className="flex flex-col items-center justify-center border border-border/70 bg-card px-5 py-6 text-center">
               <p className="font-heading text-3xl font-semibold text-primary md:text-4xl">{item.value ?? "--"}</p>
               <p className="mt-2 text-sm text-muted-foreground">{item.label ?? item.title}</p>
             </div>
@@ -187,7 +187,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {section.items.map((item) => (
-            <div key={`${section.sectionKey}-${item.sortOrder}`} className="border border-border/70 bg-card p-5">
+            <div key={`${section.sectionKey}-${item.sortOrder}`} className="flex flex-col border border-border/70 bg-card p-5">
               {item.imageUrl ? (
                 <div className="relative mb-4 aspect-video overflow-hidden border border-border/60 bg-muted">
                   <Image src={item.imageUrl} alt={item.title ?? item.label ?? "Section image"} fill className="object-cover" />

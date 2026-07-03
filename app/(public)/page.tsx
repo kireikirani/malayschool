@@ -105,17 +105,17 @@ export default async function HomePage() {
               <p className="mt-1 text-xs text-muted-foreground">Admin boleh menambah poster melalui menu Pengumuman.</p>
             </div>
           ) : (
-            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <div className="mt-8 grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
               {announcements.map((item, index) => (
-                <ScrollAnimation key={item.id} direction="up" delay={index * 0.08}>
-                  <Link href={item.linkUrl || "/news"} className="group block overflow-hidden border border-border/70 bg-card">
+                <ScrollAnimation key={item.id} direction="up" delay={index * 0.08} className="h-full">
+                  <Link href={item.linkUrl || "/news"} className="group flex h-full flex-col overflow-hidden border border-border/70 bg-card">
                     <div className="relative aspect-[3/4] w-full overflow-hidden">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={item.imageUrl} alt={item.tajuk} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
                     </div>
-                    <div className="space-y-2 p-4">
-                      <h3 className="font-heading text-lg font-semibold">{item.tajuk}</h3>
-                      {item.deskripsi ? <p className="text-sm text-muted-foreground">{item.deskripsi}</p> : null}
+                    <div className="flex flex-1 flex-col space-y-1 p-3">
+                      <h3 className="font-heading text-sm font-semibold leading-snug line-clamp-2">{item.tajuk}</h3>
+                      {item.deskripsi ? <p className="text-xs text-muted-foreground line-clamp-2">{item.deskripsi}</p> : null}
                     </div>
                   </Link>
                 </ScrollAnimation>

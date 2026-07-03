@@ -48,9 +48,9 @@ export function WhyChooseUs() {
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {REASONS.map(({ icon: Icon, title, desc }, i) => (
-            <ScrollAnimation key={title} direction="up" delay={(i % 3) * 0.08}>
-              <Card className="border-primary-foreground/15 bg-primary-foreground/5 text-primary-foreground">
-                <CardContent className="space-y-3">
+            <ScrollAnimation key={title} direction="up" delay={(i % 3) * 0.08} className="h-full">
+              <Card className="h-full border-primary-foreground/15 bg-primary-foreground/5 text-primary-foreground">
+                <CardContent className="flex h-full flex-col space-y-3">
                   <Icon className="size-7 text-gold" />
                   <h3 className="font-heading text-lg font-semibold text-primary-foreground">{title}</h3>
                   <p className="text-sm text-primary-foreground/75">{desc}</p>

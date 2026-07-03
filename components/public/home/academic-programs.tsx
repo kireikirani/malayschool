@@ -49,9 +49,9 @@ export function AcademicPrograms() {
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {PROGRAMS.map(({ icon: Icon, label, title, desc }, i) => (
-            <ScrollAnimation key={title} direction="up" delay={i * 0.08}>
-              <Card className="border-border/70 bg-card">
-                <CardContent className="space-y-4">
+            <ScrollAnimation key={title} direction="up" delay={i * 0.08} className="h-full">
+              <Card className="h-full border-border/70 bg-card">
+                <CardContent className="flex h-full flex-col space-y-4">
                   <div className="flex items-center justify-between">
                     <Icon className="size-6 text-gold" />
                     <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{label}</span>

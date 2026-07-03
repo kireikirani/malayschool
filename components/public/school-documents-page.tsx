@@ -58,8 +58,8 @@ export async function SchoolDocumentsPage() {
         <div className="mx-auto max-w-6xl px-4">
           <div className="grid gap-6 sm:grid-cols-3">
             {STEPS.map(({ icon: Icon, title, desc }, i) => (
-              <Card key={title}>
-                <CardContent className="space-y-3">
+              <Card key={title} className="h-full">
+                <CardContent className="flex h-full flex-col space-y-3">
                   <div className="flex items-center justify-between">
                     <Icon className="size-7 text-primary" />
                     <span className="font-heading text-sm font-semibold text-gold">{`0${i + 1}`}</span>

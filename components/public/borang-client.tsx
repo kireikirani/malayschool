@@ -126,7 +126,7 @@ export function BorangClient({
               Kategori ({filteredCategories.length})
             </p>
           )}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 items-stretch">
             {filteredCategories.map((category, i) => (
               <Card key={category} className="h-full">
                 <CardContent className="flex h-full flex-col gap-4">
