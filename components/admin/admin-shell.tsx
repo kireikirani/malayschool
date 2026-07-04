@@ -41,6 +41,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/auth-client";
+import { SchoolLogo } from "@/components/public/school-logo";
+import { SCHOOL_SHORT_NAME } from "@/lib/brand";
 
 const NAV_GROUPS = [
   {
@@ -108,13 +110,19 @@ export function AdminShell({
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader>
-          <span className="px-2 text-sm font-semibold">Sekolah CMS</span>
+        <SidebarHeader className="border-b border-sidebar-border py-3">
+          <div className="flex items-center gap-2.5 px-2">
+            <SchoolLogo className="size-8 shrink-0" />
+            <div className="flex min-w-0 flex-col leading-tight">
+              <span className="font-heading text-sm font-semibold text-sidebar-foreground">{SCHOOL_SHORT_NAME}</span>
+              <span className="text-[10px] text-sidebar-foreground/50">Sistem Pengurusan</span>
+            </div>
+          </div>
         </SidebarHeader>
         <SidebarContent>
           {NAV_GROUPS.map((group) => (
             <SidebarGroup key={group.label}>
-              <div className="px-2 pb-2 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+              <div className="px-2 pb-2 text-[10px] font-semibold tracking-widest text-sidebar-foreground/40 uppercase">
                 {group.label}
               </div>
               <SidebarGroupContent>
@@ -137,15 +145,17 @@ export function AdminShell({
             </SidebarGroup>
           ))}
         </SidebarContent>
-        <SidebarFooter>
+        <SidebarFooter className="border-t border-sidebar-border py-3">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex w-full items-center gap-2 rounded-md p-2 text-left hover:bg-sidebar-accent">
               <Avatar className="size-7">
-                <AvatarFallback>{initials(user.name)}</AvatarFallback>
+                <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-xs">
+                  {initials(user.name)}
+                </AvatarFallback>
               </Avatar>
               <div className="flex min-w-0 flex-col">
-                <span className="truncate text-sm font-medium">{user.name}</span>
-                <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+                <span className="truncate text-sm font-medium text-sidebar-foreground">{user.name}</span>
+                <span className="truncate text-xs text-sidebar-foreground/50">{user.email}</span>
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56">

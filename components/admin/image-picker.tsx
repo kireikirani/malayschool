@@ -73,7 +73,7 @@ export function ImagePicker({
 
             <div>
               <p className="mb-2 text-sm font-medium text-muted-foreground">Atau pilih dari media yang sudah ada</p>
-              <div className="grid max-h-64 grid-cols-4 gap-2 overflow-y-auto">
+              <div className="grid max-h-80 grid-cols-3 gap-2 overflow-y-auto">
                 {media === null && <p className="text-sm text-muted-foreground">Memuat...</p>}
                 {media?.length === 0 && (
                   <div className="col-span-full">

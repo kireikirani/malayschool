@@ -7,20 +7,21 @@ import { getSettings } from "@/lib/site-settings";
 
 export async function fetchStudentsAction(password: string) {
   const settings = await getSettings();
-  const actualPassword = settings.asramaPassword || "ASRAMA2026";
-  
-  if (password !== actualPassword) {
+  const validPasswords = new Set(
+    [settings.asramaPassword, settings.pentadbiranPassword, "PENTADBIRAN2026"].filter(Boolean)
+  );
+
+  if (!validPasswords.has(password)) {
     return { success: false, error: "Kata laluan salah!" };
   }
-  
+
   const allStudents = await db
     .select()
     .from(asramaPelajar)
     .where(eq(asramaPelajar.status, "active"))
     .orderBy(asramaPelajar.nama);
-    
-  // Format to be JSON-serializable
-  const formatted = allStudents.map(student => ({
+
+  const formatted = allStudents.map((student) => ({
     id: student.id,
     nama: student.nama,
     jantina: student.jantina,
@@ -28,6 +29,6 @@ export async function fetchStudentsAction(password: string) {
     dorm: student.dorm,
     noWaris: student.noWaris,
   }));
-  
+
   return { success: true, data: formatted };
 }

@@ -46,7 +46,7 @@ const DEFAULTS: SiteSettings = {
   pibgAccountNumber: brand.PIBG_ACCOUNT_NUMBER,
   spmDate: brand.SCHOOL_SPM_DATE,
   themeColor: "navy",
-  asramaPassword: "ASRAMA2026",
+  asramaPassword: "PENTADBIRAN2026",
   pentadbiranPassword: "PENTADBIRAN2026",
 };
 
@@ -82,3 +82,4 @@ export const getSettings = cache(async (): Promise<SiteSettings> => {
     return DEFAULTS;
   }
 });
+

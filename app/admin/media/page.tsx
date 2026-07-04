@@ -139,20 +139,20 @@ export default function MediaLibraryPage() {
                     {typeof item.fileSize === "number" ? ` · ${formatFileSize(item.fileSize)}` : ""}
                   </p>
                 </div>
+                <DeleteConfirmDialog
+                  trigger={
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon-xs"
+                      className="opacity-0 transition-opacity group-hover:opacity-100"
+                    >
+                      <Trash2 />
+                    </Button>
+                  }
+                  onConfirm={() => handleDelete(item.id)}
+                />
               </div>
-              <DeleteConfirmDialog
-                trigger={
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="icon-xs"
-                    className="opacity-0 transition-opacity group-hover:opacity-100"
-                  >
-                    <Trash2 />
-                  </Button>
-                }
-                onConfirm={() => handleDelete(item.id)}
-              />
             </div>
           ))}
       </div>

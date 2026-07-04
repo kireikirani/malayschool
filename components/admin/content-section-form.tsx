@@ -260,6 +260,10 @@ export function ContentSectionForm({
                 onUploadError={(error) => { toast.error(error.message); }}
                 appearance={{ button: "text-xs h-auto px-2 py-1", allowedContent: "hidden" }}
               />
+              {values.imageUrl && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={values.imageUrl} alt="Preview" className="mt-1 h-24 w-auto rounded border border-border/70 object-cover" />
+              )}
             </div>
             <div className="space-y-1.5">
               <Label>Link</Label>
@@ -349,6 +353,10 @@ export function ContentSectionForm({
                       onUploadError={(error) => { toast.error(error.message); }}
                       appearance={{ button: "text-xs h-auto px-2 py-1", allowedContent: "hidden" }}
                     />
+                    {item.imageUrl && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={item.imageUrl} alt="Preview" className="mt-1 h-24 w-auto rounded border border-border/70 object-cover" />
+                    )}
                   </div>
                 </div>
               </div>
