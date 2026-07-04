@@ -1,7 +1,5 @@
-import { UnitPage } from "@/components/public/unit-page";
-import { UNITS } from "@/lib/units";
+import { ManagementProtectedPage } from "@/components/public/management-protected-page";
 
 export default function Tingkatan6Page() {
-  const unit = UNITS.find((u) => u.slug === "tingkatan-6")!;
-  return <UnitPage unit={unit} />;
+  return <ManagementProtectedPage unitSlug="tingkatan-6" />;
 }
