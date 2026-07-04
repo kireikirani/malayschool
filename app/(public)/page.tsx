@@ -19,6 +19,7 @@ import { ContactSection } from "@/components/public/home/contact-section";
 import { StatsCounter } from "@/components/public/home/stats-counter";
 import { PibgDonation } from "@/components/public/home/pibg-donation";
 import { CountdownSpm } from "@/components/public/home/countdown-spm";
+import { VisionMission } from "@/components/public/home/vision-mission";
 import { ScrollAnimation } from "@/components/ui/scroll-animation";
 import { getPublicContentSection } from "@/lib/content";
 import { getSettings } from "@/lib/site-settings";
@@ -71,6 +72,8 @@ export default async function HomePage() {
           </div>
         </section>
       ) : null}
+
+      <VisionMission vision={settings.schoolVision} mission={settings.schoolMission} />
 
       <WhyChooseUs />
       <AcademicPrograms />

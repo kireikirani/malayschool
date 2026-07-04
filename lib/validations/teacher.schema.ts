@@ -6,6 +6,7 @@ const teacherFields = z.object({
   position: optionalTrimmedString(255),
   photo: imagePathSchema.optional(),
   biography: optionalTrimmedString(5000),
+  sortOrder: z.coerce.number().int().min(0).max(9999).default(0),
   status: z.enum(["active", "inactive"]),
 });
 
@@ -17,5 +18,4 @@ export const updateTeacherSchema = teacherFields.partial();
 
 export const teacherQuerySchema = paginationSchema.extend({
   status: z.enum(["active", "inactive"]).optional(),
-  sort: z.enum(["name", "position"]).default("name"),
 });

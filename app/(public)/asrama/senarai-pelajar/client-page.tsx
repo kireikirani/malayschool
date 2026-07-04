@@ -1,37 +1,125 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Lock, Search, FileText, Unlock, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
+import { Lock, Search, Unlock, LogOut, ChevronLeft, ChevronRight, User, Phone, BookOpen, BedDouble } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { fetchStudentsAction } from "./actions";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { fetchStudentsAction, type StudentData } from "./actions";
 import { toast } from "sonner";
-import { ScrollAnimation } from "@/components/ui/scroll-animation";
 
-type Student = {
-  id: number;
-  nama: string;
-  jantina: string;
-  tingkatan: string;
-  dorm: string;
-  noWaris: string | null;
-};
+type Student = StudentData;
+
+type GenderFilter = "all" | "lelaki" | "perempuan";
 
 const ITEMS_PER_PAGE = 20;
+
+const COLOR_SCHEMES = {
+  blue: {
+    headerBg: "bg-blue-600/10 border-blue-200/60",
+    headerText: "text-blue-700",
+    rowHover: "hover:bg-blue-50/60",
+    nameColor: "text-blue-700 hover:text-blue-900",
+  },
+  pink: {
+    headerBg: "bg-pink-500/10 border-pink-200/60",
+    headerText: "text-pink-700",
+    rowHover: "hover:bg-pink-50/60",
+    nameColor: "text-pink-700 hover:text-pink-900",
+  },
+} as const;
+
+function StudentDetailDialog({
+  student,
+  open,
+  onOpenChange,
+}: {
+  student: Student | null;
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+}) {
+  if (!student) return null;
+  const isLelaki = student.jantina === "lelaki";
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-sm p-0 overflow-hidden">
+        {/* Top colored banner */}
+        <div className={`h-24 w-full ${isLelaki ? "bg-blue-600" : "bg-pink-500"}`} />
+
+        {/* Avatar overlapping banner */}
+        <div className="px-6 -mt-12">
+          <div className={`size-20 rounded-full overflow-hidden border-4 border-white shadow-md ${isLelaki ? "bg-blue-100" : "bg-pink-100"} flex items-center justify-center`}>
+            {student.foto ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={student.foto} alt={student.nama} className="w-full h-full object-cover" />
+            ) : (
+              <User className={`size-9 ${isLelaki ? "text-blue-400" : "text-pink-400"}`} />
+            )}
+          </div>
+        </div>
+
+        <DialogHeader className="px-6 pt-2 pb-1">
+          <DialogTitle className="text-lg font-heading font-bold leading-tight">{student.nama}</DialogTitle>
+          <p className={`text-sm font-medium ${isLelaki ? "text-blue-600" : "text-pink-500"}`}>
+            {isLelaki ? "Aspura (Pelajar Lelaki)" : "Aspuri (Pelajar Perempuan)"}
+          </p>
+        </DialogHeader>
+
+        <div className="px-6 pb-6 space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div className={`rounded-xl p-3 ${isLelaki ? "bg-blue-50" : "bg-pink-50"}`}>
+              <div className="flex items-center gap-1.5 mb-1">
+                <BookOpen className={`size-3.5 ${isLelaki ? "text-blue-500" : "text-pink-500"}`} />
+                <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Tingkatan</span>
+              </div>
+              <p className="text-sm font-semibold">{student.tingkatan}</p>
+            </div>
+            <div className={`rounded-xl p-3 ${isLelaki ? "bg-blue-50" : "bg-pink-50"}`}>
+              <div className="flex items-center gap-1.5 mb-1">
+                <BedDouble className={`size-3.5 ${isLelaki ? "text-blue-500" : "text-pink-500"}`} />
+                <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Dorm</span>
+              </div>
+              <p className="text-sm font-semibold">{student.dorm}</p>
+            </div>
+          </div>
+
+          {(student.namaWaris || student.noWaris) && (
+            <div className="rounded-xl border border-border/60 p-3 space-y-1.5">
+              <div className="flex items-center gap-1.5">
+                <Phone className="size-3.5 text-muted-foreground" />
+                <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Maklumat Waris</span>
+              </div>
+              {student.namaWaris && (
+                <p className="text-sm font-medium">{student.namaWaris}</p>
+              )}
+              {student.noWaris && (
+                <p className="text-sm text-muted-foreground">{student.noWaris}</p>
+              )}
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 function PaginatedStudentTable({
   title,
   students,
   search,
+  onSelectStudent,
+  colorScheme,
 }: {
   title: string;
   students: Student[];
   search: string;
+  onSelectStudent: (student: Student) => void;
+  colorScheme: "blue" | "pink";
 }) {
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter based on search query
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
     if (!q) return students;
@@ -46,10 +134,9 @@ function PaginatedStudentTable({
   const totalItems = filtered.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-  // Adjust page number if items change
   useEffect(() => {
     setCurrentPage(1);
-  }, [search]);
+  }, [search, students]);
 
   const paginated = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -59,16 +146,17 @@ function PaginatedStudentTable({
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE + 1;
   const endIndex = Math.min(currentPage * ITEMS_PER_PAGE, totalItems);
 
+  const { headerBg, headerText, rowHover, nameColor } = COLOR_SCHEMES[colorScheme];
+
   return (
     <div className="space-y-4">
-      <h3 className="font-heading text-lg font-semibold">{title}</h3>
-      <div className="overflow-x-auto border border-border/70 bg-card">
-        <div className="border-b border-border/70 bg-muted/40 px-5 py-3">
-          <span className="font-heading text-sm font-semibold">{title}</span>
+      <div className="overflow-x-auto border border-border/70 bg-card shadow-sm">
+        <div className={`border-b px-5 py-3 ${headerBg}`}>
+          <span className={`font-heading text-sm font-semibold ${headerText}`}>{title}</span>
         </div>
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border/50">
+            <tr className="border-b border-border/50 bg-muted/20">
               <th className="w-8 px-5 py-2.5 text-left text-xs font-medium text-muted-foreground">#</th>
               <th className="px-5 py-2.5 text-left text-xs font-medium text-muted-foreground">Nama</th>
               <th className="px-5 py-2.5 text-left text-xs font-medium text-muted-foreground">Tingkatan</th>
@@ -85,11 +173,19 @@ function PaginatedStudentTable({
               </tr>
             ) : (
               paginated.map((row, index) => (
-                <tr key={row.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30 transition-colors">
+                <tr
+                  key={row.id}
+                  className={`border-b border-border/40 last:border-0 transition-colors cursor-pointer ${rowHover}`}
+                  onClick={() => onSelectStudent(row)}
+                >
                   <td className="px-5 py-3.5 text-muted-foreground">
                     {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
                   </td>
-                  <td className="px-5 py-3.5 font-medium">{row.nama}</td>
+                  <td className="px-5 py-3.5">
+                    <span className={`font-medium underline-offset-2 hover:underline ${nameColor}`}>
+                      {row.nama}
+                    </span>
+                  </td>
                   <td className="px-5 py-3.5 text-muted-foreground">{row.tingkatan}</td>
                   <td className="px-5 py-3.5 text-muted-foreground hidden sm:table-cell">{row.dorm}</td>
                   <td className="px-5 py-3.5 text-muted-foreground hidden md:table-cell">{row.noWaris ?? "-"}</td>
@@ -98,8 +194,7 @@ function PaginatedStudentTable({
             )}
           </tbody>
         </table>
-        
-        {/* Pagination Footer */}
+
         {totalPages > 1 && (
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-border/40 px-5 py-3 bg-muted/10">
             <p className="text-xs text-muted-foreground">
@@ -142,7 +237,7 @@ function PaginatedStudentTable({
             </div>
           </div>
         )}
-        
+
         {totalPages <= 1 && totalItems > 0 && (
           <div className="border-t border-border/40 px-5 py-3 text-center bg-muted/10">
             <p className="text-xs text-muted-foreground">
@@ -161,8 +256,9 @@ export function AsramaStudentSubpage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [search, setSearch] = useState("");
+  const [genderFilter, setGenderFilter] = useState<GenderFilter>("all");
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
-  // Check if session has stored password
   useEffect(() => {
     const savedPassword = sessionStorage.getItem("asrama_page_password");
     if (savedPassword) {
@@ -210,13 +306,28 @@ export function AsramaStudentSubpage() {
     setIsAuthenticated(false);
     setStudents([]);
     setPassword("");
+    setGenderFilter("all");
     sessionStorage.removeItem("asrama_page_password");
     toast.info("Halaman dikunci semula");
   };
 
-  // Filter boys and girls
-  const boys = useMemo(() => students.filter((s) => s.jantina === "lelaki"), [students]);
-  const girls = useMemo(() => students.filter((s) => s.jantina === "perempuan"), [students]);
+  const handleSelectStudent = (student: Student) => {
+    setSelectedStudent(student);
+  };
+
+  const { boys, girls } = useMemo(() => {
+    const boys: Student[] = [];
+    const girls: Student[] = [];
+    for (const s of students) {
+      if (s.jantina === "lelaki") boys.push(s);
+      else girls.push(s);
+    }
+    return { boys, girls };
+  }, [students]);
+
+  const toggleFilter = (f: GenderFilter) => {
+    setGenderFilter((prev) => (prev === f ? "all" : f));
+  };
 
   if (isVerifying && !isAuthenticated) {
     return (
@@ -229,7 +340,6 @@ export function AsramaStudentSubpage() {
     );
   }
 
-  // PASSWORD PROMPT VIEW
   if (!isAuthenticated) {
     return (
       <div className="mx-auto max-w-md px-4 py-20">
@@ -265,7 +375,6 @@ export function AsramaStudentSubpage() {
     );
   }
 
-  // STUDENT LISTS VIEW
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 md:py-16 space-y-10">
       {/* Header and Controls */}
@@ -283,7 +392,6 @@ export function AsramaStudentSubpage() {
           </p>
         </div>
 
-        {/* Toolbar */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full max-w-md md:w-auto">
           <div className="relative flex-1 sm:w-64">
             <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground/75" />
@@ -302,27 +410,98 @@ export function AsramaStudentSubpage() {
         </div>
       </div>
 
-      {/* Stats row */}
+      {/* Stats / Filter Cards */}
       <div className="grid gap-4 grid-cols-3 max-w-2xl">
-        {[
-          { label: "Jumlah Pelajar", value: students.length },
-          { label: "Aspura (Lelaki)", value: boys.length },
-          { label: "Aspuri (Perempuan)", value: girls.length },
-        ].map((stat) => (
-          <div key={stat.label} className="border border-border/70 bg-card p-4 text-center">
-            <p className="font-heading text-2xl font-semibold text-primary">{stat.value}</p>
-            <p className="mt-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-              {stat.label}
-            </p>
-          </div>
-        ))}
+        {/* Total - tidak boleh filter */}
+        <div className="border border-blue-200 bg-blue-50 p-4 text-center rounded-sm">
+          <p className="font-heading text-2xl font-semibold text-blue-700">{students.length}</p>
+          <p className="mt-1 text-[11px] font-medium text-blue-500 uppercase tracking-wide">
+            Jumlah Pelajar
+          </p>
+        </div>
+
+        {/* Lelaki filter card */}
+        <button
+          type="button"
+          onClick={() => toggleFilter("lelaki")}
+          className={`border p-4 text-center rounded-sm transition-all ${
+            genderFilter === "lelaki"
+              ? "bg-blue-600 border-blue-600 shadow-md shadow-blue-200"
+              : "bg-sky-50 border-sky-200 hover:bg-sky-100"
+          }`}
+        >
+          <p className={`font-heading text-2xl font-semibold ${genderFilter === "lelaki" ? "text-white" : "text-sky-700"}`}>
+            {boys.length}
+          </p>
+          <p className={`mt-1 text-[11px] font-medium uppercase tracking-wide ${genderFilter === "lelaki" ? "text-blue-100" : "text-sky-500"}`}>
+            Aspura (Lelaki)
+          </p>
+        </button>
+
+        {/* Perempuan filter card */}
+        <button
+          type="button"
+          onClick={() => toggleFilter("perempuan")}
+          className={`border p-4 text-center rounded-sm transition-all ${
+            genderFilter === "perempuan"
+              ? "bg-pink-500 border-pink-500 shadow-md shadow-pink-200"
+              : "bg-pink-50 border-pink-200 hover:bg-pink-100"
+          }`}
+        >
+          <p className={`font-heading text-2xl font-semibold ${genderFilter === "perempuan" ? "text-white" : "text-pink-700"}`}>
+            {girls.length}
+          </p>
+          <p className={`mt-1 text-[11px] font-medium uppercase tracking-wide ${genderFilter === "perempuan" ? "text-pink-100" : "text-pink-400"}`}>
+            Aspuri (Perempuan)
+          </p>
+        </button>
       </div>
+
+      {/* Filter label */}
+      {genderFilter !== "all" && (
+        <div className="flex items-center gap-2 -mt-4">
+          <span className="text-xs text-muted-foreground">Menapis:</span>
+          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${genderFilter === "lelaki" ? "bg-blue-100 text-blue-700" : "bg-pink-100 text-pink-700"}`}>
+            {genderFilter === "lelaki" ? "Pelajar Lelaki" : "Pelajar Perempuan"}
+          </span>
+          <button
+            type="button"
+            onClick={() => setGenderFilter("all")}
+            className="text-xs text-muted-foreground underline hover:text-foreground"
+          >
+            Padam penapis
+          </button>
+        </div>
+      )}
 
       {/* Tables section */}
       <div className="space-y-12">
-        <PaginatedStudentTable title="Aspura (Pelajar Lelaki)" students={boys} search={search} />
-        <PaginatedStudentTable title="Aspuri (Pelajar Perempuan)" students={girls} search={search} />
+        {(genderFilter === "all" || genderFilter === "lelaki") && (
+          <PaginatedStudentTable
+            title="Aspura (Pelajar Lelaki)"
+            students={boys}
+            search={search}
+            onSelectStudent={handleSelectStudent}
+            colorScheme="blue"
+          />
+        )}
+        {(genderFilter === "all" || genderFilter === "perempuan") && (
+          <PaginatedStudentTable
+            title="Aspuri (Pelajar Perempuan)"
+            students={girls}
+            search={search}
+            onSelectStudent={handleSelectStudent}
+            colorScheme="pink"
+          />
+        )}
       </div>
+
+      {/* Student detail dialog */}
+      <StudentDetailDialog
+        student={selectedStudent}
+        open={selectedStudent !== null}
+        onOpenChange={(v) => { if (!v) setSelectedStudent(null); }}
+      />
     </div>
   );
 }

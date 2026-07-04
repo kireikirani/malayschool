@@ -5,7 +5,20 @@ import { db } from "@/lib/db";
 import { asramaPelajar } from "@/db/schema";
 import { getSettings } from "@/lib/site-settings";
 
-export async function fetchStudentsAction(password: string) {
+export type StudentData = {
+  id: number;
+  nama: string;
+  jantina: string;
+  tingkatan: string;
+  dorm: string;
+  noWaris: string | null;
+  namaWaris: string | null;
+  foto: string | null;
+};
+
+export async function fetchStudentsAction(
+  password: string
+): Promise<{ success: false; error: string } | { success: true; data: StudentData[] }> {
   const settings = await getSettings();
   const validPasswords = new Set(
     [settings.asramaPassword, settings.pentadbiranPassword, "PENTADBIRAN2026"].filter(Boolean)
@@ -28,6 +41,8 @@ export async function fetchStudentsAction(password: string) {
     tingkatan: student.tingkatan,
     dorm: student.dorm,
     noWaris: student.noWaris,
+    namaWaris: student.namaWaris,
+    foto: student.foto,
   }));
 
   return { success: true, data: formatted };

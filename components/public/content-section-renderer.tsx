@@ -71,7 +71,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
 
   if (section.type === "text_block") {
     return (
-      <section className="border border-border/70 bg-card px-6 py-6">
+      <section className="bg-card px-6 py-6 shadow-sm">
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         {section.body ? (
           <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-muted-foreground">{section.body}</pre>
@@ -88,7 +88,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {section.items.map((item) => (
-            <div key={`${section.sectionKey}-${item.sortOrder}`} className="flex flex-col items-center justify-center border border-border/70 bg-card px-5 py-6 text-center">
+            <div key={`${section.sectionKey}-${item.sortOrder}`} className="flex flex-col items-center justify-center bg-card px-5 py-6 text-center shadow-sm">
               <p className="font-heading text-3xl font-semibold text-primary md:text-4xl">{item.value ?? "--"}</p>
               <p className="mt-2 text-sm text-muted-foreground">{item.label ?? item.title}</p>
             </div>
@@ -123,14 +123,14 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
 
   if (section.type === "quick_links") {
     return (
-      <section className="border border-border/70 bg-card px-6 py-6">
+      <section className="bg-card px-6 py-6 shadow-sm">
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         <div className="grid gap-3 sm:grid-cols-2">
           {section.items.map((item) => (
             <Link
               key={`${section.sectionKey}-${item.sortOrder}`}
               href={item.url || "#"}
-              className="flex items-center justify-between border border-border/70 px-4 py-3 text-sm hover:bg-muted/40"
+              className="flex items-center justify-between bg-muted/30 px-4 py-3 text-sm hover:bg-muted/60"
             >
               <span className="flex items-center gap-2">
                 <Link2 className="size-4 text-primary" />
@@ -150,12 +150,12 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         {section.imageUrl ? (
           <div className="mb-6 flex justify-center">
-            <div className="relative aspect-[3/2] w-52 overflow-hidden border border-border/70 bg-card">
+            <div className="relative aspect-[3/2] w-52 overflow-hidden bg-muted">
               <Image src={section.imageUrl} alt={section.title ?? section.sectionKey} fill className="object-contain" />
             </div>
           </div>
         ) : null}
-        <div className="overflow-x-auto border border-border/70 bg-card">
+        <div className="overflow-x-auto bg-card shadow-sm">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border/60">
@@ -187,9 +187,9 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {section.items.map((item) => (
-            <div key={`${section.sectionKey}-${item.sortOrder}`} className="flex flex-col border border-border/70 bg-card p-5">
+            <div key={`${section.sectionKey}-${item.sortOrder}`} className="flex flex-col bg-card p-5 shadow-sm">
               {item.imageUrl ? (
-                <div className="relative mb-4 aspect-video overflow-hidden border border-border/60 bg-muted">
+                <div className="relative mb-4 aspect-video overflow-hidden bg-muted">
                   <Image src={item.imageUrl} alt={item.title ?? item.label ?? "Section image"} fill className="object-cover" />
                 </div>
               ) : null}

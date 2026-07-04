@@ -23,7 +23,7 @@ export function FacilitiesPreview() {
           {FACILITIES.map((facility, i) => (
             <ScrollAnimation key={facility.title} direction="up" delay={i * 0.08} className="w-56 shrink-0 sm:w-auto">
               <div
-                className="aspect-square w-full border border-border/70 bg-muted shadow-[0_18px_40px_-34px_rgba(35,24,16,0.5)]"
+                className="aspect-square w-full bg-muted shadow-sm"
               />
               <div className="px-1 pt-4">
                 <h3 className="font-heading text-sm font-semibold">{facility.title}</h3>

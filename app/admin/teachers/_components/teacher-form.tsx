@@ -41,6 +41,7 @@ export function TeacherForm({
       position: initialData?.position ?? "",
       photo: initialData?.photo ?? undefined,
       biography: initialData?.biography ?? "",
+      sortOrder: initialData?.sortOrder ?? 0,
       status: initialData?.status ?? "active",
     },
   });
@@ -87,7 +88,7 @@ export function TeacherForm({
           name="position"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Jabatan</FormLabel>
+              <FormLabel>Jawatan</FormLabel>
               <FormControl>
                 <Input {...field} value={field.value as string} />
               </FormControl>
@@ -119,6 +120,30 @@ export function TeacherForm({
               <FormControl>
                 <Textarea rows={5} {...field} value={field.value as string} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="sortOrder"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Kedudukan (Urutan Paparan)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  min={0}
+                  max={9999}
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  className="w-32"
+                />
+              </FormControl>
+              <p className="text-xs text-muted-foreground">
+                Nombor lebih kecil dipapar dahulu. Guna 0, 1, 2... untuk susun atur guru mengikut jawatan.
+              </p>
               <FormMessage />
             </FormItem>
           )}

@@ -1,4 +1,4 @@
-import { index, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { index, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 export const teachers = mysqlTable(
   "teachers",
@@ -8,9 +8,14 @@ export const teachers = mysqlTable(
     position: varchar("position", { length: 255 }),
     photo: varchar("photo", { length: 2048 }),
     biography: text("biography"),
+    sortOrder: int("sort_order").notNull().default(0),
     status: mysqlEnum("status", ["active", "inactive"]).notNull().default("active"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
   },
-  (table) => [index("teachers_status_idx").on(table.status), index("teachers_name_idx").on(table.name)],
+  (table) => [
+    index("teachers_status_idx").on(table.status),
+    index("teachers_name_idx").on(table.name),
+    index("teachers_sort_order_idx").on(table.sortOrder),
+  ],
 );

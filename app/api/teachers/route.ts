@@ -13,7 +13,7 @@ export async function GET(req: Request) {
     const session = await getSession(req);
     const isAdmin = session?.user.role === "admin";
 
-    const { page, limit, q, status, sort } = parseQuery(
+    const { page, limit, q, status } = parseQuery(
       new URL(req.url).searchParams,
       teacherQuerySchema,
     );
@@ -27,10 +27,8 @@ export async function GET(req: Request) {
     if (q) conditions.push(like(teachers.name, `%${q}%`));
 
     const where = conditions.length ? and(...conditions) : undefined;
-    const orderColumn = sort === "position" ? teachers.position : teachers.name;
-
     const [rows, [{ total }]] = await Promise.all([
-      db.select().from(teachers).where(where).orderBy(asc(orderColumn)).limit(limit).offset((page - 1) * limit),
+      db.select().from(teachers).where(where).orderBy(asc(teachers.sortOrder), asc(teachers.name)).limit(limit).offset((page - 1) * limit),
       db.select({ total: count() }).from(teachers).where(where),
     ]);
 

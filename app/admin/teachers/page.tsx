@@ -30,6 +30,7 @@ type TeacherRow = {
   id: string;
   name: string;
   position: string | null;
+  sortOrder: number;
   status: "active" | "inactive";
 };
 
@@ -90,6 +91,15 @@ export default function TeachersListPage() {
   }
 
   const columns: ColumnDef<TeacherRow, unknown>[] = [
+    {
+      accessorKey: "sortOrder",
+      header: "Urutan",
+      cell: ({ row }) => (
+        <span className="inline-flex size-7 items-center justify-center rounded-full bg-muted text-xs font-semibold">
+          {row.original.sortOrder}
+        </span>
+      ),
+    },
     { accessorKey: "name", header: "Nama" },
     { accessorKey: "position", header: "Jawatan", cell: ({ row }) => row.original.position ?? "-" },
     {
