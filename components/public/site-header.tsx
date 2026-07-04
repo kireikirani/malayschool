@@ -30,6 +30,11 @@ const NEWS_GALLERY_LINKS = [
   { href: "/gallery", label: "Galeri" },
 ];
 
+const ASRAMA_LINKS = [
+  { href: "/asrama", label: "Maklumat Asrama" },
+  { href: "/asrama/senarai-pelajar", label: "Senarai Pelajar" },
+];
+
 const MANAGEMENT_LINKS = [
   { href: "/pentadbiran", label: "Pentadbiran" },
   { href: "/kurikulum", label: "Kurikulum" },
@@ -123,9 +128,22 @@ export function SiteHeader() {
             </DropdownMenu>
 
             {/* 4. Asrama */}
-            <Link href="/asrama" className={getLinkClass(isAsramaActive)}>
-              Asrama
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger className={getLinkClass(isAsramaActive) + " flex items-center gap-1.5 cursor-pointer"}>
+                Asrama
+                <ChevronDown className="size-3.5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {ASRAMA_LINKS.map((link) => {
+                  const isLinkActive = pathname === link.href;
+                  return (
+                    <DropdownMenuItem key={link.href} asChild className={cn(isLinkActive && "bg-muted font-medium")}>
+                      <Link href={link.href}>{link.label}</Link>
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* 5. Pengurusan & Pentadbiran */}
             <DropdownMenu>
@@ -238,16 +256,32 @@ export function SiteHeader() {
                 </div>
 
                 {/* Asrama */}
-                <Link
-                  href="/asrama"
-                  onClick={() => setOpen(false)}
-                  className={cn(
-                    "text-base font-semibold transition-colors",
-                    isAsramaActive ? "text-primary font-bold" : "text-foreground hover:text-primary"
-                  )}
-                >
-                  Asrama
-                </Link>
+                <div className="space-y-2">
+                  <p className={cn(
+                    "text-sm font-semibold tracking-wide uppercase transition-colors",
+                    isAsramaActive ? "text-primary font-bold" : "text-muted-foreground"
+                  )}>
+                    Asrama
+                  </p>
+                  <div className="flex flex-col gap-2 pl-3 border-l border-border">
+                    {ASRAMA_LINKS.map((link) => {
+                      const isLinkActive = pathname === link.href;
+                      return (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          onClick={() => setOpen(false)}
+                          className={cn(
+                            "text-sm font-medium transition-colors",
+                            isLinkActive ? "text-primary font-bold" : "text-muted-foreground hover:text-primary"
+                          )}
+                        >
+                          {link.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
 
                 {/* Pengurusan & Pentadbiran */}
                 <div className="space-y-2">
