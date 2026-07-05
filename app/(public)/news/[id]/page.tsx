@@ -3,8 +3,22 @@ export const dynamic = "force-dynamic";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { news } from "@/db/schema";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const [row] = await db.select({ title: news.title, thumbnail: news.thumbnail }).from(news).where(eq(news.id, id)).limit(1);
+  if (!row) return {};
+  return {
+    title: row.title,
+    openGraph: {
+      title: row.title,
+      ...(row.thumbnail ? { images: [row.thumbnail] } : {}),
+    },
+  };
+}
 import { NewsContent } from "@/components/public/news-content";
 import { AdSlot } from "@/components/public/ad-slot";
 

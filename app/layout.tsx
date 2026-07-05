@@ -3,7 +3,7 @@ import { Fraunces, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
-import { SCHOOL_LOGO_URL, SCHOOL_NAME, SCHOOL_OG_IMAGE_URL } from "@/lib/brand";
+import { SCHOOL_LOGO_URL, SCHOOL_NAME, SCHOOL_OG_IMAGE_URL, SCHOOL_SHORT_NAME } from "@/lib/brand";
 import { getSettings } from "@/lib/site-settings";
 import { THEME_PRESETS } from "@/lib/theme";
 
@@ -21,15 +21,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: process.env.NEXT_PUBLIC_APP_URL ? new URL(process.env.NEXT_PUBLIC_APP_URL) : undefined,
-  title: SCHOOL_NAME,
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://malayschool.vercel.app/"),
+  title: {
+    default: SCHOOL_NAME,
+    template: `%s | ${SCHOOL_SHORT_NAME}`,
+  },
   description: `Laman web rasmi ${SCHOOL_NAME}`,
   icons: {
     icon: SCHOOL_LOGO_URL,
   },
   openGraph: {
     title: SCHOOL_NAME,
+    description: `Laman web rasmi ${SCHOOL_NAME}`,
     images: [SCHOOL_OG_IMAGE_URL],
+    locale: "ms_MY",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
   },
 };
 

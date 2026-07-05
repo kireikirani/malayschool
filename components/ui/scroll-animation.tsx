@@ -23,10 +23,9 @@ const generateVariants = (direction: Direction) => {
   const value = direction === 'right' || direction === 'down' ? 20 : -20;
 
   return {
-    hidden: { filter: 'blur(10px)', opacity: 0, [axis]: value },
+    hidden: { filter: 'blur(8px)', [axis]: value },
     visible: {
       filter: 'blur(0px)',
-      opacity: 1,
       [axis]: 0,
       transition: {
         duration: 0.7,

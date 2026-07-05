@@ -1,6 +1,12 @@
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Asrama",
+  description: "Maklumat asrama SMK Telok Panglima Garang — fasiliti, warden, jawatankuasa, dan senarai pelajar penghuni.",
+};
 import { and, count, desc, eq, gte, isNull, or } from "drizzle-orm";
 import { ArrowRight, Users } from "lucide-react";
 import { db } from "@/lib/db";

@@ -3,8 +3,20 @@ export const dynamic = "force-dynamic";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { teachers } from "@/db/schema";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const [row] = await db.select({ name: teachers.name, position: teachers.position }).from(teachers).where(eq(teachers.id, id)).limit(1);
+  if (!row) return {};
+  return {
+    title: row.name,
+    description: row.position ?? undefined,
+    openGraph: { title: row.name },
+  };
+}
 
 export default async function TeacherDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

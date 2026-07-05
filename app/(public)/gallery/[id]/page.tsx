@@ -1,49 +1,39 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { use } from "react";
-import Image from "next/image";
+import { eq, asc } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Skeleton } from "@/components/ui/skeleton";
+import type { Metadata } from "next";
+import { db } from "@/lib/db";
+import { galleryAlbums, galleryItems } from "@/db/schema";
+import { GalleryLightbox } from "./lightbox";
 
-type GalleryItem = { id: string; image: string; caption: string | null };
-type Album = { id: string; name: string; description: string | null; items: GalleryItem[] };
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const [album] = await db
+    .select({ name: galleryAlbums.name, description: galleryAlbums.description })
+    .from(galleryAlbums)
+    .where(eq(galleryAlbums.id, id))
+    .limit(1);
+  if (!album) return {};
+  return {
+    title: album.name,
+    description: album.description ?? `Koleksi foto ${album.name}`,
+    openGraph: {
+      title: album.name,
+      description: album.description ?? `Koleksi foto ${album.name}`,
+    },
+  };
+}
 
-export default function AlbumDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const [album, setAlbum] = useState<Album | null>(null);
-  const [notFoundFlag, setNotFoundFlag] = useState(false);
-  const [activeImage, setActiveImage] = useState<GalleryItem | null>(null);
+export default async function AlbumDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
-  useEffect(() => {
-    fetch(`/api/gallery/albums/${id}`)
-      .then((res) => {
-        if (res.status === 404) {
-          setNotFoundFlag(true);
-          return null;
-        }
-        return res.json();
-      })
-      .then((body) => {
-        if (body) setAlbum(body.data);
-      });
-  }, [id]);
+  const [album] = await db.select().from(galleryAlbums).where(eq(galleryAlbums.id, id)).limit(1);
+  if (!album) notFound();
 
-  if (notFoundFlag) notFound();
-
-  if (!album) {
-    return (
-      <div className="mx-auto max-w-6xl space-y-6 px-4 py-10">
-        <Skeleton className="h-8 w-48" />
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="aspect-[4/3] w-full" />
-          ))}
-        </div>
-      </div>
-    );
-  }
+  const items = await db
+    .select()
+    .from(galleryItems)
+    .where(eq(galleryItems.albumId, id))
+    .orderBy(asc(galleryItems.order));
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 md:py-14">
@@ -52,32 +42,14 @@ export default function AlbumDetailPage({ params }: { params: Promise<{ id: stri
         {album.description && <p className="text-muted-foreground">{album.description}</p>}
       </div>
 
-      {album.items.length === 0 && <p className="text-sm text-muted-foreground">Belum ada foto di album ini.</p>}
-
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {album.items.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className="relative aspect-[4/3] overflow-hidden border border-border/70 bg-muted shadow-[0_18px_40px_-34px_rgba(35,24,16,0.5)]"
-            onClick={() => setActiveImage(item)}
-          >
-            <Image src={item.image} alt={item.caption ?? album.name} fill className="object-cover" />
-          </button>
-        ))}
-      </div>
-
-      <Dialog open={!!activeImage} onOpenChange={(open) => !open && setActiveImage(null)}>
-        <DialogContent className="max-w-3xl">
-          <DialogTitle className="sr-only">{activeImage?.caption ?? album.name}</DialogTitle>
-          {activeImage && (
-            <div className="relative h-[70vh] w-full overflow-hidden border border-border/70 bg-muted">
-              <Image src={activeImage.image} alt={activeImage.caption ?? album.name} fill className="object-contain" />
-            </div>
-          )}
-          {activeImage?.caption && <p className="text-sm text-muted-foreground">{activeImage.caption}</p>}
-        </DialogContent>
-      </Dialog>
+      {items.length === 0 ? (
+        <p className="text-sm text-muted-foreground">Belum ada foto di album ini.</p>
+      ) : (
+        <GalleryLightbox
+          items={items.map((i) => ({ id: i.id, image: i.image, caption: i.caption }))}
+          albumName={album.name}
+        />
+      )}
     </div>
   );
 }

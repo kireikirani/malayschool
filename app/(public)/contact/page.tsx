@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { Mail, MapPin, Phone, Printer } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Hubungi Kami",
+  description: "Maklumat hubungan SMK Telok Panglima Garang — alamat, nombor telefon, faks, dan e-mel rasmi sekolah.",
+};
 import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader } from "@/components/public/page-header";
 import { SCHOOL_ADDRESS, SCHOOL_EMAIL, SCHOOL_FAX, SCHOOL_MAPS_EMBED_URL, SCHOOL_PHONE } from "@/lib/brand";

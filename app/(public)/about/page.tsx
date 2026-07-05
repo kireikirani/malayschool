@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { PageHeader } from "@/components/public/page-header";
 import { ContentSectionRenderer } from "@/components/public/content-section-renderer";
 import { VisionMission } from "@/components/public/home/vision-mission";
 import { getPublicContent } from "@/lib/content";
 import { getSettings } from "@/lib/site-settings";
+
+export const metadata: Metadata = {
+  title: "Tentang Kami",
+  description: "Profil, visi, misi, dan hala tuju SMK Telok Panglima Garang — melahirkan modal insan yang cemerlang dalam akademik, sahsiah, dan kokurikulum.",
+};
 
 export default async function AboutPage() {
   const [settings, sections] = await Promise.all([getSettings(), getPublicContent("about")]);
