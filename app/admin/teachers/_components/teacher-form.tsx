@@ -137,6 +137,7 @@ export function TeacherForm({
                   min={0}
                   max={9999}
                   {...field}
+                  value={field.value as number}
                   onChange={(e) => field.onChange(Number(e.target.value))}
                   className="w-32"
                 />
