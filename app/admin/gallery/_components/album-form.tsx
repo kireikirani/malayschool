@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { ImagePicker } from "@/components/admin/image-picker";
 import { createAlbumSchema } from "@/lib/validations/gallery.schema";
 import { apiSend } from "@/lib/fetcher";
@@ -68,6 +68,7 @@ export function AlbumForm({
               <FormControl>
                 <Input {...field} />
               </FormControl>
+              <FormDescription>Nama album yang akan dipaparkan di galeri awam.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -82,6 +83,7 @@ export function AlbumForm({
               <FormControl>
                 <Textarea rows={4} {...field} value={field.value as string} />
               </FormControl>
+              <FormDescription>Keterangan ringkas album (opsional). Dipaparkan di bawah nama album.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -96,6 +98,7 @@ export function AlbumForm({
               <FormControl>
                 <ImagePicker value={field.value} onChange={field.onChange} />
               </FormControl>
+              <FormDescription>Gambar utama yang mewakili album ini dalam senarai galeri.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

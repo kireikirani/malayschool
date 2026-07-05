@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronRight, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,17 +28,7 @@ const SECTION_TYPES: SectionType[] = [
 ];
 
 function emptyItem(sortOrder: number): ContentItem {
-  return {
-    label: "",
-    title: "",
-    value: "",
-    body: "",
-    url: "",
-    fileUrl: "",
-    imageUrl: "",
-    meta: null,
-    sortOrder,
-  };
+  return { label: "", title: "", value: "", body: "", url: "", fileUrl: "", imageUrl: "", meta: null, sortOrder };
 }
 
 type SectionValues = {
@@ -75,6 +65,23 @@ function normalizeInitialValue(section?: Partial<ContentSection> & { pageKey?: s
   };
 }
 
+function Collapsible({ label, children, defaultOpen = false }: { label: string; children: React.ReactNode; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="rounded-md border border-dashed border-border/60">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center gap-2 px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground"
+      >
+        {open ? <ChevronDown className="size-3.5" /> : <ChevronRight className="size-3.5" />}
+        {label}
+      </button>
+      {open && <div className="space-y-4 border-t border-dashed border-border/60 p-3">{children}</div>}
+    </div>
+  );
+}
+
 export function ContentSectionForm({
   mode,
   action,
@@ -101,14 +108,14 @@ export function ContentSectionForm({
   function updateItem(index: number, patch: Partial<ContentItem>) {
     setValues((prev) => ({
       ...prev,
-      items: prev.items.map((item, itemIndex) => (itemIndex === index ? { ...item, ...patch } : item)),
+      items: prev.items.map((item, i) => (i === index ? { ...item, ...patch } : item)),
     }));
   }
 
   function removeItem(index: number) {
     setValues((prev) => ({
       ...prev,
-      items: prev.items.filter((_, itemIndex) => itemIndex !== index).map((item, itemIndex) => ({ ...item, sortOrder: itemIndex })),
+      items: prev.items.filter((_, i) => i !== index).map((item, i) => ({ ...item, sortOrder: i })),
     }));
   }
 
@@ -121,12 +128,8 @@ export function ContentSectionForm({
     try {
       const url =
         action === "create"
-          ? mode === "public"
-            ? "/api/admin/content"
-            : "/api/admin/units"
-          : mode === "public"
-            ? `/api/admin/content/${initialValue?.id}`
-            : `/api/admin/units/${initialValue?.id}`;
+          ? mode === "public" ? "/api/admin/content" : "/api/admin/units"
+          : mode === "public" ? `/api/admin/content/${initialValue?.id}` : `/api/admin/units/${initialValue?.id}`;
 
       const method = action === "create" ? "POST" : "PATCH";
       const payload = {
@@ -141,17 +144,10 @@ export function ContentSectionForm({
         linkUrl: values.linkUrl,
         isActive: values.isActive,
         sortOrder: Number(values.sortOrder),
-        items: values.items.map((item, index) => ({
-          ...item,
-          sortOrder: Number(item.sortOrder ?? index),
-        })),
+        items: values.items.map((item, index) => ({ ...item, sortOrder: Number(item.sortOrder ?? index) })),
       };
 
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const body = await res.json().catch(() => null);
       if (!res.ok) throw new Error(body?.error?.message ?? "Gagal menyimpan");
       toast.success(action === "create" ? "Seksyen ditambah" : "Seksyen dikemaskini");
@@ -171,116 +167,106 @@ export function ContentSectionForm({
           <CardTitle className="text-base">Maklumat Seksyen</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Row 1: Unit/Page + Type */}
           <div className="grid gap-4 md:grid-cols-2">
             {mode === "public" ? (
               <div className="space-y-1.5">
                 <Label>Halaman</Label>
-                <Select value={values.pageKey} onValueChange={(value) => setField("pageKey", value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Pilih halaman" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {(pageOptions ?? []).map((page) => (
-                      <SelectItem key={page} value={page}>
-                        {page}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
+                <Select value={values.pageKey} onValueChange={(v) => setField("pageKey", v)}>
+                  <SelectTrigger><SelectValue placeholder="Pilih halaman" /></SelectTrigger>
+                  <SelectContent>{(pageOptions ?? []).map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
                 </Select>
+                <p className="text-xs text-muted-foreground">Halaman awam di mana seksyen ini akan dipaparkan.</p>
               </div>
             ) : (
               <div className="space-y-1.5">
                 <Label>Unit</Label>
-                <Select value={values.unitSlug} onValueChange={(value) => setField("unitSlug", value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Pilih unit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {(unitOptions ?? []).map((unit) => (
-                      <SelectItem key={unit.value} value={unit.value}>
-                        {unit.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
+                <Select value={values.unitSlug} onValueChange={(v) => setField("unitSlug", v)}>
+                  <SelectTrigger><SelectValue placeholder="Pilih unit" /></SelectTrigger>
+                  <SelectContent>{(unitOptions ?? []).map((u) => <SelectItem key={u.value} value={u.value}>{u.label}</SelectItem>)}</SelectContent>
                 </Select>
+                <p className="text-xs text-muted-foreground">Unit yang berkaitan dengan seksyen ini.</p>
               </div>
             )}
-
             <div className="space-y-1.5">
               <Label>Jenis Seksyen</Label>
-              <Select value={values.type} onValueChange={(value) => setField("type", value as SectionType)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Pilih jenis" />
-                </SelectTrigger>
-                <SelectContent>
-                  {SECTION_TYPES.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+              <Select value={values.type} onValueChange={(v) => setField("type", v as SectionType)}>
+                <SelectTrigger><SelectValue placeholder="Pilih jenis" /></SelectTrigger>
+                <SelectContent>{SECTION_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
               </Select>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label>Section Key</Label>
-              <Input value={values.sectionKey} onChange={(event) => setField("sectionKey", event.target.value)} />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label>Sort Order</Label>
-              <Input type="number" value={values.sortOrder} onChange={(event) => setField("sortOrder", Number(event.target.value))} />
+              <p className="text-xs text-muted-foreground">Tentukan bagaimana konten seksyen ini akan dipaparkan (jadual, teks, statistik, dll).</p>
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <Label>Tajuk</Label>
-            <Input value={values.title} onChange={(event) => setField("title", event.target.value)} />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label>Subtitle</Label>
-            <Textarea rows={3} value={values.subtitle} onChange={(event) => setField("subtitle", event.target.value)} />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label>Body</Label>
-            <Textarea rows={5} value={values.body} onChange={(event) => setField("body", event.target.value)} />
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
+          {/* Row 2: Title + Sort Order + Active */}
+          <div className="grid gap-4 md:grid-cols-[1fr_120px]">
             <div className="space-y-1.5">
-              <Label>Image URL</Label>
-              <Input value={values.imageUrl} onChange={(event) => setField("imageUrl", event.target.value)} />
-              <UploadButton
-                endpoint="mediaUploader"
-                onClientUploadComplete={(files) => {
-                  if (files[0]) setField("imageUrl", files[0].ufsUrl);
-                }}
-                onUploadError={(error) => { toast.error(error.message); }}
-                appearance={{ button: "text-xs h-auto px-2 py-1", allowedContent: "hidden" }}
-              />
-              {values.imageUrl && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={values.imageUrl} alt="Preview" className="mt-1 h-24 w-auto rounded border border-border/70 object-cover" />
-              )}
+              <Label>Tajuk</Label>
+              <Input value={values.title} onChange={(e) => setField("title", e.target.value)} placeholder="Tajuk seksyen" />
+              <p className="text-xs text-muted-foreground">Judul seksyen yang dipaparkan kepada pengunjung laman web.</p>
             </div>
             <div className="space-y-1.5">
-              <Label>Link</Label>
-              <div className="grid gap-3">
-                <Input placeholder="Label pautan" value={values.linkLabel} onChange={(event) => setField("linkLabel", event.target.value)} />
-                <Input placeholder="URL pautan" value={values.linkUrl} onChange={(event) => setField("linkUrl", event.target.value)} />
-              </div>
+              <Label>Urutan</Label>
+              <Input type="number" value={values.sortOrder} onChange={(e) => setField("sortOrder", Number(e.target.value))} />
+              <p className="text-xs text-muted-foreground">Nombor lebih kecil dipapar dahulu.</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <Checkbox checked={values.isActive} onCheckedChange={(checked) => setField("isActive", Boolean(checked))} />
-            <Label>Aktif</Label>
+            <Checkbox checked={values.isActive} onCheckedChange={(checked) => setField("isActive", Boolean(checked))} id="isActive" />
+            <Label htmlFor="isActive">Aktif</Label>
+            <span className="text-xs text-muted-foreground">— Nyahtanda untuk menyembunyikan seksyen ini dari laman web.</span>
           </div>
+
+          {/* Advanced fields */}
+          <Collapsible label="Tetapan Lanjutan (Section Key, Subtitle, Body, Gambar, Pautan)">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label>Section Key</Label>
+                <Input value={values.sectionKey} onChange={(e) => setField("sectionKey", e.target.value)} placeholder="contoh: kpi, jk-1" />
+                <p className="text-xs text-muted-foreground">ID unik seksyen dalam kod. Hanya ubah jika benar-benar perlu — boleh menyebabkan seksyen tidak dikenali.</p>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Subtitle</Label>
+                <Input value={values.subtitle} onChange={(e) => setField("subtitle", e.target.value)} />
+                <p className="text-xs text-muted-foreground">Sub tajuk di bawah tajuk utama seksyen (opsional).</p>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Body</Label>
+              <Textarea rows={4} value={values.body} onChange={(e) => setField("body", e.target.value)} />
+              <p className="text-xs text-muted-foreground">Teks utama atau huraian untuk seksyen ini (opsional).</p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label>Gambar (Image URL)</Label>
+                <Input value={values.imageUrl} onChange={(e) => setField("imageUrl", e.target.value)} placeholder="https://..." />
+                <p className="text-xs text-muted-foreground">URL gambar atau gunakan butang muat naik di bawah.</p>
+                <UploadButton
+                  endpoint="mediaUploader"
+                  onClientUploadComplete={(files) => { if (files[0]) setField("imageUrl", files[0].ufsUrl); }}
+                  onUploadError={(error) => { toast.error(error.message); }}
+                  appearance={{ button: "text-xs h-auto px-2 py-1", allowedContent: "hidden" }}
+                />
+                {values.imageUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={values.imageUrl} alt="Preview" className="mt-1 h-24 w-auto rounded border border-border/70 object-cover" />
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <Label>Pautan</Label>
+                <div className="grid gap-2">
+                  <Input placeholder="Label pautan" value={values.linkLabel} onChange={(e) => setField("linkLabel", e.target.value)} />
+                  <Input placeholder="URL pautan" value={values.linkUrl} onChange={(e) => setField("linkUrl", e.target.value)} />
+                </div>
+                <p className="text-xs text-muted-foreground">Label dan URL untuk butang atau pautan di seksyen ini (opsional).</p>
+              </div>
+            </div>
+          </Collapsible>
         </CardContent>
       </Card>
 
+      {/* Items */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-base">Item Seksyen</CardTitle>
@@ -289,76 +275,82 @@ export function ContentSectionForm({
             Tambah Item
           </Button>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3">
           {values.items.length === 0 ? (
             <div className="rounded-md border border-dashed border-border/70 px-4 py-6 text-sm text-muted-foreground">
-              Belum ada item.
+              Belum ada item. Klik "Tambah Item" untuk mula.
             </div>
           ) : (
             values.items.map((item, index) => (
-              <div key={`${index}-${item.sortOrder}`} className="space-y-4 rounded-md border p-4">
+              <div key={`${index}-${item.sortOrder}`} className="space-y-3 rounded-md border p-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium">Item #{index + 1}</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">Item #{index + 1}</h3>
                   <Button type="button" variant="ghost" size="icon-sm" onClick={() => removeItem(index)}>
                     <Trash2 className="size-4 text-muted-foreground" />
                   </Button>
                 </div>
-                <div className="grid gap-4 md:grid-cols-2">
+
+                {/* Primary item fields */}
+                <div className="grid gap-3 md:grid-cols-2">
                   <div className="space-y-1.5">
-                    <Label>Label</Label>
-                    <Input value={item.label ?? ""} onChange={(event) => updateItem(index, { label: event.target.value })} />
+                    <Label className="text-xs">Tajuk / Nama</Label>
+                    <Input value={item.title ?? ""} onChange={(e) => updateItem(index, { title: e.target.value })} placeholder="Tajuk item" />
+                    <p className="text-xs text-muted-foreground">Nama atau tajuk entri ini (contoh: nama ahli JK, nama statistik).</p>
                   </div>
                   <div className="space-y-1.5">
-                    <Label>Tajuk</Label>
-                    <Input value={item.title ?? ""} onChange={(event) => updateItem(index, { title: event.target.value })} />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label>Value</Label>
-                    <Input value={item.value ?? ""} onChange={(event) => updateItem(index, { value: event.target.value })} />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label>Sort Order</Label>
-                    <Input type="number" value={item.sortOrder} onChange={(event) => updateItem(index, { sortOrder: Number(event.target.value) })} />
+                    <Label className="text-xs">Value / Jawatan</Label>
+                    <Input value={item.value ?? ""} onChange={(e) => updateItem(index, { value: e.target.value })} placeholder="Nilai atau jawatan" />
+                    <p className="text-xs text-muted-foreground">Nilai, jawatan, atau maklumat utama untuk entri ini.</p>
                   </div>
                 </div>
-                <div className="space-y-1.5">
-                  <Label>Body</Label>
-                  <Textarea rows={3} value={item.body ?? ""} onChange={(event) => updateItem(index, { body: event.target.value })} />
-                </div>
-                <div className="grid gap-4 md:grid-cols-3">
-                  <div className="space-y-1.5">
-                    <Label>URL</Label>
-                    <Input value={item.url ?? ""} onChange={(event) => updateItem(index, { url: event.target.value })} />
+
+                {/* Secondary item fields */}
+                <Collapsible label="Lanjutan (Label, Body, URL, Fail, Gambar, Urutan)">
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs">Label</Label>
+                      <Input value={item.label ?? ""} onChange={(e) => updateItem(index, { label: e.target.value })} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-xs">Sort Order</Label>
+                      <Input type="number" value={item.sortOrder} onChange={(e) => updateItem(index, { sortOrder: Number(e.target.value) })} className="w-28" />
+                    </div>
                   </div>
                   <div className="space-y-1.5">
-                    <Label>File URL</Label>
-                    <Input value={item.fileUrl ?? ""} onChange={(event) => updateItem(index, { fileUrl: event.target.value })} />
-                    <UploadButton
-                      endpoint="documentUploader"
-                      onClientUploadComplete={(files) => {
-                        if (files[0]) updateItem(index, { fileUrl: files[0].ufsUrl });
-                      }}
-                      onUploadError={(error) => { toast.error(error.message); }}
-                      appearance={{ button: "text-xs h-auto px-2 py-1", allowedContent: "hidden" }}
-                    />
+                    <Label className="text-xs">Body</Label>
+                    <Textarea rows={2} value={item.body ?? ""} onChange={(e) => updateItem(index, { body: e.target.value })} />
                   </div>
-                  <div className="space-y-1.5">
-                    <Label>Image URL</Label>
-                    <Input value={item.imageUrl ?? ""} onChange={(event) => updateItem(index, { imageUrl: event.target.value })} />
-                    <UploadButton
-                      endpoint="mediaUploader"
-                      onClientUploadComplete={(files) => {
-                        if (files[0]) updateItem(index, { imageUrl: files[0].ufsUrl });
-                      }}
-                      onUploadError={(error) => { toast.error(error.message); }}
-                      appearance={{ button: "text-xs h-auto px-2 py-1", allowedContent: "hidden" }}
-                    />
-                    {item.imageUrl && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={item.imageUrl} alt="Preview" className="mt-1 h-24 w-auto rounded border border-border/70 object-cover" />
-                    )}
+                  <div className="grid gap-3 md:grid-cols-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs">URL</Label>
+                      <Input value={item.url ?? ""} onChange={(e) => updateItem(index, { url: e.target.value })} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-xs">File URL</Label>
+                      <Input value={item.fileUrl ?? ""} onChange={(e) => updateItem(index, { fileUrl: e.target.value })} />
+                      <UploadButton
+                        endpoint="documentUploader"
+                        onClientUploadComplete={(files) => { if (files[0]) updateItem(index, { fileUrl: files[0].ufsUrl }); }}
+                        onUploadError={(error) => { toast.error(error.message); }}
+                        appearance={{ button: "text-xs h-auto px-2 py-1", allowedContent: "hidden" }}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-xs">Image URL</Label>
+                      <Input value={item.imageUrl ?? ""} onChange={(e) => updateItem(index, { imageUrl: e.target.value })} />
+                      <UploadButton
+                        endpoint="mediaUploader"
+                        onClientUploadComplete={(files) => { if (files[0]) updateItem(index, { imageUrl: files[0].ufsUrl }); }}
+                        onUploadError={(error) => { toast.error(error.message); }}
+                        appearance={{ button: "text-xs h-auto px-2 py-1", allowedContent: "hidden" }}
+                      />
+                      {item.imageUrl && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={item.imageUrl} alt="Preview" className="mt-1 h-16 w-auto rounded border border-border/70 object-cover" />
+                      )}
+                    </div>
                   </div>
-                </div>
+                </Collapsible>
               </div>
             ))
           )}
@@ -366,9 +358,7 @@ export function ContentSectionForm({
       </Card>
 
       <div className="flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.push(redirectTo)}>
-          Batal
-        </Button>
+        <Button type="button" variant="outline" onClick={() => router.push(redirectTo)}>Batal</Button>
         <Button type="button" onClick={handleSubmit} disabled={isSaving}>
           {isSaving ? "Menyimpan..." : action === "create" ? "Tambah Seksyen" : "Kemaskini Seksyen"}
         </Button>
@@ -376,4 +366,3 @@ export function ContentSectionForm({
     </div>
   );
 }
-

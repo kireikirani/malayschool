@@ -1,4 +1,4 @@
-import { and, asc, count, eq, like } from "drizzle-orm";
+import { and, asc, count, eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { teachers } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
@@ -24,7 +24,7 @@ export async function GET(req: Request) {
     } else if (status) {
       conditions.push(eq(teachers.status, status));
     }
-    if (q) conditions.push(like(teachers.name, `%${q}%`));
+    if (q) conditions.push(sql`LOWER(${teachers.name}) LIKE ${`%${q.toLowerCase()}%`}`);
 
     const where = conditions.length ? and(...conditions) : undefined;
     const [rows, [{ total }]] = await Promise.all([

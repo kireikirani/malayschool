@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { ImagePicker } from "@/components/admin/image-picker";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { createNewsSchema } from "@/lib/validations/news.schema";
@@ -87,6 +87,7 @@ export function NewsForm({
               <FormControl>
                 <Input {...field} />
               </FormControl>
+              <FormDescription>Tajuk berita yang akan dipaparkan kepada pembaca.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -101,6 +102,7 @@ export function NewsForm({
               <FormControl>
                 <Input {...field} value={field.value as string} placeholder="Otomatis dari judul jika dikosongkan" />
               </FormControl>
+              <FormDescription>URL unik berita. Kosongkan untuk dijana secara automatik dari tajuk.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -115,6 +117,7 @@ export function NewsForm({
               <FormControl>
                 <RichTextEditor value={field.value} onChange={field.onChange} />
               </FormControl>
+              <FormDescription>Isi kandungan penuh berita. Gunakan toolbar untuk format teks.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -129,6 +132,7 @@ export function NewsForm({
               <FormControl>
                 <ImagePicker value={field.value} onChange={field.onChange} />
               </FormControl>
+              <FormDescription>Gambar kecil yang mewakili berita dalam senarai. Saiz disyorkan: 800×450 piksel.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -152,6 +156,7 @@ export function NewsForm({
                     <SelectItem value="published">Diterbitkan</SelectItem>
                   </SelectContent>
                 </Select>
+                <FormDescription>Draft tidak dipaparkan. Tukar ke "Diterbitkan" untuk tampilkan kepada pembaca.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -182,6 +187,7 @@ export function NewsForm({
                       <Calendar mode="single" selected={dateValue} onSelect={field.onChange} />
                     </PopoverContent>
                   </Popover>
+                  <FormDescription>Kosongkan untuk menggunakan tarikh semasa.</FormDescription>
                   <FormMessage />
                 </FormItem>
               );
@@ -198,6 +204,7 @@ export function NewsForm({
               <FormControl>
                 <Input {...field} value={field.value as string} />
               </FormControl>
+              <FormDescription>Tajuk untuk enjin carian. Kosongkan untuk gunakan tajuk berita. Disyorkan: di bawah 60 aksara.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -212,6 +219,7 @@ export function NewsForm({
               <FormControl>
                 <Textarea {...field} value={field.value as string} />
               </FormControl>
+              <FormDescription>Ringkasan pendek untuk enjin carian. Disyorkan: 150–160 aksara.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -226,6 +234,7 @@ export function NewsForm({
               <FormControl>
                 <ImagePicker value={field.value} onChange={field.onChange} />
               </FormControl>
+              <FormDescription>Gambar yang dipaparkan apabila pautan berita dikongsi di media sosial.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

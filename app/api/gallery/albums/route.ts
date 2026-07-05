@@ -1,4 +1,4 @@
-import { count, eq, like } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { galleryAlbums, galleryItems } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
@@ -11,7 +11,7 @@ import { rateLimit, getClientIp } from "@/lib/rate-limit";
 export async function GET(req: Request) {
   try {
     const { page, limit, q } = parseQuery(new URL(req.url).searchParams, albumQuerySchema);
-    const where = q ? like(galleryAlbums.name, `%${q}%`) : undefined;
+    const where = q ? sql`LOWER(${galleryAlbums.name}) LIKE ${`%${q.toLowerCase()}%`}` : undefined;
 
     const [rows, [{ total }]] = await Promise.all([
       db

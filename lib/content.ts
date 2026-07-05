@@ -7,6 +7,7 @@ import {
   unitDocuments,
   unitSections,
   unitSectionItems,
+  unitJkMembers,
 } from "@/db/schema";
 import { getSettings } from "@/lib/site-settings";
 import { ASRAMA_FASILITI, JK_ASRAMA, WARDENS } from "@/lib/asrama";
@@ -272,11 +273,18 @@ async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> 
   const unit = UNITS.find((row) => row.slug === unitSlug);
   if (!unit) return [];
 
-  const uploadedDocs = await db
-    .select()
-    .from(unitDocuments)
-    .where(eq(unitDocuments.unitSlug, unitSlug))
-    .orderBy(asc(unitDocuments.sortOrder), asc(unitDocuments.createdAt));
+  const [uploadedDocs, dbJkMembers] = await Promise.all([
+    db
+      .select()
+      .from(unitDocuments)
+      .where(eq(unitDocuments.unitSlug, unitSlug))
+      .orderBy(asc(unitDocuments.sortOrder), asc(unitDocuments.createdAt)),
+    db
+      .select()
+      .from(unitJkMembers)
+      .where(eq(unitJkMembers.unitSlug, unitSlug))
+      .orderBy(asc(unitJkMembers.jkCode), asc(unitJkMembers.sortOrder)),
+  ]);
 
   const carta = uploadedDocs.find((row) => row.type === "carta-org");
   const fileItems = unit.dokumen?.map((doc, index) => {
@@ -291,6 +299,44 @@ async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> 
       createdAt: uploaded?.createdAt ?? null,
     };
   }) ?? [];
+
+  // Group DB JK members by jkCode → one section per unique jkCode
+  const dbJkSections: ContentSection[] = [];
+  if (dbJkMembers.length > 0) {
+    const grouped = new Map<string, typeof dbJkMembers>();
+    for (const member of dbJkMembers) {
+      if (!grouped.has(member.jkCode)) grouped.set(member.jkCode, []);
+      grouped.get(member.jkCode)!.push(member);
+    }
+    let jkSortIndex = 0;
+    for (const [jkCode, members] of grouped) {
+      dbJkSections.push({
+        sectionKey: `jk-${jkCode}`,
+        type: "jk_table",
+        title: members[0].jkTitle,
+        isActive: true,
+        sortOrder: 30 + jkSortIndex,
+        items: members.map((m, i) => ({ title: m.nama, value: m.jawatan, sortOrder: i })),
+      });
+      jkSortIndex++;
+    }
+  }
+
+  // Fall back to hardcoded jkTables if no DB entries
+  const jkSections: ContentSection[] = dbJkSections.length > 0
+    ? dbJkSections
+    : (unit.jkTables?.map((table, index) => ({
+        sectionKey: `jk-${index + 1}`,
+        type: "jk_table" as const,
+        title: table.title,
+        isActive: true,
+        sortOrder: 30 + index,
+        items: table.members.map((member, memberIndex) => ({
+          title: member.name,
+          value: member.jawatan,
+          sortOrder: memberIndex,
+        })),
+      })) ?? []);
 
   return [
     {
@@ -348,20 +394,7 @@ async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> 
           },
         ]
       : []),
-    ...(unit.jkTables?.length
-      ? unit.jkTables.map((table, index) => ({
-          sectionKey: `jk-${index + 1}`,
-          type: "jk_table" as const,
-          title: table.title,
-          isActive: true,
-          sortOrder: 30 + index,
-          items: table.members.map((member, memberIndex) => ({
-            title: member.name,
-            value: member.jawatan,
-            sortOrder: memberIndex,
-          })),
-        }))
-      : []),
+    ...jkSections,
     ...(fileItems.length
       ? [
           {

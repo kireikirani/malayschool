@@ -1,4 +1,4 @@
-import { and, asc, count, eq, like } from "drizzle-orm";
+import { and, asc, count, eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { asramaPelajar } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     if (jantina) conditions.push(eq(asramaPelajar.jantina, jantina));
     if (status) conditions.push(eq(asramaPelajar.status, status));
     if (tingkatan) conditions.push(eq(asramaPelajar.tingkatan, tingkatan));
-    if (q) conditions.push(like(asramaPelajar.nama, `%${q}%`));
+    if (q) conditions.push(sql`LOWER(${asramaPelajar.nama}) LIKE ${`%${q.toLowerCase()}%`}`);
 
     const where = conditions.length ? and(...conditions) : undefined;
 

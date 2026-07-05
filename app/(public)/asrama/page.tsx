@@ -7,10 +7,11 @@ export const metadata: Metadata = {
   title: "Asrama",
   description: "Maklumat asrama SMK Telok Panglima Garang — fasiliti, warden, jawatankuasa, dan senarai pelajar penghuni.",
 };
-import { and, count, desc, eq, gte, isNull, or } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, isNull, or } from "drizzle-orm";
 import { ArrowRight, Users } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { db } from "@/lib/db";
-import { asramaPelajar, news, pengumuman } from "@/db/schema";
+import { asramaPelajar, asramaWardens, asramaFasiliti, unitJkMembers, news, pengumuman } from "@/db/schema";
 import { PageHeader } from "@/components/public/page-header";
 import { ContentSectionRenderer } from "@/components/public/content-section-renderer";
 import { ScrollAnimation } from "@/components/ui/scroll-animation";
@@ -18,6 +19,36 @@ import { CountUp } from "@/components/ui/count-up";
 import { SCHOOL_NAME } from "@/lib/brand";
 import { ASRAMA_STATS, WARDENS, JK_ASRAMA, ASRAMA_FASILITI } from "@/lib/asrama";
 import { getPublicContent } from "@/lib/content";
+
+function DynamicIcon({ name, className }: { name: string; className?: string }) {
+  const Icon = (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[name];
+  if (!Icon) return null;
+  return <Icon className={className} />;
+}
+
+function waNumber(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.startsWith("60")) return digits;
+  if (digits.startsWith("0")) return "60" + digits.slice(1);
+  return "60" + digits;
+}
+
+function PhoneLinks({ phone }: { phone: string }) {
+  const wa = waNumber(phone);
+  return (
+    <span className="flex flex-wrap items-center gap-2">
+      <a href={`tel:+${wa}`} className="font-medium text-primary hover:underline">{phone}</a>
+      <a
+        href={`https://wa.me/${wa}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1 rounded bg-green-600 px-1.5 py-0.5 text-[10px] font-semibold text-white hover:bg-green-700"
+      >
+        WA
+      </a>
+    </span>
+  );
+}
 
 function StudentTable({
   title,
@@ -57,7 +88,9 @@ function StudentTable({
                   <td className="px-5 py-3 font-medium">{row.nama}</td>
                   <td className="px-5 py-3 text-muted-foreground">{row.tingkatan}</td>
                   <td className="px-5 py-3 text-muted-foreground hidden sm:table-cell">{row.dorm}</td>
-                  <td className="px-5 py-3 text-muted-foreground hidden md:table-cell">{row.noWaris ?? "-"}</td>
+                  <td className="px-5 py-3 hidden md:table-cell">
+                    {row.noWaris ? <PhoneLinks phone={row.noWaris} /> : <span className="text-muted-foreground">-</span>}
+                  </td>
                 </tr>
               ))
             )}
@@ -73,17 +106,46 @@ function StudentTable({
 
 export default async function AsramaPage() {
   const now = new Date();
-  const [sections, [maleCount], [femaleCount], latestAnnouncements, latestNews] = await Promise.all([
+  const [
+    sections,
+    [maleCount],
+    [femaleCount],
+    dbWardens,
+    dbFasiliti,
+    dbJkAsrama,
+    latestAnnouncements,
+    latestNews,
+  ] = await Promise.all([
     getPublicContent("asrama"),
     db.select({ value: count() }).from(asramaPelajar).where(and(eq(asramaPelajar.status, "active"), eq(asramaPelajar.jantina, "lelaki"))),
     db.select({ value: count() }).from(asramaPelajar).where(and(eq(asramaPelajar.status, "active"), eq(asramaPelajar.jantina, "perempuan"))),
+    db.select().from(asramaWardens).orderBy(asc(asramaWardens.sortOrder), asc(asramaWardens.id)),
+    db.select().from(asramaFasiliti).orderBy(asc(asramaFasiliti.sortOrder), asc(asramaFasiliti.id)),
+    db.select().from(unitJkMembers).where(eq(unitJkMembers.unitSlug, "asrama")).orderBy(asc(unitJkMembers.jkCode), asc(unitJkMembers.sortOrder)),
     db.select().from(pengumuman).where(and(eq(pengumuman.aktif, true), or(isNull(pengumuman.tamatPada), gte(pengumuman.tamatPada, now)))).orderBy(pengumuman.sortOrder, desc(pengumuman.createdAt)).limit(3),
     db.select().from(news).where(eq(news.status, "published")).orderBy(desc(news.publishDate)).limit(3),
   ]);
 
+  const wardens = dbWardens.length > 0 ? dbWardens : WARDENS.map((w) => ({ id: 0, nama: w.name, jawatan: w.position, telefon: w.phone ?? null, foto: null, sortOrder: 0, createdAt: new Date(), updatedAt: new Date() }));
+  const HARDCODED_FASILITI_ICONS: Record<string, string> = {
+    "Bilik Tidur Sistematik": "BedDouble",
+    "Dewan Makan": "Utensils",
+    "Bilik Belajar": "BookOpen",
+    "Surau": "Landmark",
+    "Padang Sukan": "Trophy",
+    "Bilik Dobi": "Shirt",
+    "Wi-Fi Percuma": "Wifi",
+    "CCTV 24 Jam": "ShieldCheck",
+  };
+  const fasiliti = dbFasiliti.length > 0
+    ? dbFasiliti
+    : ASRAMA_FASILITI.map((f, i) => ({ id: i, iconName: HARDCODED_FASILITI_ICONS[f.label] ?? "Star", label: f.label, sortOrder: i, createdAt: new Date(), updatedAt: new Date() }));
+  const jkAsrama = dbJkAsrama.length > 0 ? dbJkAsrama : JK_ASRAMA.map((m, i) => ({ id: i, unitSlug: "asrama", jkCode: "jk-asrama", jkTitle: "JK Asrama", nama: m.name, jawatan: m.jawatan, sortOrder: i, createdAt: new Date(), updatedAt: new Date() }));
+
   const totalMale = maleCount.value || ASRAMA_STATS.pelajarLelaki;
   const totalFemale = femaleCount.value || ASRAMA_STATS.pelajarPerempuan;
   const totalStudents = totalMale + totalFemale;
+  const jumlahWarden = dbWardens.length > 0 ? dbWardens.length : ASRAMA_STATS.jumlahWarden;
 
   return (
     <div>
@@ -105,7 +167,7 @@ export default async function AsramaPage() {
               { label: "Jumlah Pelajar Asrama", value: totalStudents },
               { label: "Pelajar Lelaki", value: totalMale },
               { label: "Pelajar Perempuan", value: totalFemale },
-              { label: "Jumlah Warden", value: ASRAMA_STATS.jumlahWarden },
+              { label: "Jumlah Warden", value: jumlahWarden },
             ].map((stat) => (
               <div key={stat.label} className="bg-white px-5 py-6 text-center shadow-sm">
                 <p className="font-heading text-4xl font-semibold text-primary md:text-5xl"><CountUp value={stat.value} /></p>
@@ -135,10 +197,10 @@ export default async function AsramaPage() {
             <h2 className="mt-2 font-heading text-2xl font-semibold tracking-tight md:text-3xl">Fasiliti Asrama</h2>
           </ScrollAnimation>
           <div className="mt-6 grid gap-4 grid-cols-2 sm:grid-cols-4">
-            {ASRAMA_FASILITI.map((item, i) => (
+            {fasiliti.map((item, i) => (
               <ScrollAnimation key={item.label} direction="up" delay={i * 0.05}>
                 <div className="flex flex-col items-center gap-3 bg-white px-4 py-6 text-center shadow-sm">
-                  <item.icon className="size-7 text-primary" />
+                  <DynamicIcon name={item.iconName} className="size-7 text-primary" />
                   <p className="text-sm font-medium">{item.label}</p>
                 </div>
               </ScrollAnimation>
@@ -158,12 +220,12 @@ export default async function AsramaPage() {
             </div>
           </ScrollAnimation>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {WARDENS.map((warden, i) => (
-              <ScrollAnimation key={warden.name} direction="up" delay={i * 0.06}>
+            {wardens.map((warden, i) => (
+              <ScrollAnimation key={warden.nama} direction="up" delay={i * 0.06}>
                 <div className="bg-card px-5 py-5 shadow-sm">
-                  <p className="font-heading text-base font-semibold">{warden.name}</p>
-                  <p className="mt-1 text-sm text-primary">{warden.position}</p>
-                  {warden.phone ? <p className="mt-1 text-xs text-muted-foreground">{warden.phone}</p> : null}
+                  <p className="font-heading text-base font-semibold">{warden.nama}</p>
+                  <p className="mt-1 text-sm text-primary">{warden.jawatan}</p>
+                  {warden.telefon ? <p className="mt-1 text-xs text-muted-foreground">{warden.telefon}</p> : null}
                 </div>
               </ScrollAnimation>
             ))}
@@ -191,10 +253,10 @@ export default async function AsramaPage() {
                 </tr>
               </thead>
               <tbody>
-                {JK_ASRAMA.map((member, idx) => (
-                  <tr key={member.name} className="border-b border-border/40 last:border-0 hover:bg-blue-50/60 transition-colors">
+                {jkAsrama.map((member, idx) => (
+                  <tr key={member.id} className="border-b border-border/40 last:border-0 hover:bg-blue-50/60 transition-colors">
                     <td className="px-5 py-3 text-muted-foreground">{idx + 1}</td>
-                    <td className="px-5 py-3 font-medium">{member.name}</td>
+                    <td className="px-5 py-3 font-medium">{member.nama}</td>
                     <td className="px-5 py-3 text-muted-foreground">{member.jawatan}</td>
                   </tr>
                 ))}

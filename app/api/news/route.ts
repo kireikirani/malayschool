@@ -1,4 +1,4 @@
-import { and, count, desc, eq, gte, like, lte } from "drizzle-orm";
+import { and, count, desc, eq, gte, lte, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { news } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
@@ -25,7 +25,7 @@ export async function GET(req: Request) {
     } else if (status) {
       conditions.push(eq(news.status, status));
     }
-    if (q) conditions.push(like(news.title, `%${q}%`));
+    if (q) conditions.push(sql`LOWER(${news.title}) LIKE ${`%${q.toLowerCase()}%`}`);
     if (from) conditions.push(gte(news.publishDate, from));
     if (to) conditions.push(lte(news.publishDate, to));
 

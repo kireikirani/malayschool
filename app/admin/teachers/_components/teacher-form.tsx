@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { ImagePicker } from "@/components/admin/image-picker";
 import { createTeacherSchema } from "@/lib/validations/teacher.schema";
 import { apiSend } from "@/lib/fetcher";
@@ -78,6 +78,7 @@ export function TeacherForm({
               <FormControl>
                 <Input {...field} />
               </FormControl>
+              <FormDescription>Nama penuh guru seperti yang akan dipaparkan di laman web.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -92,6 +93,7 @@ export function TeacherForm({
               <FormControl>
                 <Input {...field} value={field.value as string} />
               </FormControl>
+              <FormDescription>Contoh: Guru Matematik, Ketua Panitia Bahasa Inggeris.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -106,6 +108,7 @@ export function TeacherForm({
               <FormControl>
                 <ImagePicker value={field.value} onChange={field.onChange} />
               </FormControl>
+              <FormDescription>Gambar profil guru. Saiz disyorkan: 400×400 piksel.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -120,6 +123,7 @@ export function TeacherForm({
               <FormControl>
                 <Textarea rows={5} {...field} value={field.value as string} />
               </FormControl>
+              <FormDescription>Latar belakang, kelayakan, dan pengalaman guru. Dipaparkan di halaman profil guru.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -142,9 +146,7 @@ export function TeacherForm({
                   className="w-32"
                 />
               </FormControl>
-              <p className="text-xs text-muted-foreground">
-                Nombor lebih kecil dipapar dahulu. Guna 0, 1, 2... untuk susun atur guru mengikut jawatan.
-              </p>
+              <FormDescription>Nombor lebih kecil dipapar dahulu. Guna 0, 1, 2… untuk susun atur guru mengikut jawatan.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -167,6 +169,7 @@ export function TeacherForm({
                   <SelectItem value="inactive">Nonaktif</SelectItem>
                 </SelectContent>
               </Select>
+              <FormDescription>Hanya guru "Aktif" yang dipaparkan di laman web awam.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

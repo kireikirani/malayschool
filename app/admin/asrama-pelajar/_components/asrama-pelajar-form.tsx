@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { ImagePicker } from "@/components/admin/image-picker";
 import { createAsramaPelajarSchema } from "@/lib/validations/asrama-pelajar.schema";
 import { apiSend } from "@/lib/fetcher";
@@ -71,6 +71,7 @@ export function AsramaPelajarForm({
               <FormControl>
                 <ImagePicker value={field.value} onChange={field.onChange} />
               </FormControl>
+              <FormDescription>Gambar profil pelajar (opsional). Saiz disyorkan: 400×400 piksel.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -93,6 +94,7 @@ export function AsramaPelajarForm({
                   <SelectItem value="perempuan">Perempuan (Aspuri)</SelectItem>
                 </SelectContent>
               </Select>
+              <FormDescription>Digunakan untuk pengagihan dorm dan pelaporan pelajar.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -107,6 +109,7 @@ export function AsramaPelajarForm({
               <FormControl>
                 <Input placeholder="Nama penuh pelajar..." {...field} />
               </FormControl>
+              <FormDescription>Nama penuh pelajar seperti dalam kad pengenalan.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -122,6 +125,7 @@ export function AsramaPelajarForm({
                 <FormControl>
                   <Input placeholder="4A, 5B..." {...field} />
                 </FormControl>
+                <FormDescription>Contoh: 4A, 5 Sains 1.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -135,6 +139,7 @@ export function AsramaPelajarForm({
                 <FormControl>
                   <Input placeholder="Blok A — Bilik 101" {...field} />
                 </FormControl>
+                <FormDescription>Nombor blok dan bilik pelajar.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -151,6 +156,7 @@ export function AsramaPelajarForm({
                 <FormControl>
                   <Input placeholder="Nama ibu/bapa..." {...field} value={(field.value as string) ?? ""} />
                 </FormControl>
+                <FormDescription>Nama ibu bapa atau penjaga yang boleh dihubungi.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -164,6 +170,7 @@ export function AsramaPelajarForm({
                 <FormControl>
                   <Input placeholder="0123456789" {...field} value={(field.value as string) ?? ""} />
                 </FormControl>
+                <FormDescription>Nombor untuk dihubungi dalam kecemasan. Pengguna boleh klik terus untuk call atau WhatsApp.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -187,6 +194,7 @@ export function AsramaPelajarForm({
                   <SelectItem value="inactive">Tidak Aktif (Keluar asrama)</SelectItem>
                 </SelectContent>
               </Select>
+              <FormDescription>Aktif = masih tinggal di asrama. Tidak Aktif = sudah keluar asrama.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

@@ -1,4 +1,4 @@
-import { and, count, desc, eq, like, or } from "drizzle-orm";
+import { and, count, desc, eq, like, or, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { media } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
@@ -15,7 +15,7 @@ export async function GET(req: Request) {
 
     const conditions = [];
     if (folder) conditions.push(eq(media.folder, folder));
-    if (q) conditions.push(like(media.fileName, `%${q}%`));
+    if (q) conditions.push(sql`LOWER(${media.fileName}) LIKE ${`%${q.toLowerCase()}%`}`);
     if (category === "spreadsheet") {
       conditions.push(
         or(like(media.fileName, "%.xlsx"), like(media.fileName, "%.xls"), like(media.fileName, "%.csv")),

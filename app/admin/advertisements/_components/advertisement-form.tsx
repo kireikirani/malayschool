@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { createAdvertisementSchema } from "@/lib/validations/advertisement.schema";
 import { apiSend } from "@/lib/fetcher";
 import { setFormErrors } from "@/lib/set-form-errors";
@@ -116,6 +116,7 @@ export function AdvertisementForm({
               <FormControl>
                 <Input {...field} />
               </FormControl>
+              <FormDescription>Nama dalaman untuk mengenal pasti iklan ini. Tidak dipaparkan kepada pengunjung.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -142,6 +143,7 @@ export function AdvertisementForm({
                     ))}
                   </SelectContent>
                 </Select>
+                <FormDescription>Jenis konten iklan yang akan dimasukkan.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -167,6 +169,7 @@ export function AdvertisementForm({
                     ))}
                   </SelectContent>
                 </Select>
+                <FormDescription>Lokasi di laman web di mana iklan akan muncul.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -214,6 +217,7 @@ export function AdvertisementForm({
                       <Calendar mode="single" selected={dateValue} onSelect={field.onChange} />
                     </PopoverContent>
                   </Popover>
+                  <FormDescription>Tarikh iklan mula dipaparkan. Kosongkan untuk tanpa had.</FormDescription>
                   <FormMessage />
                 </FormItem>
               );
@@ -245,6 +249,7 @@ export function AdvertisementForm({
                       <Calendar mode="single" selected={dateValue} onSelect={field.onChange} />
                     </PopoverContent>
                   </Popover>
+                  <FormDescription>Tarikh iklan berhenti dipaparkan. Kosongkan untuk tanpa had.</FormDescription>
                   <FormMessage />
                 </FormItem>
               );
