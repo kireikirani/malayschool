@@ -18,7 +18,7 @@ type DocItem = {
   createdAt?: string | Date | null;
 };
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 const formatDate = (dateInput: Date | string | null | undefined) => {
   if (!dateInput) return "-";
@@ -135,17 +135,6 @@ export function UnitDocumentsList({
             />
           </div>
 
-          {/* View All Button */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setIsPaginated(!isPaginated);
-              setCurrentPage(1);
-            }}
-          >
-            {isPaginated ? "Lihat Semua" : "Lihat Berhalaman"}
-          </Button>
         </div>
       </div>
 
@@ -258,75 +247,57 @@ export function UnitDocumentsList({
         </div>
       )}
 
-      {/* Pagination Footer */}
-      {isPaginated && totalPages > 1 && (
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4 border-t border-border/50">
-          {/* Memapar X sehingga Y dari Z dokumen */}
+      {/* Navigation footer — visible whenever there are more items than the default page size */}
+      {totalItems > ITEMS_PER_PAGE && (
+        <div className="flex items-center justify-between gap-3 border-t border-border/50 pt-4">
           <p className="text-xs text-muted-foreground">
-            Memapar <span className="font-medium text-foreground">{startIndex}</span> sehingga{" "}
-            <span className="font-medium text-foreground">{endIndex}</span> dari{" "}
-            <span className="font-medium text-foreground">{totalItems}</span> dokumen
+            {isPaginated ? (
+              <>
+                Memapar <span className="font-medium text-foreground">{startIndex}</span>–
+                <span className="font-medium text-foreground">{endIndex}</span> dari{" "}
+                <span className="font-medium text-foreground">{totalItems}</span> dokumen
+              </>
+            ) : (
+              <>Memapar semua <span className="font-medium text-foreground">{totalItems}</span> dokumen</>
+            )}
           </p>
 
-          {/* Pagination Controls */}
-          <div className="flex items-center gap-1.5 self-end sm:self-auto">
-            <Button
-              variant="outline"
-              size="icon-sm"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              title="Halaman Sebelumnya"
-            >
-              <ChevronLeft className="size-4" />
-            </Button>
-
-            {/* Generated Page Numbers */}
-            {Array.from({ length: totalPages }).map((_, i) => {
-              const pageNum = i + 1;
-              const isCurrent = pageNum === currentPage;
-              
-              // Only show first, last, current, and surrounding page numbers
-              if (
-                pageNum === 1 ||
-                pageNum === totalPages ||
-                Math.abs(pageNum - currentPage) <= 1
-              ) {
-                return (
-                  <Button
-                    key={pageNum}
-                    variant={isCurrent ? "default" : "outline"}
-                    size="icon-sm"
-                    className="w-8 h-8 text-xs font-medium"
-                    onClick={() => setCurrentPage(pageNum)}
-                  >
-                    {pageNum}
-                  </Button>
-                );
-              }
-              
-              // Ellipses rendering
-              if (
-                pageNum === 2 ||
-                pageNum === totalPages - 1
-              ) {
-                return (
-                  <span key={pageNum} className="px-1 text-xs text-muted-foreground">
-                    ...
-                  </span>
-                );
-              }
-              
-              return null;
-            })}
+          <div className="flex items-center gap-2">
+            {isPaginated && (
+              <>
+                <Button
+                  variant="outline"
+                  size="icon-sm"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  title="Halaman Sebelumnya"
+                >
+                  <ChevronLeft className="size-4" />
+                </Button>
+                <span className="min-w-[3rem] text-center text-xs text-muted-foreground tabular-nums">
+                  {currentPage} / {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="icon-sm"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  title="Halaman Seterusnya"
+                >
+                  <ChevronRight className="size-4" />
+                </Button>
+              </>
+            )}
 
             <Button
-              variant="outline"
-              size="icon-sm"
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              title="Halaman Seterusnya"
+              variant={isPaginated ? "outline" : "secondary"}
+              size="sm"
+              onClick={() => {
+                setIsPaginated(!isPaginated);
+                setCurrentPage(1);
+              }}
             >
-              <ChevronRight className="size-4" />
+              {isPaginated ? "Lihat Semua" : "Lihat Berhalaman"}
             </Button>
           </div>
         </div>

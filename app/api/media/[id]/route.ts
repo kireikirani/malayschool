@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { s3Client } from "@/lib/r2";
+import { getR2Client, getR2Config } from "@/lib/r2";
 import { db } from "@/lib/db";
 import { media } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
@@ -36,11 +36,12 @@ export async function DELETE(req: Request, { params }: Params) {
     await db.delete(media).where(eq(media.id, id));
 
     try {
-      await s3Client.send(
+      const r2 = getR2Config();
+      await getR2Client().send(
         new DeleteObjectCommand({
-          Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME || "dummy-bucket",
+          Bucket: r2.bucketName,
           Key: row.fileKey,
-        })
+        }),
       );
     } catch (err) {
       console.error("Failed to delete remote file from Cloudflare R2:", err);

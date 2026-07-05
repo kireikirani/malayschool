@@ -265,7 +265,7 @@ export function AsramaStudentSubpage() {
       setIsVerifying(true);
       fetchStudentsAction(savedPassword)
         .then((res) => {
-          if (res.success && res.data) {
+          if (res.success) {
             setStudents(res.data);
             setIsAuthenticated(true);
           } else {
@@ -287,7 +287,7 @@ export function AsramaStudentSubpage() {
     setIsVerifying(true);
     try {
       const res = await fetchStudentsAction(password);
-      if (res.success && res.data) {
+      if (res.success) {
         setStudents(res.data);
         setIsAuthenticated(true);
         sessionStorage.setItem("asrama_page_password", password);

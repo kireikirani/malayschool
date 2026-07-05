@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, FileText, Link2, Network, Upload } from "lucide-react";
+import { ArrowRight, FileText, Link2, Network, Sparkles, Upload } from "lucide-react";
 import type { ContentSection } from "@/lib/content";
 import { FileCard } from "@/components/public/file-card";
 import { UnitDocumentsList } from "@/components/public/unit-documents-list";
@@ -40,21 +40,33 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
 
   if (section.sectionKey === "log-harian-pengetua" || (section.type === "text_block" && section.linkUrl?.includes("canva.site"))) {
     return (
-      <section className="relative overflow-hidden bg-slate-900 text-white p-8 md:p-12 text-center flex flex-col items-center justify-center border border-border/20 rounded-md">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 to-slate-900 opacity-95 z-0" />
+      <section className="relative overflow-hidden text-white p-8 md:p-14 text-center flex flex-col items-center justify-center min-h-[320px] rounded-md">
+        {/* Background image — same source as page hero */}
+        <Image
+          src="/gallery/sekolah/bangunan-sekolah.jpg"
+          alt=""
+          fill
+          className="object-cover object-[78%_40%]"
+          aria-hidden
+        />
+        {/* Vibrant primary colour overlay */}
+        <div className="absolute inset-0 bg-primary/70 mix-blend-color" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/75 to-primary/50" />
+
         <div className="relative z-10 flex flex-col items-center max-w-2xl">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-500 text-xs font-semibold border border-yellow-500/20 mb-6 uppercase tracking-wider">
-            ✨ Created by Cikgu Hannani and Cikgu Hasyrul
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-white/90 text-xs font-semibold border border-white/25 mb-6 uppercase tracking-wider backdrop-blur-sm">
+            <Sparkles className="size-3" aria-hidden />
+            Created by Cikgu Hannani and Cikgu Hasyrul
           </span>
-          <h2 className="font-heading text-2xl md:text-4xl font-bold tracking-tight text-white mb-4">
+          <h2 className="font-heading text-2xl md:text-4xl font-bold tracking-tight text-white mb-4 drop-shadow-md">
             {section.title || "Log Harian Pengetua"}
           </h2>
-          <p className="text-sm md:text-base text-slate-300 leading-relaxed mb-8">
+          <p className="text-sm md:text-base text-white/85 leading-relaxed mb-8 drop-shadow-sm">
             {section.body || "Akses dan semak maklumat log harian, perancangan strategik, takwim pengurusan, serta pelan pentadbiran pengetua sekolah secara interaktif melalui paparan Canva."}
           </p>
           <Button
             asChild
-            className="bg-white hover:bg-slate-100 text-slate-900 font-semibold h-11 px-8 rounded-full shadow-lg hover:shadow-xl transition-all"
+            className="bg-white hover:bg-white/90 text-primary font-semibold h-11 px-8 rounded-full shadow-lg hover:shadow-xl transition-all"
           >
             <a
               href={section.linkUrl || "https://pengurusandanpentadbiran.my.canva.site/plannerpengetua"}

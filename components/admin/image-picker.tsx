@@ -64,7 +64,15 @@ export function ImagePicker({
               endpoint="mediaUploader"
               onClientUploadComplete={(res) => {
                 const first = res[0];
-                if (first) select(first.ufsUrl);
+                if (first) {
+                  setMedia((current) =>
+                    current
+                      ? [{ id: first.key, fileName: first.name, filePath: first.ufsUrl }, ...current]
+                      : [{ id: first.key, fileName: first.name, filePath: first.ufsUrl }],
+                  );
+                  toast.success("Gambar berjaya dimuat naik ke Cloudflare");
+                  select(first.ufsUrl);
+                }
               }}
               onUploadError={(err) => {
                 toast.error(err.message);
