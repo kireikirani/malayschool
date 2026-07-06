@@ -1,4 +1,4 @@
-import { index, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, index, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 export const unitDocuments = mysqlTable(
   "unit_documents",
@@ -10,6 +10,7 @@ export const unitDocuments = mysqlTable(
     fileUrl: text("file_url").notNull(),
     fileType: mysqlEnum("file_type", ["pdf", "image", "doc"]).notNull().default("pdf"),
     tahun: varchar("tahun", { length: 10 }),
+    isVisible: boolean("is_visible").notNull().default(true),
     sortOrder: int("sort_order").notNull().default(0),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),

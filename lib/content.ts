@@ -395,19 +395,16 @@ async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> 
         ]
       : []),
     ...jkSections,
-    ...(fileItems.length
-      ? [
-          {
-            sectionKey: "dokumen",
-            type: "file_list" as const,
-            title: `Dokumen ${unit.title}`,
-            subtitle: "Dokumen dan fail unit.",
-            isActive: true,
-            sortOrder: 60,
-            items: fileItems,
-          },
-        ]
-      : []),
+    {
+      sectionKey: "dokumen",
+      type: "file_list" as const,
+      title: `Dokumen ${unit.title}`,
+      subtitle: "Dokumen dan fail unit.",
+      unitSlug,
+      isActive: true,
+      sortOrder: 60,
+      items: fileItems,
+    },
   ];
 }
 

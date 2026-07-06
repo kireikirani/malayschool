@@ -8,6 +8,7 @@ export const createUnitDokumenSchema = z.object({
   fileUrl: imagePathSchema,
   fileType: z.enum(["pdf", "image", "doc"]).default("pdf"),
   tahun: optionalTrimmedString(10),
+  isVisible: z.boolean().default(true),
   sortOrder: z.coerce.number().int().min(0).default(0),
 });
 

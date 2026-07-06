@@ -4,6 +4,7 @@ import { ArrowRight, FileText, Link2, Network, Sparkles, Upload } from "lucide-r
 import type { ContentSection } from "@/lib/content";
 import { FileCard } from "@/components/public/file-card";
 import { UnitDocumentsList } from "@/components/public/unit-documents-list";
+import { DocumentPortal } from "@/components/public/document-portal";
 import { Button } from "@/components/ui/button";
 
 function SectionHeading({
@@ -217,6 +218,15 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
   }
 
   if (section.type === "file_list") {
+    if (section.unitSlug) {
+      return (
+        <DocumentPortal
+          unitSlug={section.unitSlug}
+          title={section.title}
+          subtitle={section.subtitle}
+        />
+      );
+    }
     return (
       <UnitDocumentsList
         items={section.items}
