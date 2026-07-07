@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type ColumnDef } from "@tanstack/react-table";
 import { ArrowDownUp, MoreHorizontal, Plus } from "lucide-react";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { unitsSteps } from "@/components/admin/tour/tour-steps";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -135,38 +137,45 @@ export default function UnitSectionsPage() {
           <h1 className="text-2xl font-semibold">Unit Sections</h1>
           <p className="text-sm text-muted-foreground">Kelola susunan seksyen bagi setiap unit pengurusan.</p>
         </div>
-        <Button asChild>
-          <Link href={addHref}>
-            <Plus />
-            Tambah Seksyen
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="units" steps={unitsSteps} />
+          <Button asChild data-tour="units-add">
+            <Link href={addHref}>
+              <Plus />
+              Tambah Seksyen
+            </Link>
+          </Button>
+        </div>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={rows}
-        isLoading={isLoading}
-        page={1}
-        totalPages={1}
-        onPageChange={() => {}}
-        emptyMessage="Belum ada seksyen unit."
-        toolbar={
-          <Select value={unitSlug} onValueChange={setUnitSlug}>
-            <SelectTrigger className="w-56">
-              <SelectValue placeholder="Pilih unit" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Semua Unit</SelectItem>
-              {UNITS.map((unit) => (
-                <SelectItem key={unit.slug} value={unit.slug}>
-                  {unit.navLabel}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        }
-      />
+      <div data-tour="units-table">
+        <DataTable
+          columns={columns}
+          data={rows}
+          isLoading={isLoading}
+          page={1}
+          totalPages={1}
+          onPageChange={() => {}}
+          emptyMessage="Belum ada seksyen unit."
+          toolbar={
+            <div data-tour="units-filter">
+              <Select value={unitSlug} onValueChange={setUnitSlug}>
+                <SelectTrigger className="w-56">
+                  <SelectValue placeholder="Pilih unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Unit</SelectItem>
+                  {UNITS.map((unit) => (
+                    <SelectItem key={unit.slug} value={unit.slug}>
+                      {unit.navLabel}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          }
+        />
+      </div>
     </div>
   );
 }

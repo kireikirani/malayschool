@@ -15,6 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { newsSteps } from "@/components/admin/tour/tour-steps";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -132,14 +134,18 @@ export default function NewsListPage() {
           <h1 className="text-2xl font-semibold">Berita</h1>
           <p className="text-sm text-muted-foreground">Kelola artikel dan pengumuman website sekolah</p>
         </div>
-        <Button asChild>
-          <Link href="/admin/news/new">
-            <Plus />
-            Tambah Berita
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="news" steps={newsSteps} />
+          <Button asChild data-tour="news-add">
+            <Link href="/admin/news/new">
+              <Plus />
+              Tambah Berita
+            </Link>
+          </Button>
+        </div>
       </div>
 
+      <div data-tour="news-table">
       <DataTable
         columns={columns}
         data={rows}
@@ -188,6 +194,7 @@ export default function NewsListPage() {
           </>
         }
       />
+      </div>
     </div>
   );
 }

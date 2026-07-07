@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { FileSpreadsheet, Trash2 } from "lucide-react";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { documentsSteps } from "@/components/admin/tour/tour-steps";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -87,17 +89,22 @@ export default function SchoolDocumentsAdminPage() {
             Upload file sekolah melalui UploadThing. Metadata sahaja disimpan di database utama.
           </p>
         </div>
-        <UploadButton
-          endpoint="documentUploader"
-          onClientUploadComplete={() => {
-            setIsLoading(true);
-            toast.success("Dokumen berhasil diunggah");
-            load();
-          }}
-          onUploadError={(err) => {
-            toast.error(err.message);
-          }}
-        />
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="documents" steps={documentsSteps} />
+          <div data-tour="docs-upload">
+            <UploadButton
+              endpoint="documentUploader"
+              onClientUploadComplete={() => {
+                setIsLoading(true);
+                toast.success("Dokumen berhasil diunggah");
+                load();
+              }}
+              onUploadError={(err) => {
+                toast.error(err.message);
+              }}
+            />
+          </div>
+        </div>
       </div>
 
       <Input
@@ -116,7 +123,7 @@ export default function SchoolDocumentsAdminPage() {
         className="max-w-xs"
       />
 
-      <div className="flex flex-wrap gap-2">
+      <div data-tour="docs-category" className="flex flex-wrap gap-2">
         {CATEGORY_TABS.map((tab) => {
           const isActive = category === tab.value;
 
@@ -139,7 +146,7 @@ export default function SchoolDocumentsAdminPage() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+      <div data-tour="docs-grid" className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         {isLoading &&
           Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-80 w-full" />)}
         {!isLoading && rows.length === 0 && (

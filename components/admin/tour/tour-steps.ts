@@ -1,0 +1,394 @@
+import type { Step } from "react-joyride";
+
+// ─── Dashboard ────────────────────────────────────────────────────────────────
+export const dashboardSteps: Step[] = [
+  {
+    target: "[data-tour='dashboard-stats']",
+    title: "Ringkasan Dashboard",
+    content: "Papan pemuka menunjukkan bilangan kandungan terkini — berita, guru, pelajar asrama, dan lain-lain.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='dashboard-quick-links']",
+    title: "Akses Pantas",
+    content: "Klik mana-mana kad untuk menuju terus ke bahagian berkenaan dalam panel admin.",
+    placement: "top",
+    skipBeacon: true,
+  },
+];
+
+// ─── Unit Dokumen ─────────────────────────────────────────────────────────────
+export const unitDokumenSteps: Step[] = [
+  {
+    target: "[data-tour='unit-tabs']",
+    title: "Pilih Unit",
+    content: "Klik tab unit yang ingin anda urus. Setiap unit mempunyai carta organisasi dan senarai dokumen tersendiri.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='carta-org']",
+    title: "Carta Organisasi",
+    content: "Muat naik gambar carta organisasi unit di sini. Gambar ini akan dipaparkan di halaman awam unit berkenaan.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='dokumen-slot']",
+    title: "Slot Dokumen",
+    content: "Setiap baris ialah satu slot dokumen yang telah ditetapkan. Muat naik fail PDF atau gunakan pautan Google Drive / URL luar.",
+    placement: "top",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='url-toggle']",
+    title: "Guna Pautan URL / Google Drive",
+    content: "Klik butang ini untuk memasukkan pautan Google Drive, Canva, atau mana-mana URL dokumen awam. Pratonton akan dipaparkan secara automatik.",
+    placement: "top",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='visibility-switch']",
+    title: "Tunjuk / Sembunyi Dokumen",
+    content: "Toggle ini mengawal sama ada dokumen dipaparkan kepada pengunjung laman web. Matikan untuk menyembunyikan sementara tanpa memadamnya.",
+    placement: "left",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='add-custom']",
+    title: "Tambah Dokumen Lain",
+    content: "Selain slot yang ditetapkan, anda boleh menambah dokumen bebas — laporan, minit mesyuarat — dengan label dan pautan sendiri.",
+    placement: "top",
+    skipBeacon: true,
+  },
+];
+
+// ─── Public Content ───────────────────────────────────────────────────────────
+export const contentSteps: Step[] = [
+  {
+    target: "[data-tour='content-table']",
+    title: "Senarai Seksyen Kandungan",
+    content: "Setiap baris ialah satu blok kandungan di halaman awam. Anda boleh menambah, mengedit, atau memadam seksyen.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='add-section']",
+    title: "Tambah Seksyen Baharu",
+    content: "Klik di sini untuk menambah seksyen baharu. Terdapat pelbagai jenis: blok teks, statistik, jadual, galeri, pautan pantas, dan lain-lain.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='section-type-col']",
+    title: "Jenis Seksyen",
+    content: "Jenis seksyen menentukan rupa paparan di laman awam. Pilih yang sesuai semasa menambah seksyen baharu.",
+    placement: "left",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='section-active-col']",
+    title: "Status Aktif",
+    content: "Tanda ✓ bermaksud seksyen dipaparkan kepada pengunjung. Anda boleh nyahaktifkan seksyen tanpa memadamnya.",
+    placement: "left",
+    skipBeacon: true,
+  },
+];
+
+// ─── Settings ─────────────────────────────────────────────────────────────────
+export const settingsSteps: Step[] = [
+  {
+    target: "[data-tour='settings-tabs']",
+    title: "Tab Tetapan",
+    content: "Tetapan dibahagikan kepada 6 tab. Klik setiap tab untuk mengedit bahagian berkenaan.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='settings-sekolah']",
+    title: "Maklumat Sekolah",
+    content: "Isikan nama sekolah, tagline, visi, dan misi. Maklumat ini dipaparkan di seluruh laman web.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='settings-statistik']",
+    title: "Tab Statistik",
+    content: "Kemas kini jumlah pelajar, guru, kelas, dan tarikh SPM yang akan dipaparkan di laman utama.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='settings-tema']",
+    title: "Tema Warna",
+    content: "Tukar warna utama laman web di sini. Pilih preset warna atau masukkan kod warna tersendiri.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='settings-save']",
+    title: "Simpan Tetapan",
+    content: "Setelah membuat perubahan di mana-mana tab, klik 'Simpan' untuk menerapkan semua perubahan sekaligus.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+];
+
+// ─── Unit JK (Jawatankuasa) ───────────────────────────────────────────────────
+export const unitJkSteps: Step[] = [
+  {
+    target: "[data-tour='jk-unit-filter']",
+    title: "Tapis Mengikut Unit",
+    content: "Pilih unit yang ingin anda urus. Setiap unit boleh mempunyai beberapa jawatankuasa (JK) yang berbeza.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='jk-table']",
+    title: "Senarai Ahli JK",
+    content: "Semua ahli jawatankuasa untuk unit yang dipilih disenaraikan di sini, termasuk nama, jawatan, dan nama JK.",
+    placement: "top",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='jk-add']",
+    title: "Tambah Ahli JK",
+    content: "Klik untuk menambah ahli baharu. Dalam borang: Kod JK (contoh: 'jk-pengurusan') mengumpulkan ahli dalam kumpulan yang sama, manakala Nama JK (contoh: 'JK Pengurusan') ialah tajuk yang dipaparkan di laman awam.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+];
+
+// ─── Asrama Warden ────────────────────────────────────────────────────────────
+export const asramaWardenSteps: Step[] = [
+  {
+    target: "[data-tour='warden-table']",
+    title: "Senarai Warden",
+    content: "Semua warden asrama tersenarai di sini. Data ini dipaparkan di halaman Asrama laman web.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='warden-add']",
+    title: "Tambah Warden",
+    content: "Klik untuk menambah warden baharu. Isi nama, jawatan, nombor telefon, dan muat naik foto profil yang akan dipaparkan di halaman Asrama.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='warden-sort']",
+    title: "Urutan Paparan",
+    content: "Nombor urutan menentukan susunan warden dalam senarai. Nombor lebih kecil dipapar dahulu.",
+    placement: "left",
+    skipBeacon: true,
+  },
+];
+
+// ─── Asrama Fasiliti ──────────────────────────────────────────────────────────
+export const asramaFasilitiSteps: Step[] = [
+  {
+    target: "[data-tour='fasiliti-table']",
+    title: "Senarai Fasiliti",
+    content: "Fasiliti asrama yang dipaparkan di halaman Asrama. Anda boleh tambah, edit, atau padam fasiliti.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='fasiliti-add']",
+    title: "Tambah Fasiliti",
+    content: "Klik untuk menambah fasiliti baharu. Pilih ikon yang sesuai dan masukkan nama fasiliti.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='fasiliti-icon']",
+    title: "Pilihan Ikon",
+    content: "Setiap fasiliti boleh mempunyai ikon yang berbeza. Pilih dari senarai ikon yang disediakan — ikon ini akan dipaparkan di laman awam.",
+    placement: "right",
+    skipBeacon: true,
+  },
+];
+
+// ─── Media ────────────────────────────────────────────────────────────────────
+export const mediaSteps: Step[] = [
+  {
+    target: "[data-tour='media-upload']",
+    title: "Muat Naik Gambar",
+    content: "Klik butang ini untuk memuat naik gambar baharu ke perpustakaan media. Gambar akan disimpan di storan awan.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='media-search']",
+    title: "Cari Media",
+    content: "Taip nama fail dan tekan Enter untuk mencari gambar tertentu dalam perpustakaan.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='media-grid']",
+    title: "Galeri Media",
+    content: "Semua gambar yang telah dimuat naik dipaparkan di sini. Klik butang 'Salin URL' pada sebarang gambar untuk mendapatkan pautan yang boleh digunakan dalam kandungan.",
+    placement: "top",
+    skipBeacon: true,
+  },
+];
+
+// ─── Documents (Sekolah) ──────────────────────────────────────────────────────
+export const documentsSteps: Step[] = [
+  {
+    target: "[data-tour='docs-category']",
+    title: "Tapis Mengikut Kategori",
+    content: "Tapis dokumen mengikut jenis: Semua, Spreadsheet, PDF, atau Dokumen Word.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='docs-upload']",
+    title: "Muat Naik Dokumen",
+    content: "Klik untuk memuat naik dokumen sekolah — fail PDF, Excel, atau Word. Dokumen ini boleh dikongsi kepada pengunjung laman.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='docs-grid']",
+    title: "Senarai Dokumen",
+    content: "Semua dokumen yang dimuat naik dipaparkan di sini. Setiap kad mempunyai pratonton, butang salin URL, dan padam.",
+    placement: "top",
+    skipBeacon: true,
+  },
+];
+
+// ─── Units (Section) ──────────────────────────────────────────────────────────
+export const unitsSteps: Step[] = [
+  {
+    target: "[data-tour='units-filter']",
+    title: "Tapis Mengikut Unit",
+    content: "Pilih unit tertentu untuk melihat seksyen kandungannya sahaja, atau pilih 'Semua' untuk lihat semua seksyen.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='units-table']",
+    title: "Seksyen Unit",
+    content: "Setiap baris ialah satu blok kandungan di halaman unit — carta org, statistik KPI, jadual JK, dan lain-lain.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='units-add']",
+    title: "Tambah Seksyen Unit",
+    content: "Tambah seksyen kandungan baharu untuk sesebuah unit. Pilih jenis seksyen yang sesuai. Untuk menyusun semula urutan, gunakan menu tiga titik dan pilih 'Naikkan' atau 'Turunkan'.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+];
+
+// ─── Asrama Pelajar ───────────────────────────────────────────────────────────
+export const asramaPelajarSteps: Step[] = [
+  {
+    target: "[data-tour='pelajar-table']",
+    title: "Senarai Pelajar Asrama",
+    content: "Semua pelajar yang mendaftar asrama tersenarai di sini. Klik Edit atau Padam untuk mengurus rekod pelajar.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='pelajar-add']",
+    title: "Daftar Pelajar Baharu",
+    content: "Klik untuk mendaftarkan pelajar asrama baharu. Isi maklumat nama, tingkatan, blok, dan gambar pelajar.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+];
+
+// ─── News (Berita) ────────────────────────────────────────────────────────────
+export const newsSteps: Step[] = [
+  {
+    target: "[data-tour='news-table']",
+    title: "Senarai Berita",
+    content: "Semua artikel berita tersenarai di sini. Klik menu tiga titik untuk edit, pratonton, atau padam berita.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='news-add']",
+    title: "Tambah Berita",
+    content: "Klik untuk menulis artikel berita baharu. Editor menyokong teks kaya, gambar, dan pautan.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+];
+
+// ─── Pengumuman ───────────────────────────────────────────────────────────────
+export const pengumumanSteps: Step[] = [
+  {
+    target: "[data-tour='pengumuman-table']",
+    title: "Senarai Pengumuman",
+    content: "Semua pengumuman yang aktif tersenarai di sini. Pengumuman terbaru dipaparkan di bar tatal laman utama.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='pengumuman-add']",
+    title: "Tambah Pengumuman",
+    content: "Klik untuk membuat pengumuman baharu. Anda boleh tetapkan tarikh tamat untuk menyembunyikannya secara automatik.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+];
+
+// ─── Gallery (Album) ──────────────────────────────────────────────────────────
+export const gallerySteps: Step[] = [
+  {
+    target: "[data-tour='gallery-table']",
+    title: "Senarai Album",
+    content: "Semua album galeri foto tersenarai di sini. Setiap album boleh mempunyai banyak gambar di dalamnya.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='gallery-add']",
+    title: "Buat Album Baharu",
+    content: "Klik untuk mencipta album foto baharu. Masukkan tajuk, tahun, dan muat naik gambar untuk album tersebut.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+];
+
+// ─── Advertisements (Iklan) ───────────────────────────────────────────────────
+export const advertisementsSteps: Step[] = [
+  {
+    target: "[data-tour='ads-table']",
+    title: "Senarai Iklan",
+    content: "Iklan yang aktif akan dipaparkan di panel sisi laman web. Anda boleh mengurus urutan, tajuk, dan gambar iklan.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='ads-add']",
+    title: "Tambah Iklan",
+    content: "Klik untuk menambah iklan baharu. Masukkan tajuk, pautan destinasi, dan muat naik gambar banner.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+];
+
+// ─── Teachers (Guru) ──────────────────────────────────────────────────────────
+export const teachersSteps: Step[] = [
+  {
+    target: "[data-tour='teachers-table']",
+    title: "Senarai Guru",
+    content: "Semua guru yang berdaftar tersenarai di sini. Data ini dipaparkan dalam halaman profil guru laman web.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='teachers-add']",
+    title: "Tambah Guru",
+    content: "Klik untuk mendaftarkan guru baharu. Isikan nama, jawatan, opsyen unit, dan muat naik foto.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+];

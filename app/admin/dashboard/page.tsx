@@ -22,6 +22,8 @@ import {
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { dashboardSteps } from "@/components/admin/tour/tour-steps";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -178,20 +180,23 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Dashboard</h1>
           <p className="text-sm text-muted-foreground">Ringkasan konten, health check, dan aktivitas terbaru</p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => load(true)} disabled={isLoading}>
-          <RefreshCw className={isLoading ? "animate-spin" : ""} />
-          Segarkan
-        </Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="dashboard" steps={dashboardSteps} />
+          <Button variant="outline" size="sm" onClick={() => load(true)} disabled={isLoading}>
+            <RefreshCw className={isLoading ? "animate-spin" : ""} />
+            Segarkan
+          </Button>
+        </div>
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5" data-tour="dashboard-stats">
         {COUNT_CARDS.map((card) => (
           <Link key={card.key} href={card.href}>
             <Card className="gap-3 py-4 transition-colors hover:bg-muted/50">
@@ -243,7 +248,7 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-tour="dashboard-quick-links">
         {[
           { href: "/admin/content/new", label: "Tambah Public Content" },
           { href: "/admin/pengumuman/new", label: "Tambah Pengumuman" },

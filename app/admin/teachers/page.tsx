@@ -8,6 +8,8 @@ import { MoreHorizontal, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { teachersSteps } from "@/components/admin/tour/tour-steps";
 import {
   Select,
   SelectContent,
@@ -145,14 +147,18 @@ export default function TeachersListPage() {
           <h1 className="text-2xl font-semibold">Guru</h1>
           <p className="text-sm text-muted-foreground">Kelola data dan status guru sekolah</p>
         </div>
-        <Button asChild>
-          <Link href="/admin/teachers/new">
-            <Plus />
-            Tambah Guru
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="teachers" steps={teachersSteps} />
+          <Button asChild data-tour="teachers-add">
+            <Link href="/admin/teachers/new">
+              <Plus />
+              Tambah Guru
+            </Link>
+          </Button>
+        </div>
       </div>
 
+      <div data-tour="teachers-table">
       <DataTable
         columns={columns}
         data={rows}
@@ -201,6 +207,7 @@ export default function TeachersListPage() {
           </>
         }
       />
+      </div>
     </div>
   );
 }

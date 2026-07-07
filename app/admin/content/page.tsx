@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Plus } from "lucide-react";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { contentSteps } from "@/components/admin/tour/tour-steps";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -64,8 +66,16 @@ export default function PublicContentPage() {
   const columns: ColumnDef<PublicContentRow, unknown>[] = [
     { accessorKey: "pageKey", header: "Halaman" },
     { accessorKey: "sectionKey", header: "Section Key" },
-    { accessorKey: "type", header: "Jenis" },
+    {
+      accessorKey: "type",
+      header: () => <span data-tour="section-type-col">Jenis</span>,
+    },
     { accessorKey: "title", header: "Tajuk", cell: ({ row }) => row.original.title ?? "-" },
+    {
+      accessorKey: "isActive",
+      header: () => <span data-tour="section-active-col">Aktif</span>,
+      cell: ({ row }) => row.original.isActive ? "✓" : "—",
+    },
     { accessorKey: "sortOrder", header: "Urutan" },
     {
       id: "actions",
@@ -97,28 +107,33 @@ export default function PublicContentPage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Public Content</h1>
           <p className="text-sm text-muted-foreground">Hero, about, PIBG, links, and structured public sections.</p>
         </div>
-        <Button asChild>
-          <Link href="/admin/content/new">
-            <Plus />
-            Tambah Seksyen
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="content-mgmt" steps={contentSteps} />
+          <Button asChild data-tour="add-section">
+            <Link href="/admin/content/new">
+              <Plus />
+              Tambah Seksyen
+            </Link>
+          </Button>
+        </div>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={rows}
-        isLoading={isLoading}
-        page={1}
-        totalPages={1}
-        onPageChange={() => {}}
-        emptyMessage="Belum ada seksyen public content."
-      />
+      <div data-tour="content-table">
+        <DataTable
+          columns={columns}
+          data={rows}
+          isLoading={isLoading}
+          page={1}
+          totalPages={1}
+          onPageChange={() => {}}
+          emptyMessage="Belum ada seksyen public content."
+        />
+      </div>
     </div>
   );
 }

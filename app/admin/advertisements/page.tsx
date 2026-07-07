@@ -8,6 +8,8 @@ import { MoreHorizontal, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { advertisementsSteps } from "@/components/admin/tour/tour-steps";
 import {
   Select,
   SelectContent,
@@ -164,14 +166,18 @@ export default function AdvertisementsListPage() {
           <h1 className="text-2xl font-semibold">Iklan</h1>
           <p className="text-sm text-muted-foreground">Kelola banner dan iklan yang tampil di website</p>
         </div>
-        <Button asChild>
-          <Link href="/admin/advertisements/new">
-            <Plus />
-            Tambah Iklan
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="advertisements" steps={advertisementsSteps} />
+          <Button asChild data-tour="ads-add">
+            <Link href="/admin/advertisements/new">
+              <Plus />
+              Tambah Iklan
+            </Link>
+          </Button>
+        </div>
       </div>
 
+      <div data-tour="ads-table">
       <DataTable
         columns={columns}
         data={rows}
@@ -206,6 +212,7 @@ export default function AdvertisementsListPage() {
           </Select>
         }
       />
+      </div>
     </div>
   );
 }

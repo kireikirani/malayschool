@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Plus } from "lucide-react";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { asramaFasilitiSteps } from "@/components/admin/tour/tour-steps";
 import { toast } from "sonner";
 import * as LucideIcons from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -200,7 +202,7 @@ export default function AsramaFasilitiPage() {
     },
     {
       accessorKey: "iconName",
-      header: "Ikon",
+      header: () => <span data-tour="fasiliti-icon">Ikon</span>,
       cell: ({ row }) => (
         <span className="flex items-center gap-2">
           <DynamicIcon name={row.original.iconName} className="size-4 text-primary" />
@@ -238,18 +240,23 @@ export default function AsramaFasilitiPage() {
           <h1 className="text-2xl font-semibold">Fasiliti Asrama</h1>
           <p className="text-sm text-muted-foreground">Urus senarai fasiliti yang tersedia di asrama</p>
         </div>
-        <Button onClick={openAdd}><Plus /> Tambah Fasiliti</Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="asrama-fasiliti" steps={asramaFasilitiSteps} />
+          <Button onClick={openAdd} data-tour="fasiliti-add"><Plus /> Tambah Fasiliti</Button>
+        </div>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={rows}
-        isLoading={isLoading}
-        page={1}
-        totalPages={1}
-        onPageChange={() => {}}
-        emptyMessage="Belum ada fasiliti. Klik 'Tambah Fasiliti' untuk mula."
-      />
+      <div data-tour="fasiliti-table">
+        <DataTable
+          columns={columns}
+          data={rows}
+          isLoading={isLoading}
+          page={1}
+          totalPages={1}
+          onPageChange={() => {}}
+          emptyMessage="Belum ada fasiliti. Klik 'Tambah Fasiliti' untuk mula."
+        />
+      </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-md">

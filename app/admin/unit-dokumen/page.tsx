@@ -27,6 +27,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DeleteConfirmDialog } from "@/components/admin/delete-confirm-dialog";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { unitDokumenSteps } from "@/components/admin/tour/tour-steps";
 import { UploadButton } from "@/lib/uploadthing-client";
 import { apiSend } from "@/lib/fetcher";
 import { UNITS } from "@/lib/units";
@@ -216,7 +218,7 @@ function UnitDokumenTab({ unit }: { unit: (typeof UNITS)[0] }) {
   return (
     <div className="space-y-8">
       {/* ─── Carta Organisasi ─── */}
-      <section>
+      <section data-tour="carta-org">
         <h3 className="mb-4 text-sm font-semibold">Carta Organisasi</h3>
         {cartaOrg ? (
           <div className="flex items-start gap-4 border border-border/70 bg-card p-4">
@@ -314,6 +316,7 @@ function UnitDokumenTab({ unit }: { unit: (typeof UNITS)[0] }) {
                 <div
                   key={dokItem.label}
                   className="border border-border/70 bg-card px-4 py-4 space-y-3"
+                  {...(idx === 0 ? { "data-tour": "dokumen-slot" } : {})}
                 >
                   {/* Header row */}
                   <div className="flex items-start gap-3">
@@ -340,7 +343,7 @@ function UnitDokumenTab({ unit }: { unit: (typeof UNITS)[0] }) {
 
                     {/* Visibility toggle (only when uploaded) */}
                     {uploaded && (
-                      <div className="flex shrink-0 items-center gap-1.5">
+                      <div className="flex shrink-0 items-center gap-1.5" {...(idx === 0 ? { "data-tour": "visibility-switch" } : {})}>
                         <Switch
                           checked={uploaded.isVisible}
                           disabled={toggling === uploaded.id}
@@ -473,6 +476,7 @@ function UnitDokumenTab({ unit }: { unit: (typeof UNITS)[0] }) {
                             size="sm"
                             className="h-7 text-xs gap-1"
                             onClick={() => toggleUrlMode(dokItem.label)}
+                            {...(idx === 0 ? { "data-tour": "url-toggle" } : {})}
                           >
                             <Link2 className="size-3" />
                             Link URL / GDrive
@@ -615,6 +619,7 @@ function UnitDokumenTab({ unit }: { unit: (typeof UNITS)[0] }) {
             size="sm"
             onClick={() => setShowCustomForm(true)}
             className="gap-1.5"
+            data-tour="add-custom"
           >
             <Plus className="size-4" />
             Tambah Dokumen Lain
@@ -628,15 +633,18 @@ function UnitDokumenTab({ unit }: { unit: (typeof UNITS)[0] }) {
 export default function UnitDokumenPage() {
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-semibold">Dokumen Unit</h1>
-        <p className="text-sm text-muted-foreground">
-          Carta organisasi dan dokumen PDF bagi setiap unit pengurusan
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold">Dokumen Unit</h1>
+          <p className="text-sm text-muted-foreground">
+            Carta organisasi dan dokumen PDF bagi setiap unit pengurusan
+          </p>
+        </div>
+        <PageTour tourKey="unit-dokumen" steps={unitDokumenSteps} />
       </div>
 
       <Tabs defaultValue={UNITS[0].slug}>
-        <TabsList className="h-auto flex-wrap gap-1">
+        <TabsList className="h-auto flex-wrap gap-1" data-tour="unit-tabs">
           {UNITS.map((unit) => (
             <TabsTrigger key={unit.slug} value={unit.slug} className="text-xs">
               {unit.navLabel}

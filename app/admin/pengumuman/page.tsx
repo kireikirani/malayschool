@@ -9,6 +9,8 @@ import { MoreHorizontal, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { pengumumanSteps } from "@/components/admin/tour/tour-steps";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -124,23 +126,28 @@ export default function PengumumanListPage() {
           <h1 className="text-2xl font-semibold">Pengumuman</h1>
           <p className="text-sm text-muted-foreground">Info terkini dan poster yang dipaparkan di laman utama</p>
         </div>
-        <Button asChild>
-          <Link href="/admin/pengumuman/new">
-            <Plus />
-            Tambah Pengumuman
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="pengumuman" steps={pengumumanSteps} />
+          <Button asChild data-tour="pengumuman-add">
+            <Link href="/admin/pengumuman/new">
+              <Plus />
+              Tambah Pengumuman
+            </Link>
+          </Button>
+        </div>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={rows}
-        isLoading={isLoading}
-        page={1}
-        totalPages={1}
-        onPageChange={() => {}}
-        emptyMessage="Belum ada pengumuman."
-      />
+      <div data-tour="pengumuman-table">
+        <DataTable
+          columns={columns}
+          data={rows}
+          isLoading={isLoading}
+          page={1}
+          totalPages={1}
+          onPageChange={() => {}}
+          emptyMessage="Belum ada pengumuman."
+        />
+      </div>
     </div>
   );
 }

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ImageIcon, Trash2 } from "lucide-react";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { mediaSteps } from "@/components/admin/tour/tour-steps";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -74,20 +76,26 @@ export default function MediaLibraryPage() {
           <h1 className="text-2xl font-semibold">Media</h1>
           <p className="text-sm text-muted-foreground">Perpustakaan aset umum seperti gambar untuk galeri, berita, dan banner.</p>
         </div>
-        <UploadButton
-          endpoint="mediaUploader"
-          onClientUploadComplete={() => {
-            setIsLoading(true);
-            toast.success("Gambar berhasil diunggah");
-            load();
-          }}
-          onUploadError={(err) => {
-            toast.error(err.message);
-          }}
-        />
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="media" steps={mediaSteps} />
+          <div data-tour="media-upload">
+            <UploadButton
+              endpoint="mediaUploader"
+              onClientUploadComplete={() => {
+                setIsLoading(true);
+                toast.success("Gambar berhasil diunggah");
+                load();
+              }}
+              onUploadError={(err) => {
+                toast.error(err.message);
+              }}
+            />
+          </div>
+        </div>
       </div>
 
       <Input
+        data-tour="media-search"
         placeholder="Cari nama file..."
         value={search}
         onChange={(e) => {
@@ -103,7 +111,7 @@ export default function MediaLibraryPage() {
         className="max-w-xs"
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div data-tour="media-grid" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {isLoading &&
           Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-64 w-full" />)}
         {!isLoading && rows.length === 0 && (

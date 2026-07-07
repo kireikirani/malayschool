@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Plus } from "lucide-react";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { asramaWardenSteps } from "@/components/admin/tour/tour-steps";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -175,7 +177,7 @@ export default function AsramaWardenPage() {
   const columns: ColumnDef<WardenRow, unknown>[] = [
     {
       accessorKey: "sortOrder",
-      header: "Urutan",
+      header: () => <span data-tour="warden-sort">Urutan</span>,
       cell: ({ row }) => (
         <span className="inline-flex size-7 items-center justify-center rounded-full bg-muted text-xs font-semibold">
           {row.original.sortOrder}
@@ -214,18 +216,23 @@ export default function AsramaWardenPage() {
           <h1 className="text-2xl font-semibold">Warden Asrama</h1>
           <p className="text-sm text-muted-foreground">Urus senarai warden asrama sekolah</p>
         </div>
-        <Button onClick={openAdd}><Plus /> Tambah Warden</Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="asrama-warden" steps={asramaWardenSteps} />
+          <Button onClick={openAdd} data-tour="warden-add"><Plus /> Tambah Warden</Button>
+        </div>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={rows}
-        isLoading={isLoading}
-        page={1}
-        totalPages={1}
-        onPageChange={() => {}}
-        emptyMessage="Belum ada warden. Klik 'Tambah Warden' untuk mula."
-      />
+      <div data-tour="warden-table">
+        <DataTable
+          columns={columns}
+          data={rows}
+          isLoading={isLoading}
+          page={1}
+          totalPages={1}
+          onPageChange={() => {}}
+          emptyMessage="Belum ada warden. Klik 'Tambah Warden' untuk mula."
+        />
+      </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg">

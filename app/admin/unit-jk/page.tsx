@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Plus } from "lucide-react";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { unitJkSteps } from "@/components/admin/tour/tour-steps";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -259,31 +261,38 @@ export default function UnitJkPage() {
           <h1 className="text-2xl font-semibold">Jawatankuasa (JK)</h1>
           <p className="text-sm text-muted-foreground">Urus ahli jawatankuasa semua unit dan asrama</p>
         </div>
-        <Button onClick={openAdd}><Plus /> Tambah Ahli JK</Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="unit-jk" steps={unitJkSteps} />
+          <Button onClick={openAdd} data-tour="jk-add"><Plus /> Tambah Ahli JK</Button>
+        </div>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={rows}
-        isLoading={isLoading}
-        page={1}
-        totalPages={1}
-        onPageChange={() => {}}
-        emptyMessage="Belum ada ahli JK untuk unit ini."
-        toolbar={
-          <Select value={unitFilter} onValueChange={(v) => { setUnitFilter(v); setIsLoading(true); }}>
-            <SelectTrigger className="w-52">
-              <SelectValue placeholder="Semua Unit" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Semua Unit</SelectItem>
-              {UNIT_OPTIONS.map((u) => (
-                <SelectItem key={u.value} value={u.value}>{u.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        }
-      />
+      <div data-tour="jk-table">
+        <DataTable
+          columns={columns}
+          data={rows}
+          isLoading={isLoading}
+          page={1}
+          totalPages={1}
+          onPageChange={() => {}}
+          emptyMessage="Belum ada ahli JK untuk unit ini."
+          toolbar={
+            <div data-tour="jk-unit-filter">
+              <Select value={unitFilter} onValueChange={(v) => { setUnitFilter(v); setIsLoading(true); }}>
+                <SelectTrigger className="w-52">
+                  <SelectValue placeholder="Semua Unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Unit</SelectItem>
+                  {UNIT_OPTIONS.map((u) => (
+                    <SelectItem key={u.value} value={u.value}>{u.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          }
+        />
+      </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg">

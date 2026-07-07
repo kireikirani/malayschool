@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { settingsSteps } from "@/components/admin/tour/tour-steps";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -70,20 +72,23 @@ export default function SettingsPage() {
           <h1 className="text-2xl font-semibold">Tetapan Laman</h1>
           <p className="text-sm text-muted-foreground">Maklumat sekolah, statistik, dan tema warna</p>
         </div>
-        <Button onClick={handleSave} disabled={isSaving}>
-          <Save />
-          {isSaving ? "Menyimpan..." : "Simpan"}
-        </Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="settings" steps={settingsSteps} />
+          <Button onClick={handleSave} disabled={isSaving} data-tour="settings-save">
+            <Save />
+            {isSaving ? "Menyimpan..." : "Simpan"}
+          </Button>
+        </div>
       </div>
 
       <Tabs defaultValue="sekolah">
-        <TabsList>
-          <TabsTrigger value="sekolah">Sekolah</TabsTrigger>
+        <TabsList data-tour="settings-tabs">
+          <TabsTrigger value="sekolah" data-tour="settings-sekolah">Sekolah</TabsTrigger>
           <TabsTrigger value="hubungi">Hubungi</TabsTrigger>
-          <TabsTrigger value="statistik">Statistik</TabsTrigger>
+          <TabsTrigger value="statistik" data-tour="settings-statistik">Statistik</TabsTrigger>
           <TabsTrigger value="pibg">PIBG</TabsTrigger>
           <TabsTrigger value="akses">Akses Terhad</TabsTrigger>
-          <TabsTrigger value="tema">Tema</TabsTrigger>
+          <TabsTrigger value="tema" data-tour="settings-tema">Tema</TabsTrigger>
         </TabsList>
 
         <TabsContent value="sekolah" className="mt-4 space-y-4">

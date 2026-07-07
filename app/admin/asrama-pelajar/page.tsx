@@ -6,6 +6,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Plus, User } from "lucide-react";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { asramaPelajarSteps } from "@/components/admin/tour/tour-steps";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -143,14 +145,18 @@ export default function AsramaPelajarPage() {
           <h1 className="text-2xl font-semibold">Pelajar Asrama</h1>
           <p className="text-sm text-muted-foreground">Senarai aspura dan aspuri penghuni asrama sekolah</p>
         </div>
-        <Button asChild>
-          <Link href="/admin/asrama-pelajar/new">
-            <Plus />
-            Tambah Pelajar
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="asrama-pelajar" steps={asramaPelajarSteps} />
+          <Button asChild data-tour="pelajar-add">
+            <Link href="/admin/asrama-pelajar/new">
+              <Plus />
+              Tambah Pelajar
+            </Link>
+          </Button>
+        </div>
       </div>
 
+      <div data-tour="pelajar-table">
       <DataTable
         columns={columns}
         data={rows}
@@ -181,6 +187,7 @@ export default function AsramaPelajarPage() {
           </>
         }
       />
+      </div>
     </div>
   );
 }

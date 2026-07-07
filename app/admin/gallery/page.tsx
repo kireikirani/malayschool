@@ -8,6 +8,8 @@ import { MoreHorizontal, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { gallerySteps } from "@/components/admin/tour/tour-steps";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -108,14 +110,18 @@ export default function GalleryAlbumsPage() {
           <h1 className="text-2xl font-semibold">Galeri</h1>
           <p className="text-sm text-muted-foreground">Kelola album dan foto galeri sekolah</p>
         </div>
-        <Button asChild>
-          <Link href="/admin/gallery/new">
-            <Plus />
-            Tambah Album
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <PageTour tourKey="gallery" steps={gallerySteps} />
+          <Button asChild data-tour="gallery-add">
+            <Link href="/admin/gallery/new">
+              <Plus />
+              Tambah Album
+            </Link>
+          </Button>
+        </div>
       </div>
 
+      <div data-tour="gallery-table">
       <DataTable
         columns={columns}
         data={rows}
@@ -145,6 +151,7 @@ export default function GalleryAlbumsPage() {
           />
         }
       />
+      </div>
     </div>
   );
 }
