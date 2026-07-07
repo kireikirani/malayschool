@@ -12,6 +12,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { ImagePicker } from "@/components/admin/image-picker";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { pengumumanFormSteps } from "@/components/admin/tour/tour-steps";
 import { createPengumumanSchema } from "@/lib/validations/pengumuman.schema";
 import { apiSend } from "@/lib/fetcher";
 import { setFormErrors } from "@/lib/set-form-errors";
@@ -60,21 +62,27 @@ export function PengumumanForm({
   }
 
   return (
+    <div className="max-w-xl space-y-6">
+      <div className="flex items-center gap-2">
+        <PageTour tourKey="pengumuman-form" steps={pengumumanFormSteps} />
+      </div>
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-xl">
-        <FormField
-          control={form.control}
-          name="imageUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Gambar / Poster *</FormLabel>
-              <FormControl>
-                <ImagePicker value={field.value} onChange={field.onChange} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div data-tour="pengumuman-form-poster">
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Gambar / Poster *</FormLabel>
+                <FormControl>
+                  <ImagePicker value={field.value} onChange={field.onChange} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -119,7 +127,7 @@ export function PengumumanForm({
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div data-tour="pengumuman-form-tamat" className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="tamatPada"
@@ -151,11 +159,12 @@ export function PengumumanForm({
           />
         </div>
 
-        <FormField
-          control={form.control}
-          name="aktif"
-          render={({ field }) => (
-            <FormItem className="flex items-center gap-3">
+        <div data-tour="pengumuman-form-aktif">
+          <FormField
+            control={form.control}
+            name="aktif"
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-3">
               <FormControl>
                 <Switch checked={field.value} onCheckedChange={field.onChange} />
               </FormControl>
@@ -166,6 +175,7 @@ export function PengumumanForm({
             </FormItem>
           )}
         />
+        </div>
 
         <div className="flex gap-3">
           <Button type="submit" disabled={isSubmitting}>
@@ -177,5 +187,6 @@ export function PengumumanForm({
         </div>
       </form>
     </Form>
+    </div>
   );
 }

@@ -90,11 +90,6 @@ export function TourTooltip({
           )}
         </div>
 
-        {/* Hint — direct user to the toggle button */}
-        <p className="mt-3 border-t border-border/50 pt-2 text-[10px] text-muted-foreground/60">
-          Panduan ini akan muncul semula setiap kali halaman ini dibuka.
-          Gunakan butang <span className="font-medium">Panduan</span> di atas untuk matikan.
-        </p>
       </div>
     </div>
   );

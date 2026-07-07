@@ -23,6 +23,8 @@ import {
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { ImagePicker } from "@/components/admin/image-picker";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { newsFormSteps } from "@/components/admin/tour/tour-steps";
 import { createNewsSchema } from "@/lib/validations/news.schema";
 import { apiSend } from "@/lib/fetcher";
 import { setFormErrors } from "@/lib/set-form-errors";
@@ -76,69 +78,78 @@ export function NewsForm({
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-3xl space-y-6">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Judul</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>Tajuk berita yang akan dipaparkan kepada pembaca.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <div className="max-w-3xl space-y-6">
+      <div className="flex items-center gap-2">
+        <PageTour tourKey="news-form" steps={newsFormSteps} />
+      </div>
+      <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div data-tour="news-form-title" className="space-y-6">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Judul</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormDescription>Tajuk berita yang akan dipaparkan kepada pembaca.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="slug"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Slug (opsional)</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value as string} placeholder="Otomatis dari judul jika dikosongkan" />
+                </FormControl>
+                <FormDescription>URL unik berita. Kosongkan untuk dijana secara automatik dari tajuk.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-        <FormField
-          control={form.control}
-          name="slug"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Slug (opsional)</FormLabel>
-              <FormControl>
-                <Input {...field} value={field.value as string} placeholder="Otomatis dari judul jika dikosongkan" />
-              </FormControl>
-              <FormDescription>URL unik berita. Kosongkan untuk dijana secara automatik dari tajuk.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div data-tour="news-form-content">
+          <FormField
+            control={form.control}
+            name="content"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Konten</FormLabel>
+                <FormControl>
+                  <RichTextEditor value={field.value} onChange={field.onChange} />
+                </FormControl>
+                <FormDescription>Isi kandungan penuh berita. Gunakan toolbar untuk format teks.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-        <FormField
-          control={form.control}
-          name="content"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Konten</FormLabel>
-              <FormControl>
-                <RichTextEditor value={field.value} onChange={field.onChange} />
-              </FormControl>
-              <FormDescription>Isi kandungan penuh berita. Gunakan toolbar untuk format teks.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div data-tour="news-form-thumbnail">
+          <FormField
+            control={form.control}
+            name="thumbnail"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Thumbnail</FormLabel>
+                <FormControl>
+                  <ImagePicker value={field.value} onChange={field.onChange} />
+                </FormControl>
+                <FormDescription>Gambar kecil yang mewakili berita dalam senarai. Saiz disyorkan: 800×450 piksel.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-        <FormField
-          control={form.control}
-          name="thumbnail"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Thumbnail</FormLabel>
-              <FormControl>
-                <ImagePicker value={field.value} onChange={field.onChange} />
-              </FormControl>
-              <FormDescription>Gambar kecil yang mewakili berita dalam senarai. Saiz disyorkan: 800×450 piksel.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid grid-cols-2 gap-4">
+        <div data-tour="news-form-status" className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="status"
@@ -195,55 +206,58 @@ export function NewsForm({
           />
         </div>
 
-        <FormField
-          control={form.control}
-          name="metaTitle"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Meta Title (SEO)</FormLabel>
-              <FormControl>
-                <Input {...field} value={field.value as string} />
-              </FormControl>
-              <FormDescription>Tajuk untuk enjin carian. Kosongkan untuk gunakan tajuk berita. Disyorkan: di bawah 60 aksara.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div data-tour="news-form-meta" className="space-y-6">
+          <FormField
+            control={form.control}
+            name="metaTitle"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Meta Title (SEO)</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value as string} />
+                </FormControl>
+                <FormDescription>Tajuk untuk enjin carian. Kosongkan untuk gunakan tajuk berita. Disyorkan: di bawah 60 aksara.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="metaDescription"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Meta Description (SEO)</FormLabel>
-              <FormControl>
-                <Textarea {...field} value={field.value as string} />
-              </FormControl>
-              <FormDescription>Ringkasan pendek untuk enjin carian. Disyorkan: 150–160 aksara.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="metaDescription"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Meta Description (SEO)</FormLabel>
+                <FormControl>
+                  <Textarea {...field} value={field.value as string} />
+                </FormControl>
+                <FormDescription>Ringkasan pendek untuk enjin carian. Disyorkan: 150–160 aksara.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="ogImage"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Open Graph Image</FormLabel>
-              <FormControl>
-                <ImagePicker value={field.value} onChange={field.onChange} />
-              </FormControl>
-              <FormDescription>Gambar yang dipaparkan apabila pautan berita dikongsi di media sosial.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="ogImage"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Open Graph Image</FormLabel>
+                <FormControl>
+                  <ImagePicker value={field.value} onChange={field.onChange} />
+                </FormControl>
+                <FormDescription>Gambar yang dipaparkan apabila pautan berita dikongsi di media sosial.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Menyimpan..." : "Simpan"}
         </Button>
       </form>
     </Form>
+    </div>
   );
 }

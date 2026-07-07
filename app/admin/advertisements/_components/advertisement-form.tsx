@@ -21,6 +21,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { advertisementFormSteps } from "@/components/admin/tour/tour-steps";
 import { createAdvertisementSchema } from "@/lib/validations/advertisement.schema";
 import { apiSend } from "@/lib/fetcher";
 import { setFormErrors } from "@/lib/set-form-errors";
@@ -105,8 +107,12 @@ export function AdvertisementForm({
   }
 
   return (
+    <div className="max-w-xl space-y-6">
+      <div className="flex items-center gap-2">
+        <PageTour tourKey="advertisement-form" steps={advertisementFormSteps} />
+      </div>
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-xl space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="name"
@@ -122,7 +128,7 @@ export function AdvertisementForm({
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div data-tour="ad-form-type" className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="type"
@@ -176,6 +182,7 @@ export function AdvertisementForm({
           />
         </div>
 
+        <div data-tour="ad-form-content">
         <FormField
           control={form.control}
           name="content"
@@ -190,6 +197,7 @@ export function AdvertisementForm({
             </FormItem>
           )}
         />
+        </div>
 
         <div className="grid grid-cols-2 gap-4">
           <FormField
@@ -284,7 +292,7 @@ export function AdvertisementForm({
           )}
         />
 
-        <div className="space-y-3 border border-border/70 bg-card p-4">
+        <div data-tour="ad-form-preview" className="space-y-3 border border-border/70 bg-card p-4">
           <div>
             <p className="text-sm font-medium">Pratinjau Ringkas</p>
             <p className="text-xs text-muted-foreground">
@@ -313,5 +321,6 @@ export function AdvertisementForm({
         </Button>
       </form>
     </Form>
+    </div>
   );
 }

@@ -392,3 +392,117 @@ export const teachersSteps: Step[] = [
     skipBeacon: true,
   },
 ];
+
+// ─── Form: Berita (New / Edit) ────────────────────────────────────────────────
+export const newsFormSteps: Step[] = [
+  {
+    target: "[data-tour='news-form-title']",
+    title: "Tajuk & Slug",
+    content: "Isi tajuk berita. Slug (URL unik) akan dijana automatik dari tajuk jika dikosongkan.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='news-form-content']",
+    title: "Editor Kandungan",
+    content: "Tulis isi berita menggunakan editor teks kaya. Toolbar menyokong format tebal, senarai, jadual, pautan, dan gambar.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='news-form-thumbnail']",
+    title: "Gambar Thumbnail",
+    content: "Muat naik gambar wakil berita. Gambar ini dipaparkan dalam kad berita di senarai. Saiz disyorkan: 800×450 piksel.",
+    placement: "right",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='news-form-status']",
+    title: "Status & Tarikh Terbit",
+    content: "'Draft' — simpan tanpa siarkan. 'Diterbitkan' — terus papar kepada pembaca. Tarikh terbit boleh ditentukan atau dibiarkan kosong.",
+    placement: "top",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='news-form-meta']",
+    title: "Maklumat SEO",
+    content: "Meta Title dan Meta Description digunakan oleh Google. Kosongkan untuk gunakan tajuk berita secara automatik. OG Image ialah gambar yang muncul apabila dikongsi di media sosial.",
+    placement: "top",
+    skipBeacon: true,
+  },
+];
+
+// ─── Form: Guru (New / Edit) ──────────────────────────────────────────────────
+export const teacherFormSteps: Step[] = [
+  {
+    target: "[data-tour='teacher-form-photo']",
+    title: "Foto Guru",
+    content: "Klik kawasan ini untuk memuat naik foto profil guru dari perpustakaan media atau komputer anda.",
+    placement: "right",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='teacher-form-sort']",
+    title: "Urutan Paparan",
+    content: "Nombor lebih kecil dipapar dahulu. Guna 0, 1, 2… untuk susun guru mengikut hierarki atau jawatan.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='teacher-form-status']",
+    title: "Status Guru",
+    content: "Hanya guru 'Aktif' yang dipaparkan kepada pengunjung laman web. Tetapkan 'Nonaktif' untuk sembunyikan sementara.",
+    placement: "top",
+    skipBeacon: true,
+  },
+];
+
+// ─── Form: Pengumuman (New / Edit) ────────────────────────────────────────────
+export const pengumumanFormSteps: Step[] = [
+  {
+    target: "[data-tour='pengumuman-form-poster']",
+    title: "Gambar Poster",
+    content: "Muat naik poster atau gambar pengumuman. Gambar ini dipaparkan dalam slider tatal di laman utama.",
+    placement: "right",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='pengumuman-form-tamat']",
+    title: "Tarikh & Urutan",
+    content: "Tetapkan tarikh pengumuman berhenti dipaparkan secara automatik. Nombor urutan menentukan susunan dalam slider.",
+    placement: "top",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='pengumuman-form-aktif']",
+    title: "Status Aktif",
+    content: "Toggle ini mengawal sama ada pengumuman dipaparkan di laman utama sekarang. Matikan untuk sembunyikan tanpa padam.",
+    placement: "top",
+    skipBeacon: true,
+  },
+];
+
+// ─── Form: Iklan (New / Edit) ─────────────────────────────────────────────────
+export const advertisementFormSteps: Step[] = [
+  {
+    target: "[data-tour='ad-form-type']",
+    title: "Jenis & Penempatan",
+    content: "Pilih jenis kandungan (AdSense, HTML, gambar banner, atau pautan) dan lokasi iklan di laman web.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='ad-form-content']",
+    title: "Kandungan Iklan",
+    content: "Isi kandungan mengikut jenis yang dipilih — tampal kod AdSense, HTML, atau masukkan URL gambar/pautan.",
+    placement: "top",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='ad-form-preview']",
+    title: "Pratinjau Status",
+    content: "Semak ringkasan penempatan, status, dan kandungan di sini sebelum simpan untuk pastikan tetapan adalah betul.",
+    placement: "top",
+    skipBeacon: true,
+  },
+];

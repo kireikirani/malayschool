@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/select";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { ImagePicker } from "@/components/admin/image-picker";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { teacherFormSteps } from "@/components/admin/tour/tour-steps";
 import { createTeacherSchema } from "@/lib/validations/teacher.schema";
 import { apiSend } from "@/lib/fetcher";
 import { setFormErrors } from "@/lib/set-form-errors";
@@ -67,8 +69,12 @@ export function TeacherForm({
   }
 
   return (
+    <div className="max-w-xl space-y-6">
+      <div className="flex items-center gap-2">
+        <PageTour tourKey="teacher-form" steps={teacherFormSteps} />
+      </div>
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-xl space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="name"
@@ -99,20 +105,22 @@ export function TeacherForm({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="photo"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Foto</FormLabel>
-              <FormControl>
-                <ImagePicker value={field.value} onChange={field.onChange} />
-              </FormControl>
-              <FormDescription>Gambar profil guru. Saiz disyorkan: 400×400 piksel.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div data-tour="teacher-form-photo">
+          <FormField
+            control={form.control}
+            name="photo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Foto</FormLabel>
+                <FormControl>
+                  <ImagePicker value={field.value} onChange={field.onChange} />
+                </FormControl>
+                <FormDescription>Gambar profil guru. Saiz disyorkan: 400×400 piksel.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -129,12 +137,13 @@ export function TeacherForm({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="sortOrder"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Kedudukan (Urutan Paparan)</FormLabel>
+        <div data-tour="teacher-form-sort">
+          <FormField
+            control={form.control}
+            name="sortOrder"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Kedudukan (Urutan Paparan)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -151,34 +160,38 @@ export function TeacherForm({
             </FormItem>
           )}
         />
+        </div>
 
-        <FormField
-          control={form.control}
-          name="status"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Status</FormLabel>
-              <Select value={field.value} onValueChange={field.onChange}>
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="active">Aktif</SelectItem>
-                  <SelectItem value="inactive">Nonaktif</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>Hanya guru "Aktif" yang dipaparkan di laman web awam.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div data-tour="teacher-form-status">
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Status</FormLabel>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="active">Aktif</SelectItem>
+                    <SelectItem value="inactive">Nonaktif</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormDescription>Hanya guru "Aktif" yang dipaparkan di laman web awam.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Menyimpan..." : "Simpan"}
         </Button>
       </form>
     </Form>
+    </div>
   );
 }
