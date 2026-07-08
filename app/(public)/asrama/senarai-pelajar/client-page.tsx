@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Lock, Search, Unlock, LogOut, ChevronLeft, ChevronRight, User, Phone, BookOpen, BedDouble } from "lucide-react";
+import { Lock, Search, Unlock, LogOut, ChevronLeft, ChevronRight, User, Phone, BookOpen, BedDouble, ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -39,10 +39,13 @@ function StudentDetailDialog({
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
+  const [photoOpen, setPhotoOpen] = useState(false);
+
   if (!student) return null;
   const isLelaki = student.jantina === "lelaki";
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-sm p-0 overflow-hidden">
         {/* Top colored banner */}
@@ -50,14 +53,24 @@ function StudentDetailDialog({
 
         {/* Avatar overlapping banner */}
         <div className="px-6 -mt-12">
-          <div className={`size-20 rounded-full overflow-hidden border-4 border-white shadow-md ${isLelaki ? "bg-blue-100" : "bg-pink-100"} flex items-center justify-center`}>
-            {student.foto ? (
-              // eslint-disable-next-line @next/next/no-img-element
+          {student.foto ? (
+            <button
+              type="button"
+              onClick={() => setPhotoOpen(true)}
+              className={`group relative size-20 rounded-full overflow-hidden border-4 border-white shadow-md ${isLelaki ? "bg-blue-100" : "bg-pink-100"} flex items-center justify-center cursor-zoom-in`}
+              aria-label="Lihat foto penuh"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={student.foto} alt={student.nama} className="w-full h-full object-cover" />
-            ) : (
+              <span className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-colors rounded-full">
+                <ZoomIn className="size-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+              </span>
+            </button>
+          ) : (
+            <div className={`size-20 rounded-full overflow-hidden border-4 border-white shadow-md ${isLelaki ? "bg-blue-100" : "bg-pink-100"} flex items-center justify-center`}>
               <User className={`size-9 ${isLelaki ? "text-blue-400" : "text-pink-400"}`} />
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         <DialogHeader className="px-6 pt-2 pb-1">
@@ -102,6 +115,24 @@ function StudentDetailDialog({
         </div>
       </DialogContent>
     </Dialog>
+
+    {/* Full-size photo lightbox */}
+    {student.foto && (
+      <Dialog open={photoOpen} onOpenChange={setPhotoOpen}>
+        <DialogContent className="max-w-md p-2 bg-black/90 border-0">
+          <DialogHeader className="sr-only">
+            <DialogTitle>{student.nama}</DialogTitle>
+          </DialogHeader>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={student.foto}
+            alt={student.nama}
+            className="w-full h-auto rounded object-contain max-h-[80vh]"
+          />
+        </DialogContent>
+      </Dialog>
+    )}
+    </>
   );
 }
 
