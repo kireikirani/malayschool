@@ -44,6 +44,7 @@ export type ContentSection = {
   id?: number;
   pageKey?: string;
   unitSlug?: string;
+  jkCode?: string | null;
   sectionKey: string;
   type: SectionType;
   title?: string | null;
@@ -313,6 +314,7 @@ async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> 
       dbJkSections.push({
         sectionKey: `jk-${jkCode}`,
         type: "jk_table",
+        jkCode,
         title: members[0].jkTitle,
         isActive: true,
         sortOrder: 30 + jkSortIndex,

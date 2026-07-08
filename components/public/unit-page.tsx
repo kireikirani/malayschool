@@ -2,6 +2,7 @@ import { Clock } from "lucide-react";
 import { PageHeader } from "@/components/public/page-header";
 import { ContentSectionRenderer } from "@/components/public/content-section-renderer";
 import { DocumentPortal } from "@/components/public/document-portal";
+import { JkDocumentSection } from "@/components/public/jk-document-section";
 import { UNIT_OPERATING_HOURS, type Unit } from "@/lib/units";
 import { SCHOOL_NAME } from "@/lib/brand";
 import { getUnitSections } from "@/lib/content";
@@ -10,8 +11,7 @@ import { ScrollAnimation } from "@/components/ui/scroll-animation";
 export async function UnitPage({ unit }: { unit: Unit }) {
   const sections = await getUnitSections(unit.slug);
 
-  const activeJkSections = sections.filter((s) => s.type === "jk_table" && s.isActive);
-  const hasJkTables = activeJkSections.length > 0;
+  const hasJkTablesWithCode = sections.some((s) => s.type === "jk_table" && s.isActive && s.jkCode);
 
   return (
     <div>
@@ -22,9 +22,9 @@ export async function UnitPage({ unit }: { unit: Unit }) {
 
         {/* CMS-managed content sections */}
         {sections.flatMap((section) => {
-          // When JK tables exist, suppress the default standalone "dokumen" portal —
-          // a portal is injected automatically below each JK table instead.
-          if (hasJkTables && section.sectionKey === "dokumen" && section.type === "file_list" && section.unitSlug) {
+          // When DB-managed JK tables (with jkCode) exist, suppress the standalone "dokumen"
+          // portal — per-JK document sections are injected below each JK table instead.
+          if (hasJkTablesWithCode && section.sectionKey === "dokumen" && section.type === "file_list" && section.unitSlug) {
             return [];
           }
 
@@ -32,11 +32,23 @@ export async function UnitPage({ unit }: { unit: Unit }) {
             <ContentSectionRenderer key={`${section.sectionKey}-${section.sortOrder}`} section={section} />,
           ];
 
-          // Inject document portal below each active JK table
           if (section.type === "jk_table" && section.isActive) {
-            elements.push(
-              <DocumentPortal key={`portal-after-${section.sectionKey}`} unitSlug={unit.slug} />,
-            );
+            if (section.jkCode) {
+              // DB-managed JK: show per-JK document section (data-driven, per committee)
+              elements.push(
+                <JkDocumentSection
+                  key={`jk-docs-${section.sectionKey}`}
+                  unitSlug={unit.slug}
+                  jkCode={section.jkCode}
+                  jkTitle={section.title}
+                />,
+              );
+            } else {
+              // Hardcoded JK (no jkCode): fall back to the general unit portal
+              elements.push(
+                <DocumentPortal key={`portal-after-${section.sectionKey}`} unitSlug={unit.slug} />,
+              );
+            }
           }
 
           return elements;
