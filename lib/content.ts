@@ -325,11 +325,15 @@ async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> 
   }
 
   // Fall back to hardcoded jkTables if no DB entries
+  const toJkCode = (title: string) =>
+    title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
   const jkSections: ContentSection[] = dbJkSections.length > 0
     ? dbJkSections
     : (unit.jkTables?.map((table, index) => ({
         sectionKey: `jk-${index + 1}`,
         type: "jk_table" as const,
+        jkCode: toJkCode(table.title),
         title: table.title,
         isActive: true,
         sortOrder: 30 + index,
