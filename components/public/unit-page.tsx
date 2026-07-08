@@ -1,6 +1,7 @@
 import { Clock } from "lucide-react";
 import { PageHeader } from "@/components/public/page-header";
 import { ContentSectionRenderer } from "@/components/public/content-section-renderer";
+import { DocumentPortal } from "@/components/public/document-portal";
 import { UNIT_OPERATING_HOURS, type Unit } from "@/lib/units";
 import { SCHOOL_NAME } from "@/lib/brand";
 import { getUnitSections } from "@/lib/content";
@@ -8,6 +9,9 @@ import { ScrollAnimation } from "@/components/ui/scroll-animation";
 
 export async function UnitPage({ unit }: { unit: Unit }) {
   const sections = await getUnitSections(unit.slug);
+
+  const activeJkSections = sections.filter((s) => s.type === "jk_table" && s.isActive);
+  const hasJkTables = activeJkSections.length > 0;
 
   return (
     <div>
@@ -17,9 +21,26 @@ export async function UnitPage({ unit }: { unit: Unit }) {
 
 
         {/* CMS-managed content sections */}
-        {sections.map((section) => (
-          <ContentSectionRenderer key={`${section.sectionKey}-${section.sortOrder}`} section={section} />
-        ))}
+        {sections.flatMap((section) => {
+          // When JK tables exist, suppress the default standalone "dokumen" portal —
+          // a portal is injected automatically below each JK table instead.
+          if (hasJkTables && section.sectionKey === "dokumen" && section.type === "file_list" && section.unitSlug) {
+            return [];
+          }
+
+          const elements = [
+            <ContentSectionRenderer key={`${section.sectionKey}-${section.sortOrder}`} section={section} />,
+          ];
+
+          // Inject document portal below each active JK table
+          if (section.type === "jk_table" && section.isActive) {
+            elements.push(
+              <DocumentPortal key={`portal-after-${section.sectionKey}`} unitSlug={unit.slug} />,
+            );
+          }
+
+          return elements;
+        })}
 
         {/* Pencapaian / Achievements */}
         {unit.pencapaian && unit.pencapaian.length > 0 && (
