@@ -25,13 +25,15 @@ export type SiteSettings = {
   themeColor: ThemeColor;
   asramaPassword?: string;
   pentadbiranPassword?: string;
+  googleAppsScriptUrl?: string;
+  googleDriveFolderId?: string;
 };
 
 const DEFAULTS: SiteSettings = {
   schoolName: brand.SCHOOL_NAME,
   schoolTagline: brand.SCHOOL_TAGLINE,
   schoolVision: brand.SCHOOL_VISION,
-  schoolMission: brand.SCHOOL_MISSION,
+  schoolMission: brand.SCHOOL_VISION,
   schoolPhone: brand.SCHOOL_PHONE,
   schoolEmail: brand.SCHOOL_EMAIL,
   schoolFax: brand.SCHOOL_FAX,
@@ -48,6 +50,8 @@ const DEFAULTS: SiteSettings = {
   themeColor: "navy",
   asramaPassword: "PENTADBIRAN2026",
   pentadbiranPassword: "PENTADBIRAN2026",
+  googleAppsScriptUrl: "",
+  googleDriveFolderId: "",
 };
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {
@@ -77,6 +81,8 @@ export const getSettings = cache(async (): Promise<SiteSettings> => {
       themeColor: (map.themeColor as ThemeColor) ?? DEFAULTS.themeColor,
       asramaPassword: map.asramaPassword ?? DEFAULTS.asramaPassword,
       pentadbiranPassword: map.pentadbiranPassword ?? DEFAULTS.pentadbiranPassword,
+      googleAppsScriptUrl: map.googleAppsScriptUrl ?? DEFAULTS.googleAppsScriptUrl,
+      googleDriveFolderId: map.googleDriveFolderId ?? DEFAULTS.googleDriveFolderId,
     };
   } catch {
     return DEFAULTS;

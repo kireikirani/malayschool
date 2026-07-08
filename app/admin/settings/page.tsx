@@ -88,6 +88,7 @@ export default function SettingsPage() {
           <TabsTrigger value="statistik" data-tour="settings-statistik">Statistik</TabsTrigger>
           <TabsTrigger value="pibg">PIBG</TabsTrigger>
           <TabsTrigger value="akses">Akses Terhad</TabsTrigger>
+          <TabsTrigger value="gdrive">Google Drive</TabsTrigger>
           <TabsTrigger value="tema" data-tour="settings-tema">Tema</TabsTrigger>
         </TabsList>
 
@@ -265,6 +266,114 @@ export default function SettingsPage() {
                 <p className="text-xs text-muted-foreground">
                   Kata laluan ini diperlukan untuk mengakses halaman Senarai Pelajar Asrama.
                 </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="gdrive" className="mt-4 space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Integrasi Google Drive & Apps Script</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Sambungkan laman web sekolah terus ke folder Google Drive anda untuk memaparkan fail rasmi secara dinamik seperti peneroka fail di halaman awam.
+              </p>
+              
+              <div className="space-y-1.5">
+                <Label>Google Apps Script Web App URL</Label>
+                <Input 
+                  placeholder="https://script.google.com/macros/s/.../exec" 
+                  value={val("googleAppsScriptUrl")} 
+                  onChange={(e) => set("googleAppsScriptUrl", e.target.value)} 
+                />
+                <p className="text-xs text-muted-foreground">
+                  URL Web App yang diperoleh selepas memasang dan melancarkan Apps Script (klik 'Deploy as Web App' di Google Sheets/Docs/Apps Script).
+                </p>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label>Google Drive Folder ID (Pilihan)</Label>
+                <Input 
+                  placeholder="Contoh: 1aBcDeFgHiJkLmNoPqRsTuVwXyZ" 
+                  value={val("googleDriveFolderId")} 
+                  onChange={(e) => set("googleDriveFolderId", e.target.value)} 
+                />
+                <p className="text-xs text-muted-foreground">
+                  ID Folder utama Google Drive yang mahu dipaparkan di portal. Jika tidak diisi, folder lalai dari script akan digunakan.
+                </p>
+              </div>
+
+              <div className="rounded-md bg-muted/40 p-4 border border-border/80 space-y-2 mt-4">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-primary">Panduan Pemasangan Google Apps Script</h4>
+                <ol className="text-xs text-muted-foreground list-decimal list-inside space-y-1.5 leading-relaxed">
+                  <li>Buka <a href="https://script.google.com" target="_blank" rel="noopener noreferrer" className="underline font-medium hover:text-foreground">Google Apps Script</a> dan cipta Projek Baharu.</li>
+                  <li>Padam kod asal dan tampal kod berikut:
+                    <pre className="mt-2 max-h-48 overflow-y-auto rounded bg-card p-2 text-[10px] font-mono text-foreground border border-border">
+{`function doGet(e) {
+  var folderId = e.parameter.id || "ID_FOLDER_GOOGLE_DRIVE_ANDA";
+  try {
+    var folder = DriveApp.getFolderById(folderId);
+    var data = getFolderContents(folder);
+    return ContentService.createTextOutput(JSON.stringify({ success: true, data: data }))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader("Access-Control-Allow-Origin", "*");
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ success: false, error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader("Access-Control-Allow-Origin", "*");
+  }
+}
+
+function getFolderContents(folder) {
+  var files = folder.getFiles();
+  var fileList = [];
+  while (files.hasNext()) {
+    var file = files.next();
+    fileList.push({
+      id: file.getId(),
+      name: file.getName(),
+      mimeType: file.getMimeType(),
+      size: formatBytes(file.getSize()),
+      dateCreated: file.getDateCreated().toISOString(),
+      url: file.getUrl(),
+      downloadUrl: "https://drive.google.com/uc?export=download&id=" + file.getId()
+    });
+  }
+  
+  var subFolders = folder.getFolders();
+  var folderList = [];
+  while (subFolders.hasNext()) {
+    var subFolder = subFolders.next();
+    folderList.push(getFolderContents(subFolder));
+  }
+  
+  fileList.sort(function(a, b) { return a.name.localeCompare(b.name); });
+  folderList.sort(function(a, b) { return a.name.localeCompare(b.name); });
+  
+  return {
+    id: folder.getId(),
+    name: folder.getName(),
+    files: fileList,
+    folders: folderList
+  };
+}
+
+function formatBytes(bytes) {
+  if (bytes === 0) return "0 Bytes";
+  var k = 1024;
+  var sizes = ["Bytes", "KB", "MB", "GB"];
+  var i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+}`}
+                    </pre>
+                  </li>
+                  <li>Tukar <code className="font-mono bg-card px-1 border rounded">"ID_FOLDER_GOOGLE_DRIVE_ANDA"</code> kepada ID folder Drive anda yang telah dikongsi secara awam (Anyone with link can view).</li>
+                  <li>Klik <strong>Deploy</strong> &rarr; <strong>New Deployment</strong>. Pilih jenis <strong>Web App</strong>.</li>
+                  <li>Set <strong>Execute as:</strong> <code>Me</code> dan <strong>Who has access:</strong> <code>Anyone</code>. Klik Deploy.</li>
+                  <li>Salin <strong>Web App URL</strong> yang terhasil dan tampal di dalam input di atas.</li>
+                </ol>
               </div>
             </CardContent>
           </Card>

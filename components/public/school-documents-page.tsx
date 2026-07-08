@@ -1,13 +1,9 @@
 import Link from "next/link";
-import { desc, eq } from "drizzle-orm";
 import { ArrowRight, CalendarCheck, ClipboardList, FileCheck2, Phone } from "lucide-react";
-import { db } from "@/lib/db";
-import { media } from "@/db/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { EmptyState } from "@/components/ui/empty-state";
-import { FileCard } from "@/components/public/file-card";
 import { SCHOOL_NAME } from "@/lib/brand";
+import { DocumentExplorer } from "@/components/public/document-explorer";
 
 const STEPS = [
   {
@@ -28,17 +24,6 @@ const STEPS = [
 ];
 
 export async function SchoolDocumentsPage() {
-  const documents = await db
-    .select({
-      id: media.id,
-      name: media.fileName,
-      url: media.filePath,
-      size: media.fileSize,
-    })
-    .from(media)
-    .where(eq(media.folder, "documents"))
-    .orderBy(desc(media.uploadedAt));
-
   return (
     <div>
       <section className="border-b border-border/60 py-16 md:py-20">
@@ -73,28 +58,17 @@ export async function SchoolDocumentsPage() {
         </div>
       </section>
 
-      <section className="border-y border-border/60 py-16 md:py-24">
-        <div className="mx-auto max-w-4xl px-4">
-          <div className="text-center">
-            <span className="text-sm font-semibold tracking-wide text-primary uppercase">Fail Aktif</span>
-            <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight">Dokumen Yang Sedang Dipaparkan</h2>
+      <section className="border-y border-border/60 py-16 md:py-20 bg-muted/5">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="text-center mb-10">
+            <span className="text-sm font-semibold tracking-wide text-primary uppercase">Portal Awam</span>
+            <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight">Peneroka Fail & Dokumen Sekolah</h2>
             <p className="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground">
-              Semua objek fail berada di UploadThing agar penyimpanan utama lebih ringan, sementara database hanya
-              menyimpan rujukan fail, nama, jenis, dan metadata lain.
+              Akses terus fail-fail rasmi dan pekeliling sekolah dari Google Drive yang diintegrasikan secara interaktif di bawah.
             </p>
           </div>
 
-          <div className="mt-10 space-y-4">
-            {documents.length === 0 ? (
-              <EmptyState
-                compact
-                title="Belum ada dokumen sekolah"
-                description="Admin sekolah belum memuat naik dokumen rasmi untuk dipaparkan di halaman ini."
-              />
-            ) : (
-              documents.map((doc) => <FileCard key={doc.id} name={doc.name} url={doc.url} size={doc.size} />)
-            )}
-          </div>
+          <DocumentExplorer title="PORTAL DOKUMEN SEKOLAH" />
         </div>
       </section>
 
