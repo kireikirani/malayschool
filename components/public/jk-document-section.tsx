@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FileText, FileImage, File, ExternalLink, FolderOpen } from "lucide-react";
+import { FileText, FileImage, File, ExternalLink, FolderOpen, FolderX } from "lucide-react";
 
 type JkDoc = {
   id: number;
@@ -44,7 +44,7 @@ export function JkDocumentSection({
       .finally(() => setReady(true));
   }, [unitSlug, jkCode]);
 
-  if (!ready || docs.length === 0) return null;
+  if (!ready) return null;
 
   return (
     <section>
@@ -54,26 +54,33 @@ export function JkDocumentSection({
           Dokumen {jkTitle ?? "Jawatankuasa"}
         </span>
       </div>
-      <div className="divide-y divide-border/50 border border-border/70 bg-card shadow-sm">
-        {docs.map((doc) => (
-          <a
-            key={doc.id}
-            href={doc.fileUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors group"
-          >
-            <FileTypeIcon fileType={doc.fileType} />
-            <span className="flex-1 text-sm font-medium group-hover:text-primary transition-colors">
-              {doc.label}
-            </span>
-            {doc.tahun && (
-              <span className="text-xs text-muted-foreground shrink-0">{doc.tahun}</span>
-            )}
-            <ExternalLink className="size-3.5 text-muted-foreground/50 shrink-0 group-hover:text-primary/60 transition-colors" />
-          </a>
-        ))}
-      </div>
+      {docs.length === 0 ? (
+        <div className="flex items-center gap-3 border border-dashed border-border/70 bg-muted/20 px-4 py-5 text-muted-foreground">
+          <FolderX className="size-4 shrink-0" />
+          <span className="text-sm">Tiada dokumen dimuatkan buat masa ini.</span>
+        </div>
+      ) : (
+        <div className="divide-y divide-border/50 border border-border/70 bg-card shadow-sm">
+          {docs.map((doc) => (
+            <a
+              key={doc.id}
+              href={doc.fileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors group"
+            >
+              <FileTypeIcon fileType={doc.fileType} />
+              <span className="flex-1 text-sm font-medium group-hover:text-primary transition-colors">
+                {doc.label}
+              </span>
+              {doc.tahun && (
+                <span className="text-xs text-muted-foreground shrink-0">{doc.tahun}</span>
+              )}
+              <ExternalLink className="size-3.5 text-muted-foreground/50 shrink-0 group-hover:text-primary/60 transition-colors" />
+            </a>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
