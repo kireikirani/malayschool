@@ -1,4 +1,4 @@
-import { boolean, index, mysqlEnum, mysqlTable, timestamp, uniqueIndex, varchar } from "drizzle-orm/mysql-core";
+import { boolean, index, mysqlEnum, mysqlTable, text, timestamp, uniqueIndex, varchar } from "drizzle-orm/mysql-core";
 
 export const user = mysqlTable(
   "user",
@@ -8,11 +8,21 @@ export const user = mysqlTable(
     email: varchar("email", { length: 255 }).notNull(),
     emailVerified: boolean("email_verified").notNull().default(false),
     image: varchar("image", { length: 2048 }),
-    role: mysqlEnum("role", ["admin", "visitor"]).notNull().default("visitor"),
+    role: mysqlEnum("role", ["admin", "teacher", "visitor"]).notNull().default("visitor"),
+    isApproved: boolean("is_approved").notNull().default(false),
+    rejectionReason: text("rejection_reason"),
+    // Teacher registration metadata (captured at sign-up, used by admin during approval)
+    teacherPhone: varchar("teacher_phone", { length: 50 }),
+    teacherSubject: varchar("teacher_subject", { length: 255 }),
+    teacherNotes: text("teacher_notes"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
   },
-  (table) => [uniqueIndex("user_email_idx").on(table.email)],
+  (table) => [
+    uniqueIndex("user_email_idx").on(table.email),
+    index("user_role_idx").on(table.role),
+    index("user_is_approved_idx").on(table.isApproved),
+  ],
 );
 
 export const session = mysqlTable(

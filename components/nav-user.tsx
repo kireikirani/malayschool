@@ -23,7 +23,7 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-export function NavUser({ user }: { user: { name: string; email: string } }) {
+export function NavUser({ user }: { user: { name: string; email: string; role?: string } }) {
   const router = useRouter();
 
   async function handleSignOut() {
@@ -54,7 +54,9 @@ export function NavUser({ user }: { user: { name: string; email: string } }) {
               <div className="max-w-full overflow-hidden overflow-ellipsis whitespace-nowrap text-muted-foreground text-xs">
                 {user.email}
               </div>
-              <div className="mt-0.5 text-[10px] text-muted-foreground">Administrator</div>
+              <div className="mt-0.5 text-[10px] text-muted-foreground">
+                {user.role === "admin" ? "Administrator" : user.role === "teacher" ? "Guru" : "Pengunjung"}
+              </div>
             </div>
           </DropdownMenuLabel>
         </DropdownMenuItem>

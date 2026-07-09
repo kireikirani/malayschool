@@ -10,7 +10,7 @@ async function main() {
     process.exit(1);
   }
 
-  const result = await db.update(user).set({ role: "admin" }).where(eq(user.email, email));
+  const result = await db.update(user).set({ role: "admin", isApproved: true }).where(eq(user.email, email));
   if (result[0].affectedRows === 0) {
     console.error(`No user found with email ${email}. Sign up via /api/auth/sign-up/email first, then re-run this script.`);
     process.exit(1);

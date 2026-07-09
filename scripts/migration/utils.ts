@@ -16,7 +16,13 @@ export function makeDeterministicSlug(value: string | null | undefined, prefix: 
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-  return base && base.length ? base : `${prefix}-${fallbackId}`;
+  if (base && base.length) return base;
+
+  const idStr = String(fallbackId);
+  if (idStr.startsWith(`${prefix}-`)) {
+    return idStr;
+  }
+  return `${prefix}-${fallbackId}`;
 }
 
 export function makeStableId(value?: string | null) {

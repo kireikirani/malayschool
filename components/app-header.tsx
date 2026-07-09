@@ -7,7 +7,7 @@ import { CustomSidebarTrigger } from "@/components/custom-sidebar-trigger";
 import { NavUser } from "@/components/nav-user";
 import { navLinks } from "@/components/app-shared";
 
-export function AppHeader({ user }: { user: { name: string; email: string } }) {
+export function AppHeader({ user }: { user: { name: string; email: string; role?: string } }) {
   const pathname = usePathname();
 
   const activeItem = navLinks.find(

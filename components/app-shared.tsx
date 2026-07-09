@@ -79,6 +79,29 @@ export const navGroups: SidebarNavGroup[] = [
   },
 ];
 
+export const teacherNavGroups: SidebarNavGroup[] = [
+  {
+    label: "Utama",
+    items: [
+      { title: "Dashboard", path: "/teacher", icon: <LayoutDashboard className="size-4" /> },
+    ],
+  },
+  {
+    label: "Profil Awam",
+    items: [
+      { title: "Profil Guru Anda", path: "/teacher/profile", icon: <GraduationCap className="size-4" /> },
+    ],
+  },
+];
+
+export const teacherNavLinks: SidebarNavItem[] = [
+  ...teacherNavGroups.flatMap((group) =>
+    group.items.flatMap((item) =>
+      item.subItems?.length ? [item, ...item.subItems] : [item]
+    )
+  ),
+];
+
 export const footerNavLinks: SidebarNavItem[] = [
   { title: "Tetapan Laman", path: "/admin/settings", icon: <Settings className="size-4" /> },
 ];
@@ -90,4 +113,5 @@ export const navLinks: SidebarNavItem[] = [
     )
   ),
   ...footerNavLinks,
+  ...teacherNavLinks,
 ];

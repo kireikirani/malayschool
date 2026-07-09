@@ -8,12 +8,12 @@ export function AppShell({
   user,
 }: {
   children: React.ReactNode;
-  user: { name: string; email: string };
+  user: { name: string; email: string; role?: string };
 }) {
   return (
     <TooltipProvider>
       <SidebarProvider className="h-screen overflow-hidden">
-        <AppSidebar />
+        <AppSidebar role={user.role} />
         <SidebarInset className="flex h-screen flex-col overflow-hidden">
           <div className="shrink-0 border-b px-4 py-3">
             <AppHeader user={user} />

@@ -4,7 +4,16 @@ import { db } from "../helpers/db-mock";
 const getSignedUrl = vi.fn();
 
 vi.mock("@/lib/db", () => ({ db }));
-vi.mock("@/lib/r2", () => ({ s3Client: {} }));
+vi.mock("@/lib/r2", () => ({
+  getR2Config: vi.fn(() => ({
+    accountId: "test-account-id",
+    accessKeyId: "test-access-key-id",
+    secretAccessKey: "test-secret-access-key",
+    bucketName: "test-bucket",
+    publicUrl: "https://pub-test.r2.dev",
+  })),
+  getR2Client: vi.fn(() => ({})),
+}));
 vi.mock("@/lib/rate-limit", () => ({ rateLimit: vi.fn(() => true), getClientIp: vi.fn(() => "127.0.0.1") }));
 vi.mock("@/lib/api/with-auth", () => ({ requireAdmin: vi.fn().mockResolvedValue({ user: { id: "admin-1", role: "admin" } }) }));
 vi.mock("@aws-sdk/s3-request-presigner", () => ({ getSignedUrl }));

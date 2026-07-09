@@ -30,7 +30,7 @@ export function transformLegacyPayload(input: LegacyPayload): LegacyPayload {
     news: (input.news ?? []).map((row) => ({
       ...row,
       title: row.title.trim(),
-      slug: makeDeterministicSlug(row.slug || row.title, "news", row.id),
+      slug: makeDeterministicSlug(row.slug, "news", row.id),
       metaTitle: normalizeOptionalText(row.metaTitle) ?? undefined,
       metaDescription: normalizeOptionalText(row.metaDescription) ?? undefined,
       thumbnail: normalizeOptionalText(row.thumbnail) ?? undefined,
@@ -52,7 +52,9 @@ async function main() {
   console.log(`Wrote ${targetPath}`);
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+if (typeof process !== "undefined" && !process.env.VITEST) {
+  main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}

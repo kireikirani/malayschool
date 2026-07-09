@@ -58,7 +58,9 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+if (typeof process !== "undefined" && !process.env.VITEST) {
+  main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}

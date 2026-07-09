@@ -7,5 +7,5 @@ export function AdminShell({
   user: { name: string; email: string };
   children: React.ReactNode;
 }) {
-  return <AppShell user={user}>{children}</AppShell>;
+  return <AppShell user={{ ...user, role: "admin" }}>{children}</AppShell>;
 }
