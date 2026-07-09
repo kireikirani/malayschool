@@ -92,7 +92,16 @@ export const auth = betterAuth({
     let url = (process.env.BETTER_AUTH_URL || "").trim();
     if (url.startsWith('"') && url.endsWith('"')) url = url.slice(1, -1).trim();
     else if (url.startsWith("'") && url.endsWith("'")) url = url.slice(1, -1).trim();
-    return url || undefined;
+    if (url) {
+      try {
+        new URL(url);
+        return url;
+      } catch (e) {
+        console.error("Format BETTER_AUTH_URL tidak sah. Menggunakan undefined untuk mengelakkan ralat.", e);
+        return undefined;
+      }
+    }
+    return undefined;
   })(),
 });
 
