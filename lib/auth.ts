@@ -82,8 +82,18 @@ export const auth = betterAuth({
     window: 60,
     max: 10,
   },
-  secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.BETTER_AUTH_URL,
+  secret: (() => {
+    let secret = (process.env.BETTER_AUTH_SECRET || "").trim();
+    if (secret.startsWith('"') && secret.endsWith('"')) secret = secret.slice(1, -1).trim();
+    else if (secret.startsWith("'") && secret.endsWith("'")) secret = secret.slice(1, -1).trim();
+    return secret || undefined;
+  })(),
+  baseURL: (() => {
+    let url = (process.env.BETTER_AUTH_URL || "").trim();
+    if (url.startsWith('"') && url.endsWith('"')) url = url.slice(1, -1).trim();
+    else if (url.startsWith("'") && url.endsWith("'")) url = url.slice(1, -1).trim();
+    return url || undefined;
+  })(),
 });
 
 /**
