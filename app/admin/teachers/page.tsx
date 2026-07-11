@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Plus } from "lucide-react";
+import { MoreHorizontal, Plus, ShieldAlert } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,6 +52,7 @@ export default function TeachersListPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string>("all");
+  const [pendingCount, setPendingCount] = useState(0);
 
   function load() {
     const params = new URLSearchParams({ page: String(page), limit: "20" });
@@ -63,6 +65,16 @@ export default function TeachersListPage() {
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setIsLoading(false));
+
+    // Fetch pending count
+    fetch("/api/admin/pending-teachers")
+      .then((res) => res.json())
+      .then((body) => {
+        if (body.data) {
+          setPendingCount(body.data.length);
+        }
+      })
+      .catch((err) => console.error(err));
   }
 
   useEffect(() => {
@@ -157,6 +169,20 @@ export default function TeachersListPage() {
           </Button>
         </div>
       </div>
+
+      {/* Alert banner if there are pending teachers */}
+      {pendingCount > 0 && (
+        <Alert variant="default" className="border-amber-500 bg-amber-500/5 text-amber-900 dark:text-amber-200">
+          <ShieldAlert className="size-5 text-amber-600 dark:text-amber-400" />
+          <AlertTitle className="font-semibold">Pendaftaran Guru Menunggu Kelulusan</AlertTitle>
+          <AlertDescription className="text-amber-800/90 dark:text-amber-300/90 flex flex-wrap items-center justify-between gap-3 pt-1">
+            <span>Terdapat {pendingCount} pendaftaran guru baharu yang sedang menunggu kelulusan anda.</span>
+            <Button size="sm" asChild className="h-7 text-xs bg-amber-600 hover:bg-amber-700 text-white border-0">
+              <Link href="/admin/dashboard">Urus Kelulusan di Dashboard</Link>
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div data-tour="teachers-table">
       <DataTable

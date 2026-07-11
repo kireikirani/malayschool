@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { type ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Plus, User } from "lucide-react";
+import { MoreHorizontal, Plus, User, X } from "lucide-react";
 import { PageTour } from "@/components/admin/tour/page-tour";
 import { asramaPelajarSteps } from "@/components/admin/tour/tour-steps";
 import { toast } from "sonner";
@@ -41,26 +41,56 @@ async function fetchPelajar(params: URLSearchParams): Promise<{ rows: PelajarRow
   return { rows: body.data, totalPages: body.pagination.totalPages };
 }
 
+// Tingkatan options used in school context
+const TINGKATAN_OPTIONS = ["Tingkatan 1", "Tingkatan 2", "Tingkatan 3", "Tingkatan 4", "Tingkatan 5"];
+
 export default function AsramaPelajarPage() {
   const router = useRouter();
   const [rows, setRows] = useState<PelajarRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [search, setSearch] = useState("");
-  const [jantina, setJantina] = useState("all");
 
-  function load() {
+  // Filter states
+  const [search, setSearch] = useState("");
+  const [dormSearch, setDormSearch] = useState("");
+  const [jantina, setJantina] = useState<"" | "lelaki" | "perempuan">("");
+  const [tingkatan, setTingkatan] = useState("all");
+  const [status, setStatus] = useState("all");
+
+  function buildParams() {
     const params = new URLSearchParams({ page: String(page), limit: "20" });
     if (search) params.set("q", search);
-    if (jantina !== "all") params.set("jantina", jantina);
-    fetchPelajar(params)
+    if (dormSearch) params.set("dorm", dormSearch);
+    if (jantina) params.set("jantina", jantina);
+    if (tingkatan !== "all") params.set("tingkatan", tingkatan);
+    if (status !== "all") params.set("status", status);
+    return params;
+  }
+
+  function load() {
+    fetchPelajar(buildParams())
       .then(({ rows, totalPages }) => { setRows(rows); setTotalPages(totalPages); })
       .catch((err) => toast.error(err.message))
       .finally(() => setIsLoading(false));
   }
 
-  useEffect(() => { load(); }, [page, jantina]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { load(); }, [page, jantina, tingkatan, status]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function handleSearchKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") { setIsLoading(true); setPage(1); load(); }
+  }
+
+  function handleClearFilters() {
+    setSearch("");
+    setDormSearch("");
+    setJantina("");
+    setTingkatan("all");
+    setStatus("all");
+    setPage(1);
+  }
+
+  const hasActiveFilters = search || dormSearch || jantina || tingkatan !== "all" || status !== "all";
 
   async function handleDelete(id: number) {
     setIsLoading(true);
@@ -157,36 +187,102 @@ export default function AsramaPelajarPage() {
       </div>
 
       <div data-tour="pelajar-table">
-      <DataTable
-        columns={columns}
-        data={rows}
-        isLoading={isLoading}
-        page={page}
-        totalPages={totalPages}
-        onPageChange={(p) => { setIsLoading(true); setPage(p); }}
-        emptyMessage="Belum ada rekod pelajar asrama."
-        toolbar={
-          <>
-            <Input
-              placeholder="Cari nama..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") { setIsLoading(true); load(); } }}
-              className="max-w-xs"
-            />
-            <Select value={jantina} onValueChange={(v) => { setIsLoading(true); setPage(1); setJantina(v); }}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Jantina" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua</SelectItem>
-                <SelectItem value="lelaki">Aspura (Lelaki)</SelectItem>
-                <SelectItem value="perempuan">Aspuri (Perempuan)</SelectItem>
-              </SelectContent>
-            </Select>
-          </>
-        }
-      />
+        <DataTable
+          columns={columns}
+          data={rows}
+          isLoading={isLoading}
+          page={page}
+          totalPages={totalPages}
+          onPageChange={(p) => { setIsLoading(true); setPage(p); }}
+          emptyMessage="Belum ada rekod pelajar asrama."
+          toolbar={
+            <>
+              {/* Name search */}
+              <Input
+                placeholder="Cari nama pelajar..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
+                className="max-w-xs"
+              />
+
+              {/* Dorm search */}
+              <Input
+                placeholder="Cari asrama/dorm..."
+                value={dormSearch}
+                onChange={(e) => setDormSearch(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
+                className="max-w-[180px]"
+              />
+
+              {/* Tingkatan filter */}
+              <Select value={tingkatan} onValueChange={(v) => { setIsLoading(true); setPage(1); setTingkatan(v); }}>
+                <SelectTrigger className="w-[160px]">
+                  <SelectValue placeholder="Tingkatan" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Tingkatan</SelectItem>
+                  {TINGKATAN_OPTIONS.map((t) => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Status filter */}
+              <Select value={status} onValueChange={(v) => { setIsLoading(true); setPage(1); setStatus(v); }}>
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Status</SelectItem>
+                  <SelectItem value="active">Aktif</SelectItem>
+                  <SelectItem value="inactive">Tidak Aktif</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Gender toggle buttons */}
+              <div className="flex items-center rounded-md border bg-muted/40 p-0.5 gap-0.5">
+                <Button
+                  variant={jantina === "" ? "secondary" : "ghost"}
+                  size="sm"
+                  className="h-7 px-3 text-xs"
+                  onClick={() => { setIsLoading(true); setPage(1); setJantina(""); }}
+                >
+                  Semua
+                </Button>
+                <Button
+                  variant={jantina === "lelaki" ? "secondary" : "ghost"}
+                  size="sm"
+                  className="h-7 px-3 text-xs"
+                  onClick={() => { setIsLoading(true); setPage(1); setJantina(jantina === "lelaki" ? "" : "lelaki"); }}
+                >
+                  Aspura
+                </Button>
+                <Button
+                  variant={jantina === "perempuan" ? "secondary" : "ghost"}
+                  size="sm"
+                  className="h-7 px-3 text-xs"
+                  onClick={() => { setIsLoading(true); setPage(1); setJantina(jantina === "perempuan" ? "" : "perempuan"); }}
+                >
+                  Aspuri
+                </Button>
+              </div>
+
+              {/* Clear all filters */}
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 gap-1 text-muted-foreground hover:text-foreground"
+                  onClick={handleClearFilters}
+                >
+                  <X className="size-3.5" />
+                  Kosongkan
+                </Button>
+              )}
+            </>
+          }
+        />
       </div>
     </div>
   );

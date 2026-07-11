@@ -8,8 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { ContentSectionRenderer } from "@/components/public/content-section-renderer";
 import { PageHeader } from "@/components/public/page-header";
-import { ScrollAnimation } from "@/components/ui/scroll-animation";
 import { SCHOOL_NAME } from "@/lib/brand";
+import type { ContentSection } from "@/lib/content";
 import { UNIT_OPERATING_HOURS, UNITS } from "@/lib/units";
 import { fetchManagementDataAction } from "@/app/(public)/pentadbiran/actions";
 
@@ -28,10 +28,7 @@ type ManagementPageData = {
     headPosition: string;
     pencapaian: Array<{ title: string; desc: string }>;
   };
-  sections: Array<{
-    sectionKey: string;
-    sortOrder: number;
-  } & Record<string, unknown>>;
+  sections: ContentSection[];
 };
 
 export function ManagementProtectedPage({ unitSlug }: ManagementProtectedPageProps) {
@@ -167,29 +164,8 @@ export function ManagementProtectedPage({ unitSlug }: ManagementProtectedPagePro
         </div>
 
         {sections.map((section) => (
-          <ContentSectionRenderer key={`${section.sectionKey}-${section.sortOrder}`} section={section as never} />
+          <ContentSectionRenderer key={`${section.sectionKey}-${section.sortOrder}`} section={section} />
         ))}
-
-        {unit.pencapaian.length > 0 && (
-          <section>
-            <ScrollAnimation direction="up">
-              <span className="text-sm font-semibold uppercase tracking-wide text-primary">Pencapaian</span>
-              <h2 className="mt-2 font-heading text-2xl font-semibold tracking-tight md:text-3xl">
-                Pencapaian & Program
-              </h2>
-            </ScrollAnimation>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {unit.pencapaian.map((item, index) => (
-                <ScrollAnimation key={item.title} direction="up" delay={index * 0.06}>
-                  <div className="border border-border/70 bg-card p-5">
-                    <h3 className="font-heading text-base font-semibold">{item.title}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{item.desc}</p>
-                  </div>
-                </ScrollAnimation>
-              ))}
-            </div>
-          </section>
-        )}
 
         <section className="grid gap-6 border border-border/70 bg-card px-6 py-8 sm:grid-cols-[1fr_1fr] md:px-10">
           <div>
@@ -217,4 +193,3 @@ export function ManagementProtectedPage({ unitSlug }: ManagementProtectedPagePro
     </div>
   );
 }
-

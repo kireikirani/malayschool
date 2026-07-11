@@ -18,14 +18,19 @@ import {
   Layers3,
   BedDouble,
   TriangleAlert,
+  ShieldAlert,
+  Check,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageTour } from "@/components/admin/tour/page-tour";
 import { dashboardSteps } from "@/components/admin/tour/tour-steps";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,6 +56,7 @@ type DashboardData = {
     unitSections: number;
     asramaStudents: number;
     unitDocuments: number;
+    pendingTeachers?: number;
   };
   health: {
     missingUnitCharts: number;
@@ -59,6 +65,16 @@ type DashboardData = {
     emptyUnitSections: number;
   };
   recentActivity: ActivityRow[];
+};
+
+type PendingTeacher = {
+  id: string;
+  name: string;
+  email: string;
+  teacherPhone: string | null;
+  teacherSubject: string | null;
+  teacherNotes: string | null;
+  createdAt: string;
 };
 
 const COUNT_CARDS = [
@@ -100,8 +116,13 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
 
+  // Pending teachers registration state
+  const [pendingTeachers, setPendingTeachers] = useState<PendingTeacher[]>([]);
+  const [positions, setPositions] = useState<Record<string, string>>({});
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+
   function load(showToast = false) {
-    setIsLoading(true);
+    // Fetch dashboard info
     apiGet<DashboardData>("/api/dashboard")
       .then((res) => {
         setData(res);
@@ -114,11 +135,79 @@ export default function DashboardPage() {
         if (showToast) toast.error(message);
       })
       .finally(() => setIsLoading(false));
+
+    // Fetch pending teachers
+    fetch("/api/admin/pending-teachers")
+      .then((res) => res.json())
+      .then((body) => {
+        if (body.data) {
+          setPendingTeachers(body.data);
+          // Initialise positions mapping defaults
+          const initPositions: Record<string, string> = {};
+          body.data.forEach((t: PendingTeacher) => {
+            initPositions[t.id] = t.teacherSubject ? `Guru ${t.teacherSubject}` : "Guru Akademik";
+          });
+          setPositions(initPositions);
+        }
+      })
+      .catch((err) => console.error("Gagal mendapatkan permohonan guru:", err));
   }
 
   useEffect(() => {
     load();
   }, []);
+
+  const handlePositionChange = (id: string, value: string) => {
+    setPositions((prev) => ({ ...prev, [id]: value }));
+  };
+
+  async function handleApprove(userId: string) {
+    setActionLoading(userId);
+    const position = positions[userId] || "Guru";
+    try {
+      const res = await fetch("/api/admin/pending-teachers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, action: "approve", position }),
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error?.message ?? "Gagal meluluskan");
+
+      toast.success("Pendaftaran guru telah diluluskan!");
+      load();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Ralat meluluskan pendaftaran");
+    } finally {
+      setActionLoading(null);
+    }
+  }
+
+  async function handleReject(userId: string) {
+    const reason = window.prompt("Sila masukkan sebab penolakan pendaftaran:");
+    if (reason === null) return; // cancelled
+    if (!reason.trim()) {
+      toast.error("Sebab penolakan diperlukan");
+      return;
+    }
+
+    setActionLoading(userId);
+    try {
+      const res = await fetch("/api/admin/pending-teachers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, action: "reject", rejectionReason: reason }),
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error?.message ?? "Gagal menolak");
+
+      toast.success("Pendaftaran guru telah ditolak");
+      load();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Ralat menolak pendaftaran");
+    } finally {
+      setActionLoading(null);
+    }
+  }
 
   const totalPages = data ? Math.max(1, Math.ceil(data.recentActivity.length / PAGE_SIZE)) : 1;
 
@@ -187,7 +276,7 @@ export default function DashboardPage() {
         </div>
         <div className="flex items-center gap-2">
           <PageTour tourKey="dashboard" steps={dashboardSteps} />
-          <Button variant="outline" size="sm" onClick={() => load(true)} disabled={isLoading}>
+          <Button variant="outline" size="sm" onClick={() => { setIsLoading(true); load(true); }} disabled={isLoading}>
             <RefreshCw className={isLoading ? "animate-spin" : ""} />
             Segarkan
           </Button>
@@ -195,6 +284,89 @@ export default function DashboardPage() {
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
+
+      {/* Pending Teachers Notification Banner */}
+      {pendingTeachers.length > 0 && (
+        <Alert variant="default" className="border-amber-500 bg-amber-500/5 text-amber-900 dark:text-amber-200">
+          <ShieldAlert className="size-5 text-amber-600 dark:text-amber-400" />
+          <AlertTitle className="font-semibold">Kelulusan Pendaftaran Guru Diperlukan</AlertTitle>
+          <AlertDescription className="text-amber-800/90 dark:text-amber-300/90">
+            Terdapat {pendingTeachers.length} permohonan pendaftaran guru baharu yang sedang menunggu kelulusan anda. Sila semak senarai di bawah untuk meluluskan atau menolak.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Pending Teachers Review Section */}
+      {pendingTeachers.length > 0 && (
+        <Card className="border-amber-500/30">
+          <CardHeader>
+            <CardTitle className="text-base text-amber-800 dark:text-amber-300 flex items-center gap-2">
+              <GraduationCap className="size-5" />
+              Kelulusan Pendaftaran Guru ({pendingTeachers.length})
+            </CardTitle>
+            <CardDescription>
+              Sahkan maklumat guru dan berikan Jawatan rasmi mereka sebelum meluluskan akaun pendaftaran mereka.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {pendingTeachers.map((teacher) => (
+                <div key={teacher.id} className="rounded-xl border bg-card p-4 space-y-3 shadow-sm">
+                  <div className="space-y-1">
+                    <h3 className="font-semibold text-sm">{teacher.name}</h3>
+                    <p className="text-xs text-muted-foreground">{teacher.email}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs border-t pt-2">
+                    <div>
+                      <span className="text-muted-foreground block">No. Telefon:</span>
+                      <span className="font-medium">{teacher.teacherPhone ?? "—"}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block">Subjek Diajar:</span>
+                      <span className="font-medium">{teacher.teacherSubject ?? "—"}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block">Nota Pendaftaran:</span>
+                      <span className="italic text-muted-foreground">{teacher.teacherNotes ?? "Tiada nota"}</span>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5 pt-1">
+                    <label className="text-xs font-medium text-foreground">Jawatan Rasmi (Ditunjukkan di Web):</label>
+                    <Input
+                      placeholder="Contoh: Guru Matematik"
+                      value={positions[teacher.id] || ""}
+                      onChange={(e) => handlePositionChange(teacher.id, e.target.value)}
+                      className="h-8 text-xs"
+                      disabled={actionLoading === teacher.id}
+                    />
+                  </div>
+                  <div className="flex gap-2 pt-1.5 justify-end">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 text-xs border-destructive text-destructive hover:bg-destructive/10"
+                      onClick={() => handleReject(teacher.id)}
+                      disabled={actionLoading !== null}
+                    >
+                      <X className="size-3.5 mr-1" />
+                      Tolak
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="h-8 text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+                      onClick={() => handleApprove(teacher.id)}
+                      disabled={actionLoading !== null}
+                    >
+                      <Check className="size-3.5 mr-1" />
+                      Luluskan
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5" data-tour="dashboard-stats">
         {COUNT_CARDS.map((card) => (

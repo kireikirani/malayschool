@@ -10,7 +10,7 @@ import { createAsramaPelajarSchema, asramaPelajarQuerySchema } from "@/lib/valid
 export async function GET(req: Request) {
   try {
     await requireAdmin(req);
-    const { page, limit, q, jantina, status, tingkatan } = parseQuery(
+    const { page, limit, q, jantina, status, tingkatan, dorm } = parseQuery(
       new URL(req.url).searchParams,
       asramaPelajarQuerySchema,
     );
@@ -19,6 +19,7 @@ export async function GET(req: Request) {
     if (jantina) conditions.push(eq(asramaPelajar.jantina, jantina));
     if (status) conditions.push(eq(asramaPelajar.status, status));
     if (tingkatan) conditions.push(eq(asramaPelajar.tingkatan, tingkatan));
+    if (dorm) conditions.push(sql`LOWER(${asramaPelajar.dorm}) LIKE ${`%${dorm.toLowerCase()}%`}`);
     if (q) conditions.push(sql`LOWER(${asramaPelajar.nama}) LIKE ${`%${q.toLowerCase()}%`}`);
 
     const where = conditions.length ? and(...conditions) : undefined;

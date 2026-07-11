@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Plus } from "lucide-react";
+import { ArrowDownUp, MoreHorizontal, Plus } from "lucide-react";
 import { PageTour } from "@/components/admin/tour/page-tour";
 import { contentSteps } from "@/components/admin/tour/tour-steps";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,37 +30,59 @@ type PublicContentRow = {
   sortOrder: number;
 };
 
-async function fetchContent(): Promise<PublicContentRow[]> {
-  const res = await fetch("/api/admin/content?limit=100");
+async function fetchContent(pageKey: string): Promise<PublicContentRow[]> {
+  const query = pageKey === "all" ? "?limit=100" : `?pageKey=${pageKey}&limit=100`;
+  const res = await fetch(`/api/admin/content${query}`);
   const body = await res.json();
   if (!res.ok) throw new Error(body.error?.message ?? "Gagal memuat data");
   return body.data;
 }
 
+const PAGE_KEYS = ["home", "about", "asrama", "borang"];
+
 export default function PublicContentPage() {
   const router = useRouter();
   const [rows, setRows] = useState<PublicContentRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [pageKey, setPageKey] = useState("all");
 
-  function load() {
-    setIsLoading(true);
-    fetchContent()
+  function load(nextPageKey = pageKey) {
+    fetchContent(nextPageKey)
       .then(setRows)
       .catch((error) => toast.error(error.message))
       .finally(() => setIsLoading(false));
   }
 
   useEffect(() => {
-    load();
-  }, []);
+    load(pageKey);
+  }, [pageKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleDelete(id: number) {
+    setIsLoading(true);
     try {
       await apiSend(`/api/admin/content/${id}`, "DELETE");
       toast.success("Seksyen dipadam");
       load();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Gagal memadam");
+    }
+  }
+
+  async function shiftRow(row: PublicContentRow, direction: -1 | 1) {
+    const pageRows = rows.filter((item) => item.pageKey === row.pageKey).sort((a, b) => a.sortOrder - b.sortOrder);
+    const currentIndex = pageRows.findIndex((item) => item.id === row.id);
+    const targetIndex = currentIndex + direction;
+    if (targetIndex < 0 || targetIndex >= pageRows.length) return;
+
+    const swapped = [...pageRows];
+    [swapped[currentIndex], swapped[targetIndex]] = [swapped[targetIndex], swapped[currentIndex]];
+
+    try {
+      await apiSend("/api/admin/content/reorder", "POST", swapped.map((item, index) => ({ id: item.id, sortOrder: index })));
+      toast.success("Urutan dikemaskini");
+      load();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Gagal menukar urutan");
     }
   }
 
@@ -91,6 +114,14 @@ export default function PublicContentPage() {
             <DropdownMenuItem onClick={() => router.push(`/admin/content/${row.original.id}/edit`)}>
               Edit
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => shiftRow(row.original, -1)}>
+              <ArrowDownUp className="size-4" />
+              Naikkan
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => shiftRow(row.original, 1)}>
+              <ArrowDownUp className="size-4" />
+              Turunkan
+            </DropdownMenuItem>
             <DeleteConfirmDialog
               trigger={
                 <DropdownMenuItem onSelect={(event) => event.preventDefault()} variant="destructive">
@@ -105,6 +136,10 @@ export default function PublicContentPage() {
     },
   ];
 
+  const addHref = useMemo(() => {
+    return pageKey === "all" ? "/admin/content/new" : `/admin/content/new?pageKey=${pageKey}`;
+  }, [pageKey]);
+
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -115,7 +150,7 @@ export default function PublicContentPage() {
         <div className="flex items-center gap-2">
           <PageTour tourKey="content-mgmt" steps={contentSteps} />
           <Button asChild data-tour="add-section">
-            <Link href="/admin/content/new">
+            <Link href={addHref}>
               <Plus />
               Tambah Seksyen
             </Link>
@@ -132,6 +167,23 @@ export default function PublicContentPage() {
           totalPages={1}
           onPageChange={() => {}}
           emptyMessage="Belum ada seksyen public content."
+          toolbar={
+            <div className="flex items-center gap-2">
+              <Select value={pageKey} onValueChange={(v) => { setIsLoading(true); setPageKey(v); }}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Pilih Halaman" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Halaman</SelectItem>
+                  {PAGE_KEYS.map((pk) => (
+                    <SelectItem key={pk} value={pk}>
+                      {pk.toUpperCase()}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          }
         />
       </div>
     </div>

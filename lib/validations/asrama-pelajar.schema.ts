@@ -22,4 +22,5 @@ export const asramaPelajarQuerySchema = paginationSchema.extend({
   jantina: z.enum(["lelaki", "perempuan"]).optional(),
   status: z.enum(["active", "inactive"]).optional(),
   tingkatan: z.string().optional(),
+  dorm: z.string().optional(),
 });

@@ -1,6 +1,6 @@
-import { and, count, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, isNull } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { advertisements, asramaPelajar, galleryAlbums, media, news, pengumuman, publicContent, teachers, unitDocuments, unitSections } from "@/db/schema";
+import { advertisements, asramaPelajar, galleryAlbums, media, news, pengumuman, publicContent, teachers, unitDocuments, unitSections, user } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
 import { ok } from "@/lib/api/response";
 import { requireAdmin } from "@/lib/api/with-auth";
@@ -30,6 +30,7 @@ export async function GET(req: Request) {
       recentContent,
       recentAsrama,
       recentUnitDocs,
+      [{ total: pendingTeachersCount }],
     ] = await Promise.all([
       db.select({ total: count() }).from(news),
       db.select({ total: count() }).from(galleryAlbums),
@@ -50,6 +51,13 @@ export async function GET(req: Request) {
       db.select().from(publicContent).orderBy(desc(publicContent.updatedAt)).limit(10),
       db.select().from(asramaPelajar).orderBy(desc(asramaPelajar.updatedAt)).limit(10),
       db.select().from(unitDocuments).orderBy(desc(unitDocuments.updatedAt)).limit(10),
+      db.select({ total: count() }).from(user).where(
+        and(
+          eq(user.role, "teacher"),
+          eq(user.isApproved, false),
+          isNull(user.rejectionReason)
+        )
+      ),
     ]);
 
     const recentActivity = [
@@ -76,6 +84,7 @@ export async function GET(req: Request) {
         unitSections: totalUnitSections,
         asramaStudents: totalAsramaStudents,
         unitDocuments: totalUnitDocs,
+        pendingTeachers: pendingTeachersCount,
       },
       health: {
         missingUnitCharts: Math.max(UNITS.length - totalCarta, 0),

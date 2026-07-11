@@ -65,7 +65,8 @@ describe("GET /api/dashboard", () => {
       .mockReturnValueOnce(recentQ([pengRow]))
       .mockReturnValueOnce(recentQ([contentRow]))
       .mockReturnValueOnce(recentQ([asramaRow]))
-      .mockReturnValueOnce(recentQ([dokRow]));
+      .mockReturnValueOnce(recentQ([dokRow]))
+      .mockReturnValueOnce({ from: vi.fn(() => ({ where: vi.fn(() => Promise.resolve([{ total: 2 }])) })) });
 
     const { GET } = await import("@/app/api/dashboard/route");
     const res = await GET(makeRequest("GET", "/api/dashboard"));
@@ -78,6 +79,7 @@ describe("GET /api/dashboard", () => {
     expect(data.counts.teachers).toBe(10);
     expect(data.counts.asramaStudents).toBe(150);
     expect(data.counts.unitDocuments).toBe(7);
+    expect(data.counts.pendingTeachers).toBe(2);
     expect(typeof data.health.missingUnitCharts).toBe("number");
     expect(typeof data.health.emptyAboutSections).toBe("number");
     expect(Array.isArray(data.recentActivity)).toBe(true);

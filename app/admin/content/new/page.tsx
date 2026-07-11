@@ -1,6 +1,12 @@
 import { ContentSectionForm } from "@/components/admin/content-section-form";
 
-export default function NewPublicContentPage() {
+type PageProps = {
+  searchParams: Promise<{ pageKey?: string }>;
+};
+
+export default async function NewPublicContentPage({ searchParams }: PageProps) {
+  const { pageKey } = await searchParams;
+
   return (
     <div className="space-y-5">
       <div>
@@ -12,6 +18,7 @@ export default function NewPublicContentPage() {
         action="create"
         redirectTo="/admin/content"
         pageOptions={["home", "about", "asrama", "borang"]}
+        initialValue={pageKey ? { pageKey } : undefined}
       />
     </div>
   );

@@ -47,6 +47,12 @@ export default async function HomePage() {
       .limit(1),
   ]);
 
+  const newsGridClass = latestNews.length <= 1
+    ? "mt-8 max-w-sm"
+    : latestNews.length === 2
+      ? "mt-8 grid gap-6 md:grid-cols-2"
+      : "mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3";
+
   return (
     <div>
       <Hero
@@ -86,26 +92,38 @@ export default async function HomePage() {
         />
       )}
       <FacilitiesPreview />
-      <CountdownSpm spmDate={settings.spmDate} />
+      <CountdownSpm
+        spmDate={settings.spmDate}
+        eyebrow={settings.homeCountdownEyebrow}
+        title={settings.homeCountdownTitle}
+        pastTitle={settings.homeCountdownPastTitle}
+        quote={settings.homeCountdownQuote}
+        labels={{
+          days: settings.homeCountdownDaysLabel,
+          hours: settings.homeCountdownHoursLabel,
+          minutes: settings.homeCountdownMinutesLabel,
+          seconds: settings.homeCountdownSecondsLabel,
+        }}
+      />
 
       <section className="py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollAnimation direction="up" className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <span className="text-sm font-semibold tracking-wide text-primary uppercase">Terkini</span>
+              <span className="text-sm font-semibold tracking-wide text-primary uppercase">{settings.homeAnnouncementsEyebrow}</span>
               <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
-                Info & Pengumuman
+                {settings.homeAnnouncementsTitle}
               </h2>
             </div>
             <Link href="/news" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
-              Lihat semua berita
+              {settings.homeAnnouncementsLinkLabel}
               <ArrowRight className="size-4" />
             </Link>
           </ScrollAnimation>
           {announcements.length === 0 ? (
             <div className="mt-8 border border-dashed border-border/70 bg-muted/30 px-6 py-10 text-center">
-              <p className="text-sm font-medium">Belum ada poster info terkini</p>
-              <p className="mt-1 text-xs text-muted-foreground">Admin boleh menambah poster melalui menu Pengumuman.</p>
+              <p className="text-sm font-medium">{settings.homeAnnouncementsEmptyTitle}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{settings.homeAnnouncementsEmptyBody}</p>
             </div>
           ) : (
             <div className="mt-8 grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
@@ -137,25 +155,25 @@ export default async function HomePage() {
         accountNumber={settings.pibgAccountNumber}
       />
 
-      <section className="py-16 md:py-24">
+      <section className="py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollAnimation direction="up" className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <span className="text-sm font-semibold tracking-wide text-primary uppercase">Berita & Pengumuman</span>
+              <span className="text-sm font-semibold tracking-wide text-primary uppercase">{settings.homeNewsEyebrow}</span>
               <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
-                Perkembangan Terkini Sekolah
+                {settings.homeNewsTitle}
               </h2>
             </div>
             <Link href="/news" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
-              Lihat semua berita
+              {settings.homeNewsLinkLabel}
               <ArrowRight className="size-4" />
             </Link>
           </ScrollAnimation>
 
           {latestNews.length === 0 ? (
-            <p className="mt-8 text-sm text-muted-foreground">Belum ada berita.</p>
+            <p className="mt-8 text-sm text-muted-foreground">{settings.homeNewsEmptyMessage}</p>
           ) : (
-            <div className="mt-10 grid gap-6 sm:grid-cols-3">
+            <div className={newsGridClass}>
               {latestNews.map((row, i) => (
                 <ScrollAnimation key={row.id} direction="up" delay={i * 0.08} className="relative">
                   <Badge className="absolute top-3 left-3 z-10">

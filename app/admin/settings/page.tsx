@@ -85,6 +85,7 @@ export default function SettingsPage() {
         <TabsList data-tour="settings-tabs">
           <TabsTrigger value="sekolah" data-tour="settings-sekolah">Sekolah</TabsTrigger>
           <TabsTrigger value="hubungi">Hubungi</TabsTrigger>
+          <TabsTrigger value="halaman-utama">Halaman Utama</TabsTrigger>
           <TabsTrigger value="statistik" data-tour="settings-statistik">Statistik</TabsTrigger>
           <TabsTrigger value="pibg">PIBG</TabsTrigger>
           <TabsTrigger value="akses">Akses Terhad</TabsTrigger>
@@ -150,6 +151,108 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="halaman-utama" className="mt-4 space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Teks Info & Pengumuman</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label>Eyebrow</Label>
+                  <Input value={val("homeAnnouncementsEyebrow", "Terkini")} onChange={(e) => set("homeAnnouncementsEyebrow", e.target.value)} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Label Pautan</Label>
+                  <Input value={val("homeAnnouncementsLinkLabel", "Lihat semua berita")} onChange={(e) => set("homeAnnouncementsLinkLabel", e.target.value)} />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Tajuk Seksyen</Label>
+                <Input value={val("homeAnnouncementsTitle", "Info & Pengumuman")} onChange={(e) => set("homeAnnouncementsTitle", e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Tajuk Keadaan Kosong</Label>
+                <Input value={val("homeAnnouncementsEmptyTitle", "Belum ada poster info terkini")} onChange={(e) => set("homeAnnouncementsEmptyTitle", e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Huraian Keadaan Kosong</Label>
+                <Textarea rows={2} value={val("homeAnnouncementsEmptyBody", "Admin boleh menambah poster melalui menu Pengumuman.")} onChange={(e) => set("homeAnnouncementsEmptyBody", e.target.value)} />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Teks Berita Terkini</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label>Eyebrow</Label>
+                  <Input value={val("homeNewsEyebrow", "Berita & Pengumuman")} onChange={(e) => set("homeNewsEyebrow", e.target.value)} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Label Pautan</Label>
+                  <Input value={val("homeNewsLinkLabel", "Lihat semua berita")} onChange={(e) => set("homeNewsLinkLabel", e.target.value)} />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Tajuk Seksyen</Label>
+                <Input value={val("homeNewsTitle", "Perkembangan Terkini Sekolah")} onChange={(e) => set("homeNewsTitle", e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Pesan Bila Tiada Berita</Label>
+                <Input value={val("homeNewsEmptyMessage", "Belum ada berita.")} onChange={(e) => set("homeNewsEmptyMessage", e.target.value)} />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Teks Countdown SPM</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label>Eyebrow</Label>
+                  <Input value={val("homeCountdownEyebrow", "Kiraan Masa")} onChange={(e) => set("homeCountdownEyebrow", e.target.value)} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Tajuk Bila Sudah Bermula</Label>
+                  <Input value={val("homeCountdownPastTitle", "SPM Telah Bermula")} onChange={(e) => set("homeCountdownPastTitle", e.target.value)} />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Tajuk Countdown</Label>
+                <Input value={val("homeCountdownTitle", "Menghitung Hari ke SPM")} onChange={(e) => set("homeCountdownTitle", e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Petikan / Quote</Label>
+                <Textarea rows={2} value={val("homeCountdownQuote", "Belajar bersungguh-sungguh. Kejayaan anda adalah kebanggaan kami.")} onChange={(e) => set("homeCountdownQuote", e.target.value)} />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="space-y-1.5">
+                  <Label>Label Hari</Label>
+                  <Input value={val("homeCountdownDaysLabel", "Hari")} onChange={(e) => set("homeCountdownDaysLabel", e.target.value)} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Label Jam</Label>
+                  <Input value={val("homeCountdownHoursLabel", "Jam")} onChange={(e) => set("homeCountdownHoursLabel", e.target.value)} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Label Minit</Label>
+                  <Input value={val("homeCountdownMinutesLabel", "Minit")} onChange={(e) => set("homeCountdownMinutesLabel", e.target.value)} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Label Saat</Label>
+                  <Input value={val("homeCountdownSecondsLabel", "Saat")} onChange={(e) => set("homeCountdownSecondsLabel", e.target.value)} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="statistik" className="mt-4 space-y-4">
           <Card>
             <CardHeader>
@@ -159,35 +262,19 @@ export default function SettingsPage() {
               <div className="grid gap-4 sm:grid-cols-3">
                 <div className="space-y-1.5">
                   <Label>Jumlah Pelajar</Label>
-                  <Input
-                    type="number"
-                    value={val("statsStudents")}
-                    onChange={(e) => set("statsStudents", e.target.value)}
-                  />
+                  <Input type="number" value={val("statsStudents")} onChange={(e) => set("statsStudents", e.target.value)} />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Staf Sokongan</Label>
-                  <Input
-                    type="number"
-                    value={val("statsSupportStaff")}
-                    onChange={(e) => set("statsSupportStaff", e.target.value)}
-                  />
+                  <Input type="number" value={val("statsSupportStaff")} onChange={(e) => set("statsSupportStaff", e.target.value)} />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Bilangan Kelas</Label>
-                  <Input
-                    type="number"
-                    value={val("statsClasses")}
-                    onChange={(e) => set("statsClasses", e.target.value)}
-                  />
+                  <Input type="number" value={val("statsClasses")} onChange={(e) => set("statsClasses", e.target.value)} />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Bilangan Calon SPM</Label>
-                  <Input
-                    type="number"
-                    value={val("statsSpmCandidates")}
-                    onChange={(e) => set("statsSpmCandidates", e.target.value)}
-                  />
+                  <Input type="number" value={val("statsSpmCandidates")} onChange={(e) => set("statsSpmCandidates", e.target.value)} />
                 </div>
               </div>
             </CardContent>
@@ -199,11 +286,7 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="space-y-1.5">
                 <Label>Tarikh Mula SPM</Label>
-                <Input
-                  type="date"
-                  value={val("spmDate")}
-                  onChange={(e) => set("spmDate", e.target.value)}
-                />
+                <Input type="date" value={val("spmDate")} onChange={(e) => set("spmDate", e.target.value)} />
                 <p className="text-xs text-muted-foreground">
                   Digunakan untuk widget kiraan masa undur di laman utama.
                 </p>
@@ -244,12 +327,7 @@ export default function SettingsPage() {
             <CardContent className="space-y-6">
               <div className="space-y-1.5">
                 <Label>Kata Laluan Halaman Pentadbiran</Label>
-                <Input
-                  type="text"
-                  placeholder="Masukkan kata laluan untuk halaman pentadbiran"
-                  value={val("pentadbiranPassword")}
-                  onChange={(e) => set("pentadbiranPassword", e.target.value)}
-                />
+                <Input type="text" placeholder="Masukkan kata laluan untuk halaman pentadbiran" value={val("pentadbiranPassword")} onChange={(e) => set("pentadbiranPassword", e.target.value)} />
                 <p className="text-xs text-muted-foreground">
                   Kata laluan ini diperlukan untuk mengakses halaman Pentadbiran dari bahagian awam.
                 </p>
@@ -257,12 +335,7 @@ export default function SettingsPage() {
 
               <div className="space-y-1.5 border-t border-border/60 pt-4">
                 <Label>Kata Laluan Senarai Pelajar Asrama</Label>
-                <Input
-                  type="text"
-                  placeholder="Masukkan kata laluan untuk senarai pelajar asrama"
-                  value={val("asramaPassword")}
-                  onChange={(e) => set("asramaPassword", e.target.value)}
-                />
+                <Input type="text" placeholder="Masukkan kata laluan untuk senarai pelajar asrama" value={val("asramaPassword")} onChange={(e) => set("asramaPassword", e.target.value)} />
                 <p className="text-xs text-muted-foreground">
                   Kata laluan ini diperlukan untuk mengakses halaman Senarai Pelajar Asrama.
                 </p>
@@ -280,100 +353,21 @@ export default function SettingsPage() {
               <p className="text-sm text-muted-foreground">
                 Sambungkan laman web sekolah terus ke folder Google Drive anda untuk memaparkan fail rasmi secara dinamik seperti peneroka fail di halaman awam.
               </p>
-              
+
               <div className="space-y-1.5">
                 <Label>Google Apps Script Web App URL</Label>
-                <Input 
-                  placeholder="https://script.google.com/macros/s/.../exec" 
-                  value={val("googleAppsScriptUrl")} 
-                  onChange={(e) => set("googleAppsScriptUrl", e.target.value)} 
-                />
+                <Input placeholder="https://script.google.com/macros/s/.../exec" value={val("googleAppsScriptUrl")} onChange={(e) => set("googleAppsScriptUrl", e.target.value)} />
                 <p className="text-xs text-muted-foreground">
-                  URL Web App yang diperoleh selepas memasang dan melancarkan Apps Script (klik 'Deploy as Web App' di Google Sheets/Docs/Apps Script).
+                  URL Web App yang diperoleh selepas memasang dan melancarkan Apps Script (klik Deploy as Web App di Google Sheets/Docs/Apps Script).
                 </p>
               </div>
 
               <div className="space-y-1.5">
                 <Label>Google Drive Folder ID (Pilihan)</Label>
-                <Input 
-                  placeholder="Contoh: 1aBcDeFgHiJkLmNoPqRsTuVwXyZ" 
-                  value={val("googleDriveFolderId")} 
-                  onChange={(e) => set("googleDriveFolderId", e.target.value)} 
-                />
+                <Input placeholder="Contoh: 1aBcDeFgHiJkLmNoPqRsTuVwXyZ" value={val("googleDriveFolderId")} onChange={(e) => set("googleDriveFolderId", e.target.value)} />
                 <p className="text-xs text-muted-foreground">
                   ID Folder utama Google Drive yang mahu dipaparkan di portal. Jika tidak diisi, folder lalai dari script akan digunakan.
                 </p>
-              </div>
-
-              <div className="rounded-md bg-muted/40 p-4 border border-border/80 space-y-2 mt-4">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-primary">Panduan Pemasangan Google Apps Script</h4>
-                <ol className="text-xs text-muted-foreground list-decimal list-inside space-y-1.5 leading-relaxed">
-                  <li>Buka <a href="https://script.google.com" target="_blank" rel="noopener noreferrer" className="underline font-medium hover:text-foreground">Google Apps Script</a> dan cipta Projek Baharu.</li>
-                  <li>Padam kod asal dan tampal kod berikut:
-                    <pre className="mt-2 max-h-48 overflow-y-auto rounded bg-card p-2 text-[10px] font-mono text-foreground border border-border">
-{`function doGet(e) {
-  var folderId = e.parameter.id || "ID_FOLDER_GOOGLE_DRIVE_ANDA";
-  try {
-    var folder = DriveApp.getFolderById(folderId);
-    var data = getFolderContents(folder);
-    return ContentService.createTextOutput(JSON.stringify({ success: true, data: data }))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader("Access-Control-Allow-Origin", "*");
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ success: false, error: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader("Access-Control-Allow-Origin", "*");
-  }
-}
-
-function getFolderContents(folder) {
-  var files = folder.getFiles();
-  var fileList = [];
-  while (files.hasNext()) {
-    var file = files.next();
-    fileList.push({
-      id: file.getId(),
-      name: file.getName(),
-      mimeType: file.getMimeType(),
-      size: formatBytes(file.getSize()),
-      dateCreated: file.getDateCreated().toISOString(),
-      url: file.getUrl(),
-      downloadUrl: "https://drive.google.com/uc?export=download&id=" + file.getId()
-    });
-  }
-  
-  var subFolders = folder.getFolders();
-  var folderList = [];
-  while (subFolders.hasNext()) {
-    var subFolder = subFolders.next();
-    folderList.push(getFolderContents(subFolder));
-  }
-  
-  fileList.sort(function(a, b) { return a.name.localeCompare(b.name); });
-  folderList.sort(function(a, b) { return a.name.localeCompare(b.name); });
-  
-  return {
-    id: folder.getId(),
-    name: folder.getName(),
-    files: fileList,
-    folders: folderList
-  };
-}
-
-function formatBytes(bytes) {
-  if (bytes === 0) return "0 Bytes";
-  var k = 1024;
-  var sizes = ["Bytes", "KB", "MB", "GB"];
-  var i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-}`}
-                    </pre>
-                  </li>
-                  <li>Tukar <code className="font-mono bg-card px-1 border rounded">"ID_FOLDER_GOOGLE_DRIVE_ANDA"</code> kepada ID folder Drive anda yang telah dikongsi secara awam (Anyone with link can view).</li>
-                  <li>Klik <strong>Deploy</strong> &rarr; <strong>New Deployment</strong>. Pilih jenis <strong>Web App</strong>.</li>
-                  <li>Set <strong>Execute as:</strong> <code>Me</code> dan <strong>Who has access:</strong> <code>Anyone</code>. Klik Deploy.</li>
-                  <li>Salin <strong>Web App URL</strong> yang terhasil dan tampal di dalam input di atas.</li>
-                </ol>
               </div>
             </CardContent>
           </Card>
@@ -398,14 +392,9 @@ function formatBytes(bytes) {
                       onClick={() => set("themeColor", key)}
                       className={`flex items-center gap-3 rounded-md border p-3 text-left transition-colors hover:bg-muted/50 ${isActive ? "border-primary ring-1 ring-primary" : "border-border"}`}
                     >
-                      <span
-                        className="size-7 shrink-0 rounded-full"
-                        style={{ background: preset.primary }}
-                      />
+                      <span className="size-7 shrink-0 rounded-full" style={{ background: preset.primary }} />
                       <span className="text-sm font-medium">{preset.label}</span>
-                      {isActive && (
-                        <span className="ml-auto text-xs text-primary font-medium">Aktif</span>
-                      )}
+                      {isActive && <span className="ml-auto text-xs text-primary font-medium">Aktif</span>}
                     </button>
                   );
                 })}
@@ -417,4 +406,3 @@ function formatBytes(bytes) {
     </div>
   );
 }
-

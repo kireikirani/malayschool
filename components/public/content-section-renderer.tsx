@@ -41,8 +41,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
 
   if (section.sectionKey === "log-harian-pengetua" || (section.type === "text_block" && section.linkUrl?.includes("canva.site"))) {
     return (
-      <section className="relative overflow-hidden text-white p-8 md:p-14 text-center flex flex-col items-center justify-center min-h-[320px] rounded-md">
-        {/* Background image — same source as page hero */}
+      <section className="relative flex min-h-[320px] flex-col items-center justify-center overflow-hidden rounded-md p-8 text-center text-white md:p-14">
         <Image
           src="/gallery/sekolah/bangunan-sekolah.jpg"
           alt=""
@@ -50,24 +49,23 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
           className="object-cover object-[78%_40%]"
           aria-hidden
         />
-        {/* Vibrant primary colour overlay */}
         <div className="absolute inset-0 bg-primary/70 mix-blend-color" />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/75 to-primary/50" />
 
-        <div className="relative z-10 flex flex-col items-center max-w-2xl">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-white/90 text-xs font-semibold border border-white/25 mb-6 uppercase tracking-wider backdrop-blur-sm">
+        <div className="relative z-10 flex max-w-2xl flex-col items-center">
+          <span className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white/90 backdrop-blur-sm">
             <Sparkles className="size-3" aria-hidden />
             Created by Cikgu Hannani and Cikgu Hasyrul
           </span>
-          <h2 className="font-heading text-2xl md:text-4xl font-bold tracking-tight text-white mb-4 drop-shadow-md">
+          <h2 className="mb-4 font-heading text-2xl font-bold tracking-tight text-white drop-shadow-md md:text-4xl">
             {section.title || "Log Harian Pengetua"}
           </h2>
-          <p className="text-sm md:text-base text-white/85 leading-relaxed mb-8 drop-shadow-sm">
+          <p className="mb-8 text-sm leading-relaxed text-white/85 drop-shadow-sm md:text-base">
             {section.body || "Akses dan semak maklumat log harian, perancangan strategik, takwim pengurusan, serta pelan pentadbiran pengetua sekolah secara interaktif melalui paparan Canva."}
           </p>
           <Button
             asChild
-            className="bg-white hover:bg-white/90 text-primary font-semibold h-11 px-8 rounded-full shadow-lg hover:shadow-xl transition-all"
+            className="h-11 rounded-full bg-white px-8 font-semibold text-primary shadow-lg transition-all hover:bg-white/90 hover:shadow-xl"
           >
             <a
               href={section.linkUrl || "https://pengurusandanpentadbiran.my.canva.site/plannerpengetua"}
@@ -161,34 +159,36 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
     return (
       <section>
         <SectionHeading title={section.title} subtitle={section.subtitle} />
-        {section.imageUrl ? (
-          <div className="mb-6 flex justify-center">
-            <div className="relative aspect-[3/2] w-52 overflow-hidden bg-muted">
-              <Image src={section.imageUrl} alt={section.title ?? section.sectionKey} fill className="object-contain" />
+        <div className={section.imageUrl ? "grid gap-6 md:grid-cols-[240px_1fr] md:items-start" : ""}>
+          {section.imageUrl ? (
+            <div className="overflow-hidden border border-border/70 bg-muted">
+              <div className="relative aspect-square w-full">
+                <Image src={section.imageUrl} alt={section.title ?? section.sectionKey} fill className="object-contain p-4" />
+              </div>
             </div>
-          </div>
-        ) : null}
-        <div className="overflow-x-auto bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border/60">
-                <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">
-                  {section.type === "jk_table" ? "Nama" : "Perkara"}
-                </th>
-                <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">
-                  {section.type === "jk_table" ? "Jawatan" : "Keterangan"}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {section.items.map((item) => (
-                <tr key={`${section.sectionKey}-${item.sortOrder}`} className="border-b border-border/40 last:border-0">
-                  <td className="px-5 py-3 font-medium">{item.title ?? item.label}</td>
-                  <td className="px-5 py-3 text-muted-foreground">{item.value ?? item.body}</td>
+          ) : null}
+          <div className="overflow-x-auto bg-card shadow-sm">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border/60">
+                  <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">
+                    {section.type === "jk_table" ? "Nama" : "Perkara"}
+                  </th>
+                  <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground">
+                    {section.type === "jk_table" ? "Jawatan" : "Keterangan"}
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {section.items.map((item) => (
+                  <tr key={`${section.sectionKey}-${item.sortOrder}`} className="border-b border-border/40 last:border-0">
+                    <td className="px-5 py-3 font-medium">{item.title ?? item.label}</td>
+                    <td className="px-5 py-3 text-muted-foreground">{item.value ?? item.body}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
     );
@@ -206,7 +206,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
                   <Image src={item.imageUrl} alt={item.title ?? item.label ?? "Section image"} fill className="object-cover" />
                 </div>
               ) : null}
-              {item.label ? <p className="text-xs font-semibold tracking-wide text-primary uppercase">{item.label}</p> : null}
+              {item.label ? <p className="text-xs font-semibold uppercase tracking-wide text-primary">{item.label}</p> : null}
               {item.title ? <h3 className="mt-1 font-heading text-lg font-semibold">{item.title}</h3> : null}
               {item.value ? <p className="mt-1 text-sm font-medium text-primary">{item.value}</p> : null}
               {item.body ? <p className="mt-2 text-sm text-muted-foreground">{item.body}</p> : null}

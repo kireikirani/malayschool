@@ -58,6 +58,14 @@ export type ContentSection = {
   items: ContentItem[];
 };
 
+type UnitTemplateSpec =
+  | { type: "poster"; title: string; subtitle?: string; imageUrl?: string | null; sectionKey?: string }
+  | { type: "stats"; title: string; sectionKey?: string }
+  | { type: "text_block"; title: string; subtitle?: string | null; body?: string | null; linkLabel?: string | null; linkUrl?: string | null; sectionKey?: string }
+  | { type: "jk_table"; title: string; sectionKey?: string }
+  | { type: "file_list"; title: string; subtitle?: string; sectionKey?: string }
+  | { type: "simple_table"; title: string; subtitle?: string; sectionKey?: string };
+
 function parseMetaJson(value: string | null): Record<string, unknown> | null {
   if (!value) return null;
   try {
@@ -270,6 +278,262 @@ function defaultAsramaSections(): ContentSection[] {
   ];
 }
 
+function slugify(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+function normalizeTitle(value: string) {
+  return value.toLowerCase().replace(/[()]/g, " ").replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function extractCommitteeCode(value: string) {
+  const match = value.toUpperCase().match(/\b(JM\d+|JK\d+)\b/);
+  return match?.[1] ?? null;
+}
+
+const MANAGEMENT_TEMPLATE_SECTIONS: Record<string, UnitTemplateSpec[]> = {
+  pentadbiran: [
+    { type: "poster", title: "Carta Organisasi Sekolah", sectionKey: "carta-organisasi-sekolah" },
+    { type: "stats", title: "Hala Tuju 2026-2030", sectionKey: "hala-tuju-2026-2030" },
+    {
+      type: "text_block",
+      title: "Log Harian Pengetua",
+      sectionKey: "log-harian-pengetua",
+      body: "Akses dan semak maklumat log harian, perancangan strategik, takwim pengurusan, serta pelan pentadbiran pengetua sekolah secara interaktif melalui paparan Canva.",
+      linkLabel: "Buka Log Harian Pengetua",
+      linkUrl: "https://pengurusandanpentadbiran.my.canva.site/plannerpengetua",
+    },
+    { type: "jk_table", title: "JM01. JK Pengurusan Sekolah" },
+    { type: "file_list", title: "Section Gdrive", sectionKey: "gdrive-1" },
+    { type: "jk_table", title: "JM02. JK Pengurusan Maklumat Sekolah" },
+    { type: "jk_table", title: "JM03. JK Pengurusan Sumber Manusia" },
+    { type: "file_list", title: "Section Gdrive", sectionKey: "gdrive-2" },
+    { type: "jk_table", title: "JM04. JK Pengurusan Kewangan, Akaun dan Aset Sekolah" },
+    { type: "jk_table", title: "JM05. JK Standard Kualiti Pendidikan Malaysia" },
+    { type: "jk_table", title: "JM07. JK Bencana Sekolah" },
+    { type: "jk_table", title: "JM08. JK Persatuan Ibu Bapa - Guru" },
+    { type: "jk_table", title: "JM09. JK Kelab Kebajikan Guru dan Kakitangan" },
+    { type: "jk_table", title: "JM10. JK Pengurusan Murid Asal" },
+    { type: "jk_table", title: "JM11. JK Pengurusan Tingkatan 6" },
+    { type: "jk_table", title: "JK Transformasi Sekolah (TS25/PAK21/PLC/KBAT)" },
+    { type: "jk_table", title: "JK Pengurusan Bilik - Bilik Khas" },
+    { type: "jk_table", title: "JK Pengurusan Murid" },
+    { type: "jk_table", title: "JK Pengurusan Kelas" },
+    { type: "jk_table", title: "JK Kajian Tindakan" },
+    { type: "jk_table", title: "JK Teknik & Pembangunan Sekolah" },
+    { type: "jk_table", title: "JK Perancangan Strategik Operasi (PSO)" },
+    { type: "jk_table", title: "JK Mesyuarat Guru / Refleksi" },
+    { type: "jk_table", title: "JK Pengurusan Pejabat" },
+    { type: "simple_table", title: "Jadual Guru Bertugas Mingguan 2024/2025", sectionKey: "jadual-guru-bertugas" },
+  ],
+  kurikulum: [
+    { type: "jk_table", title: "JM21. JK Pengurusan Kurikulum" },
+    { type: "file_list", title: "Section Gdrive", sectionKey: "gdrive-1" },
+    { type: "jk_table", title: "JM22. JK Panitia Mata Pelajaran" },
+    { type: "file_list", title: "Section Gdrive", sectionKey: "gdrive-2" },
+    { type: "jk_table", title: "JM23. JK Pentaksiran dan Peperiksaan /JK PBS" },
+    { type: "file_list", title: "Section Gdrive", sectionKey: "gdrive-3" },
+    { type: "jk_table", title: "JM24. JK Pusat Sumber Sekolah" },
+    { type: "file_list", title: "Section Gdrive", sectionKey: "gdrive-4" },
+  ],
+  hem: [
+    { type: "poster", title: "Carta Organisasi Pengurusan Hal Ehwal Murid", sectionKey: "carta-organisasi-hem" },
+    { type: "poster", title: "Carta Organisasi Pengurusan Asrama", sectionKey: "carta-organisasi-asrama" },
+    { type: "jk_table", title: "JM25 JK Pengurusan Hal Ehwal Murid" },
+    { type: "file_list", title: "Section Gdrive", sectionKey: "gdrive-1" },
+    { type: "jk_table", title: "JM26. JK Pengurusan Disiplin Murid" },
+    { type: "jk_table", title: "JM27. JK Pengurusan 3K (Kebersihan, Kesihatan dan Keselamatan)" },
+    { type: "jk_table", title: "JM28. JK Bimbingan dan Kaunseling" },
+    { type: "jk_table", title: "JK Penglibatan Ibubapa Komuniti Swasta (PIBKS)" },
+    { type: "jk_table", title: "JM29. JK Pengurusan Asrama" },
+    { type: "jk_table", title: "JK Pengurusan Persatuan Waris (PEWARIS)" },
+    { type: "file_list", title: "Section Gdrive", sectionKey: "gdrive-2" },
+  ],
+  kokurikulum: [
+    { type: "poster", title: "Carta Organisasi Pengurusan Kokurikulum", sectionKey: "carta-organisasi-kokurikulum" },
+    { type: "jk_table", title: "JM30. JK Pengurusan Kokurikulum" },
+    { type: "jk_table", title: "JM31. JK Pembangunan Sukan Sekolah" },
+    { type: "jk_table", title: "JM32. JK Sukan Tahunan Sekolah" },
+    { type: "file_list", title: "Section Gdrive", sectionKey: "gdrive-1" },
+    { type: "jk_table", title: "JM33. JK Koperasi Sekolah" },
+    { type: "jk_table", title: "JK Pasukan Badan Beruniform (PBB)" },
+    { type: "jk_table", title: "JK Kelab dan Persatuan Akademik" },
+    { type: "file_list", title: "Section Gdrive", sectionKey: "gdrive-2" },
+    { type: "jk_table", title: "JK Rancangan Integrasi Murid untuk Perpaduan (RIMUP)" },
+    { type: "jk_table", title: "JK Pengurusan Kokurikulum Tambahan" },
+    { type: "jk_table", title: "JK Redaksi / Majalah Sekolah" },
+    { type: "jk_table", title: "JK Pengurusan Latihan Pasukan Permainan Sekolah" },
+    { type: "file_list", title: "Section Gdrive", sectionKey: "gdrive-3" },
+  ],
+  "tingkatan-6": [
+    { type: "poster", title: "Carta Organisasi Pengurusan Tingkatan Enam", sectionKey: "carta-organisasi-tingkatan-enam" },
+    { type: "jk_table", title: "JM11 JK Pengurusan Tingkatan Enam" },
+    { type: "simple_table", title: "Jadual Ketua Guru Bertugas Mingguan", sectionKey: "jadual-ketua-guru-bertugas" },
+    { type: "jk_table", title: "JK Pengurusan Akademik Tingkatan Enam" },
+    { type: "jk_table", title: "JK Pengurusan Hal Ehwal Murid Tingkatan Enam" },
+    { type: "jk_table", title: "JK Pengurusan Kokurikulum Tingkatan Enam" },
+    { type: "file_list", title: "Section Gdrive", sectionKey: "gdrive-1" },
+  ],
+};
+
+function buildManagementTemplateSections({
+  unitSlug,
+  unit,
+  cartaImageUrl,
+  dbJkMembers,
+}: {
+  unitSlug: string;
+  unit: (typeof UNITS)[number];
+  cartaImageUrl: string | null;
+  dbJkMembers: Array<{ jkCode: string; jkTitle: string; nama: string; jawatan: string; sortOrder: number }>;
+}): ContentSection[] | null {
+  const template = MANAGEMENT_TEMPLATE_SECTIONS[unitSlug];
+  if (!template) return null;
+
+  const dbByTitle = new Map<string, ContentItem[]>();
+  const dbByCode = new Map<string, ContentItem[]>();
+  for (const member of dbJkMembers) {
+    const item = {
+      title: member.nama,
+      value: member.jawatan,
+      sortOrder: member.sortOrder,
+    };
+    const titleKey = normalizeTitle(member.jkTitle);
+    dbByTitle.set(titleKey, [...(dbByTitle.get(titleKey) ?? []), item]);
+    const codeKey = extractCommitteeCode(member.jkTitle) ?? member.jkCode.toUpperCase();
+    dbByCode.set(codeKey, [...(dbByCode.get(codeKey) ?? []), item]);
+  }
+
+  const fallbackByTitle = new Map<string, ContentItem[]>();
+  const fallbackByCode = new Map<string, ContentItem[]>();
+  for (const table of unit.jkTables ?? []) {
+    const items = table.members.map((member, index) => ({
+      title: member.name,
+      value: member.jawatan,
+      sortOrder: index,
+    }));
+    fallbackByTitle.set(normalizeTitle(table.title), items);
+    const codeKey = extractCommitteeCode(table.title);
+    if (codeKey) {
+      fallbackByCode.set(codeKey, items);
+    }
+  }
+
+  const kpiItems = unit.kpis.map((kpi, index) => ({
+    label: kpi.label,
+    value: `${kpi.value}${kpi.suffix ?? ""}`,
+    sortOrder: index,
+  }));
+
+  return template.map((spec, index) => {
+    const sortOrder = index * 10;
+    const sectionKey = spec.sectionKey ?? slugify(spec.title);
+
+    if (spec.type === "poster") {
+      return {
+        sectionKey,
+        type: "poster",
+        title: spec.title,
+        subtitle: spec.subtitle ?? null,
+        body: null,
+        imageUrl: spec.imageUrl ?? (index === 0 ? cartaImageUrl : null),
+        linkLabel: null,
+        linkUrl: null,
+        isActive: true,
+        sortOrder,
+        items: [],
+      } satisfies ContentSection;
+    }
+
+    if (spec.type === "stats") {
+      return {
+        sectionKey,
+        type: "stats",
+        title: spec.title,
+        subtitle: null,
+        body: null,
+        imageUrl: null,
+        linkLabel: null,
+        linkUrl: null,
+        isActive: true,
+        sortOrder,
+        items: kpiItems,
+      } satisfies ContentSection;
+    }
+
+    if (spec.type === "text_block") {
+      return {
+        sectionKey,
+        type: "text_block",
+        title: spec.title,
+        subtitle: spec.subtitle ?? null,
+        body: spec.body ?? null,
+        imageUrl: null,
+        linkLabel: spec.linkLabel ?? null,
+        linkUrl: spec.linkUrl ?? null,
+        isActive: true,
+        sortOrder,
+        items: [],
+      } satisfies ContentSection;
+    }
+
+    if (spec.type === "file_list") {
+      return {
+        sectionKey,
+        type: "file_list",
+        title: spec.title,
+        subtitle: spec.subtitle ?? "Akses dokumen berkaitan melalui integrasi Google Drive.",
+        body: null,
+        imageUrl: null,
+        linkLabel: null,
+        linkUrl: null,
+        unitSlug,
+        isActive: true,
+        sortOrder,
+        items: [],
+      } satisfies ContentSection;
+    }
+
+    if (spec.type === "simple_table") {
+      return {
+        sectionKey,
+        type: "simple_table",
+        title: spec.title,
+        subtitle: spec.subtitle ?? null,
+        body: null,
+        imageUrl: null,
+        linkLabel: null,
+        linkUrl: null,
+        isActive: true,
+        sortOrder,
+        items: [],
+      } satisfies ContentSection;
+    }
+
+    const codeKey = extractCommitteeCode(spec.title);
+    const items =
+      dbByTitle.get(normalizeTitle(spec.title))
+      ?? (codeKey ? dbByCode.get(codeKey) : undefined)
+      ?? fallbackByTitle.get(normalizeTitle(spec.title))
+      ?? (codeKey ? fallbackByCode.get(codeKey) : undefined)
+      ?? [];
+
+    return {
+      sectionKey,
+      type: "jk_table",
+      title: spec.title,
+      subtitle: null,
+      body: null,
+      imageUrl: null,
+      linkLabel: null,
+      linkUrl: null,
+      isActive: true,
+      sortOrder,
+      items,
+    } satisfies ContentSection;
+  });
+}
+
 async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> {
   const unit = UNITS.find((row) => row.slug === unitSlug);
   if (!unit) return [];
@@ -288,6 +552,16 @@ async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> 
   ]);
 
   const carta = uploadedDocs.find((row) => row.type === "carta-org");
+  const managementTemplate = buildManagementTemplateSections({
+    unitSlug,
+    unit,
+    cartaImageUrl: carta?.fileUrl ?? null,
+    dbJkMembers,
+  });
+  if (managementTemplate) {
+    return managementTemplate;
+  }
+
   const fileItems = unit.dokumen?.map((doc, index) => {
     const uploaded = uploadedDocs.find((row) => row.type === "dokumen" && row.label === doc.label);
     return {
@@ -301,7 +575,6 @@ async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> 
     };
   }) ?? [];
 
-  // Group DB JK members by jkCode → one section per unique jkCode
   const dbJkSections: ContentSection[] = [];
   if (dbJkMembers.length > 0) {
     const grouped = new Map<string, typeof dbJkMembers>();
@@ -324,7 +597,6 @@ async function defaultUnitSections(unitSlug: string): Promise<ContentSection[]> 
     }
   }
 
-  // Fall back to hardcoded jkTables if no DB entries
   const toJkCode = (title: string) =>
     title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
@@ -489,7 +761,3 @@ export async function getUnitContentSection(unitSlug: string, sectionKey: string
   const sections = await getUnitSections(unitSlug);
   return sections.find((section) => section.sectionKey === sectionKey) ?? null;
 }
-
-
-
-

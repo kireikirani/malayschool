@@ -27,6 +27,23 @@ export type SiteSettings = {
   pentadbiranPassword?: string;
   googleAppsScriptUrl?: string;
   googleDriveFolderId?: string;
+  homeAnnouncementsEyebrow: string;
+  homeAnnouncementsTitle: string;
+  homeAnnouncementsLinkLabel: string;
+  homeAnnouncementsEmptyTitle: string;
+  homeAnnouncementsEmptyBody: string;
+  homeNewsEyebrow: string;
+  homeNewsTitle: string;
+  homeNewsLinkLabel: string;
+  homeNewsEmptyMessage: string;
+  homeCountdownEyebrow: string;
+  homeCountdownTitle: string;
+  homeCountdownPastTitle: string;
+  homeCountdownQuote: string;
+  homeCountdownDaysLabel: string;
+  homeCountdownHoursLabel: string;
+  homeCountdownMinutesLabel: string;
+  homeCountdownSecondsLabel: string;
 };
 
 const DEFAULTS: SiteSettings = {
@@ -52,6 +69,23 @@ const DEFAULTS: SiteSettings = {
   pentadbiranPassword: "PENTADBIRAN2026",
   googleAppsScriptUrl: "",
   googleDriveFolderId: "",
+  homeAnnouncementsEyebrow: "Terkini",
+  homeAnnouncementsTitle: "Info & Pengumuman",
+  homeAnnouncementsLinkLabel: "Lihat semua berita",
+  homeAnnouncementsEmptyTitle: "Belum ada poster info terkini",
+  homeAnnouncementsEmptyBody: "Admin boleh menambah poster melalui menu Pengumuman.",
+  homeNewsEyebrow: "Berita & Pengumuman",
+  homeNewsTitle: "Perkembangan Terkini Sekolah",
+  homeNewsLinkLabel: "Lihat semua berita",
+  homeNewsEmptyMessage: "Belum ada berita.",
+  homeCountdownEyebrow: "Kiraan Masa",
+  homeCountdownTitle: "Menghitung Hari ke SPM",
+  homeCountdownPastTitle: "SPM Telah Bermula",
+  homeCountdownQuote: "Belajar bersungguh-sungguh. Kejayaan anda adalah kebanggaan kami.",
+  homeCountdownDaysLabel: "Hari",
+  homeCountdownHoursLabel: "Jam",
+  homeCountdownMinutesLabel: "Minit",
+  homeCountdownSecondsLabel: "Saat",
 };
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {
@@ -83,9 +117,25 @@ export const getSettings = cache(async (): Promise<SiteSettings> => {
       pentadbiranPassword: map.pentadbiranPassword ?? DEFAULTS.pentadbiranPassword,
       googleAppsScriptUrl: map.googleAppsScriptUrl ?? DEFAULTS.googleAppsScriptUrl,
       googleDriveFolderId: map.googleDriveFolderId ?? DEFAULTS.googleDriveFolderId,
+      homeAnnouncementsEyebrow: map.homeAnnouncementsEyebrow ?? DEFAULTS.homeAnnouncementsEyebrow,
+      homeAnnouncementsTitle: map.homeAnnouncementsTitle ?? DEFAULTS.homeAnnouncementsTitle,
+      homeAnnouncementsLinkLabel: map.homeAnnouncementsLinkLabel ?? DEFAULTS.homeAnnouncementsLinkLabel,
+      homeAnnouncementsEmptyTitle: map.homeAnnouncementsEmptyTitle ?? DEFAULTS.homeAnnouncementsEmptyTitle,
+      homeAnnouncementsEmptyBody: map.homeAnnouncementsEmptyBody ?? DEFAULTS.homeAnnouncementsEmptyBody,
+      homeNewsEyebrow: map.homeNewsEyebrow ?? DEFAULTS.homeNewsEyebrow,
+      homeNewsTitle: map.homeNewsTitle ?? DEFAULTS.homeNewsTitle,
+      homeNewsLinkLabel: map.homeNewsLinkLabel ?? DEFAULTS.homeNewsLinkLabel,
+      homeNewsEmptyMessage: map.homeNewsEmptyMessage ?? DEFAULTS.homeNewsEmptyMessage,
+      homeCountdownEyebrow: map.homeCountdownEyebrow ?? DEFAULTS.homeCountdownEyebrow,
+      homeCountdownTitle: map.homeCountdownTitle ?? DEFAULTS.homeCountdownTitle,
+      homeCountdownPastTitle: map.homeCountdownPastTitle ?? DEFAULTS.homeCountdownPastTitle,
+      homeCountdownQuote: map.homeCountdownQuote ?? DEFAULTS.homeCountdownQuote,
+      homeCountdownDaysLabel: map.homeCountdownDaysLabel ?? DEFAULTS.homeCountdownDaysLabel,
+      homeCountdownHoursLabel: map.homeCountdownHoursLabel ?? DEFAULTS.homeCountdownHoursLabel,
+      homeCountdownMinutesLabel: map.homeCountdownMinutesLabel ?? DEFAULTS.homeCountdownMinutesLabel,
+      homeCountdownSecondsLabel: map.homeCountdownSecondsLabel ?? DEFAULTS.homeCountdownSecondsLabel,
     };
   } catch {
     return DEFAULTS;
   }
 });
-
