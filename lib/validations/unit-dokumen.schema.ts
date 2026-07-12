@@ -15,6 +15,7 @@ export const createUnitDokumenSchema = z.object({
 export const updateUnitDokumenSchema = createUnitDokumenSchema.partial();
 
 export const unitDokumenQuerySchema = paginationSchema.extend({
+  limit: z.coerce.number().int().min(1).max(500).default(20),
   unitSlug: z.string().optional(),
   type: z.enum(["carta-org", "dokumen"]).optional(),
 });

@@ -736,17 +736,23 @@ export const getUnitSections = cache(async (unitSlug: string): Promise<ContentSe
       .where(inArray(unitSectionItems.sectionId, rows.map((row) => row.id)))
       .orderBy(asc(unitSectionItems.sortOrder), asc(unitSectionItems.createdAt));
 
-    const dbSections = withItems(rows, itemRows, "sectionId").filter((section) => section.isActive);
+    const rowById = new Map(rows.map((row) => [row.id, row]));
+    const dbSections = withItems(rows, itemRows, "sectionId")
+      .filter((section) => section.isActive)
+      .map((section) => {
+        const row = section.id ? rowById.get(section.id) : undefined;
+        return {
+          ...section,
+          unitSlug: row?.unitSlug ?? unitSlug,
+          jkCode:
+            section.type === "jk_table" && section.sectionKey.startsWith("jk-")
+              ? section.sectionKey.slice(3)
+              : null,
+        };
+      });
 
-    const merged = [...dbSections];
-    for (const defSec of defaults) {
-      if (!dbSections.some((s) => s.sectionKey === defSec.sectionKey)) {
-        merged.push(defSec);
-      }
-    }
-
-    merged.sort((a, b) => a.sortOrder - b.sortOrder);
-    return merged;
+    dbSections.sort((a, b) => a.sortOrder - b.sortOrder);
+    return dbSections;
   } catch {
     return defaultUnitSections(unitSlug);
   }

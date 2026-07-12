@@ -81,6 +81,7 @@ export const createUnitSectionSchema = z.object({
 export const updateUnitSectionSchema = createUnitSectionSchema.partial();
 
 export const unitSectionsQuerySchema = paginationSchema.extend({
+  limit: z.coerce.number().int().min(1).max(500).default(20),
   unitSlug: z.string().trim().optional(),
 });
 
