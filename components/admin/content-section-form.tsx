@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { UploadButton } from "@/lib/uploadthing-client";
+import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import type { ContentItem, ContentSection, SectionType } from "@/lib/content";
 
 const SECTION_TYPES: SectionType[] = [
@@ -437,8 +438,8 @@ export function ContentSectionForm({
             </div>
             <div className="space-y-1.5">
               <Label>Body</Label>
-              <Textarea rows={4} value={values.body} onChange={(e) => setField("body", e.target.value)} />
-              <p className="text-xs text-muted-foreground">Teks utama atau huraian untuk seksyen ini.</p>
+              <RichTextEditor value={values.body} onChange={(v) => setField("body", v)} />
+              <p className="text-xs text-muted-foreground">Teks utama atau huraian untuk seksyen ini. Menyokong format Markdown.</p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-1.5">

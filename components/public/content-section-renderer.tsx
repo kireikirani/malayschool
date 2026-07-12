@@ -5,6 +5,7 @@ import type { ContentSection } from "@/lib/content";
 import { FileCard } from "@/components/public/file-card";
 import { UnitDocumentsList } from "@/components/public/unit-documents-list";
 import { DocumentPortal } from "@/components/public/document-portal";
+import { MarkdownContent } from "@/components/public/markdown-content";
 import { Button } from "@/components/ui/button";
 
 function SectionHeading({
@@ -85,7 +86,10 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
       <section className="bg-card px-6 py-6 shadow-sm">
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         {section.body ? (
-          <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-muted-foreground">{section.body}</pre>
+          <MarkdownContent
+            markdown={section.body}
+            className="prose prose-sm prose-neutral dark:prose-invert max-w-none prose-headings:font-heading prose-p:text-muted-foreground prose-li:text-muted-foreground prose-a:text-primary hover:prose-a:underline"
+          />
         ) : (
           <p className="text-sm text-muted-foreground">Kandungan akan dikemaskini.</p>
         )}
