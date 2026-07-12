@@ -6,6 +6,9 @@ const teacherFields = z.object({
   position: optionalTrimmedString(255),
   photo: imagePathSchema.optional(),
   biography: optionalTrimmedString(5000),
+  phone: optionalTrimmedString(50),
+  subject: optionalTrimmedString(255),
+  notes: optionalTrimmedString(5000),
   sortOrder: z.coerce.number().int().min(0).max(9999).default(0),
   status: z.enum(["active", "inactive"]),
 });

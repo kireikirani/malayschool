@@ -20,3 +20,11 @@ export async function requireAdmin(req: Request) {
   }
   return session;
 }
+
+export async function requireAdminOrTeacher(req: Request) {
+  const session = await getSessionOrThrow(req);
+  if (session.user.role !== "admin" && session.user.role !== "teacher") {
+    throw new ApiError("Forbidden", 403);
+  }
+  return session;
+}

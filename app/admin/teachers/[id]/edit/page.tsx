@@ -22,6 +22,9 @@ export default async function EditTeacherPage({ params }: { params: Promise<{ id
           position: row.position ?? undefined,
           photo: row.photo ?? undefined,
           biography: row.biography ?? undefined,
+          phone: row.phone ?? undefined,
+          subject: row.subject ?? undefined,
+          notes: row.notes ?? undefined,
           sortOrder: row.sortOrder,
           status: row.status,
         }}

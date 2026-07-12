@@ -1,7 +1,7 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { getR2Client, getR2Config } from "@/lib/r2";
-import { requireAdmin } from "@/lib/api/with-auth";
+import { requireAdminOrTeacher } from "@/lib/api/with-auth";
 import { handleApiError } from "@/lib/api/error-handler";
 import { fail, ok } from "@/lib/api/response";
 import { ALLOWED_DOCUMENT_MIME_TYPES, ALLOWED_IMAGE_MIME_TYPES } from "@/lib/constants";
@@ -10,10 +10,14 @@ import { presignMediaSchema } from "@/lib/validations/media.schema";
 
 export async function POST(req: Request) {
   try {
-    await requireAdmin(req);
+    const session = await requireAdminOrTeacher(req);
 
     const body = await parseBody(req, presignMediaSchema);
     const { fileName, fileType, fileSize, folder } = body;
+
+    if (session.user.role === "teacher" && folder !== "general") {
+      return fail("Guru hanya boleh memuat naik gambar profil", 403);
+    }
 
     if (folder === "general") {
       if (!ALLOWED_IMAGE_MIME_TYPES.includes(fileType as (typeof ALLOWED_IMAGE_MIME_TYPES)[number])) {

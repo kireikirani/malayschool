@@ -11,7 +11,7 @@ import { parseBody } from "@/lib/api/validate-request";
 
 // Validate settings payload: flat object where every key and value must be a non-empty string.
 const settingsSchema = z
-  .record(z.string().min(1).max(100), z.string().min(1).max(5000))
+  .record(z.string().min(1).max(100), z.string().max(5000))
   .refine((obj) => Object.keys(obj).length > 0, { message: "At least one setting must be provided" });
 
 export async function GET(req: Request) {

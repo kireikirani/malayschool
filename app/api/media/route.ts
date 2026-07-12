@@ -4,14 +4,18 @@ import { media } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
 import { fail, ok, paginated } from "@/lib/api/response";
 import { parseBody, parseQuery } from "@/lib/api/validate-request";
-import { requireAdmin } from "@/lib/api/with-auth";
+import { requireAdmin, requireAdminOrTeacher } from "@/lib/api/with-auth";
 import { createMediaSchema, mediaQuerySchema } from "@/lib/validations/media.schema";
 
 export async function GET(req: Request) {
   try {
-    await requireAdmin(req);
+    const session = await requireAdminOrTeacher(req);
 
     const { page, limit, q, folder, category } = parseQuery(new URL(req.url).searchParams, mediaQuerySchema);
+
+    if (session.user.role === "teacher" && folder !== "general") {
+      return fail("Forbidden", 403);
+    }
 
     const conditions = [];
     if (folder) conditions.push(eq(media.folder, folder));
@@ -51,10 +55,14 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const session = await requireAdmin(req);
+    const session = await requireAdminOrTeacher(req);
 
     const body = await parseBody(req, createMediaSchema);
     const { fileName, filePath, fileKey, fileType, fileSize, folder } = body;
+
+    if (session.user.role === "teacher" && (folder ?? "general") !== "general") {
+      return fail("Forbidden", 403);
+    }
 
     const newId = crypto.randomUUID();
     const item = {

@@ -43,6 +43,9 @@ export function TeacherForm({
       position: initialData?.position ?? "",
       photo: initialData?.photo ?? undefined,
       biography: initialData?.biography ?? "",
+      phone: initialData?.phone ?? "",
+      subject: initialData?.subject ?? "",
+      notes: initialData?.notes ?? "",
       sortOrder: initialData?.sortOrder ?? 0,
       status: initialData?.status ?? "active",
     },
@@ -100,6 +103,50 @@ export function TeacherForm({
                 <Input {...field} value={field.value as string} />
               </FormControl>
               <FormDescription>Contoh: Guru Matematik, Ketua Panitia Bahasa Inggeris.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>No. Telefon</FormLabel>
+                <FormControl>
+                  <Input {...field} value={(field.value as string) ?? ""} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="subject"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Subjek Diajar</FormLabel>
+                <FormControl>
+                  <Input {...field} value={(field.value as string) ?? ""} placeholder="Contoh: Matematik, Sains" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="notes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nota Khas (dari Admin)</FormLabel>
+              <FormControl>
+                <Textarea rows={3} {...field} value={(field.value as string) ?? ""} />
+              </FormControl>
+              <FormDescription>Nota tambahan yang hanya boleh dilihat oleh guru pada dashboardnya.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
