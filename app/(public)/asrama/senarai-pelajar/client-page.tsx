@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { fetchStudentsAction, type StudentData } from "./actions";
 import { toast } from "sonner";
 
@@ -288,6 +289,8 @@ export function AsramaStudentSubpage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [search, setSearch] = useState("");
   const [genderFilter, setGenderFilter] = useState<GenderFilter>("all");
+  const [tingkatanFilter, setTingkatanFilter] = useState<string>("all");
+  const [dormFilter, setDormFilter] = useState<string>("all");
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
   useEffect(() => {
@@ -338,6 +341,8 @@ export function AsramaStudentSubpage() {
     setStudents([]);
     setPassword("");
     setGenderFilter("all");
+    setTingkatanFilter("all");
+    setDormFilter("all");
     sessionStorage.removeItem("asrama_page_password");
     toast.info("Halaman dikunci semula");
   };
@@ -346,19 +351,42 @@ export function AsramaStudentSubpage() {
     setSelectedStudent(student);
   };
 
-  const { boys, girls } = useMemo(() => {
+  const { boys, girls, tingkatanOptions, dormOptions } = useMemo(() => {
     const boys: Student[] = [];
     const girls: Student[] = [];
+    const tingkatanSet = new Set<string>();
+    const dormSet = new Set<string>();
     for (const s of students) {
       if (s.jantina === "lelaki") boys.push(s);
       else girls.push(s);
+      if (s.tingkatan) tingkatanSet.add(s.tingkatan);
+      if (s.dorm) dormSet.add(s.dorm);
     }
-    return { boys, girls };
+    const collator = new Intl.Collator("ms", { numeric: true, sensitivity: "base" });
+    const tingkatanOptions = Array.from(tingkatanSet).sort((a, b) => collator.compare(a, b));
+    const dormOptions = Array.from(dormSet).sort((a, b) => collator.compare(a, b));
+    return { boys, girls, tingkatanOptions, dormOptions };
   }, [students]);
 
   const toggleFilter = (f: GenderFilter) => {
     setGenderFilter((prev) => (prev === f ? "all" : f));
   };
+
+  const isAllActive =
+    genderFilter === "all" && tingkatanFilter === "all" && dormFilter === "all";
+
+  const resetAllFilters = () => {
+    setGenderFilter("all");
+    setTingkatanFilter("all");
+    setDormFilter("all");
+  };
+
+  const applyExtraFilters = (list: Student[]) =>
+    list.filter(
+      (s) =>
+        (tingkatanFilter === "all" || s.tingkatan === tingkatanFilter) &&
+        (dormFilter === "all" || s.dorm === dormFilter),
+    );
 
   if (isVerifying && !isAuthenticated) {
     return (
@@ -443,13 +471,23 @@ export function AsramaStudentSubpage() {
 
       {/* Stats / Filter Cards */}
       <div className="grid gap-4 grid-cols-3 max-w-2xl">
-        {/* Total - tidak boleh filter */}
-        <div className="border border-blue-200 bg-blue-50 p-4 text-center rounded-sm">
-          <p className="font-heading text-2xl font-semibold text-blue-700">{students.length}</p>
-          <p className="mt-1 text-[11px] font-medium text-blue-500 uppercase tracking-wide">
+        {/* Total - klik untuk reset semua filter */}
+        <button
+          type="button"
+          onClick={resetAllFilters}
+          className={`border p-4 text-center rounded-sm transition-all ${
+            isAllActive
+              ? "bg-blue-700 border-blue-700 shadow-md shadow-blue-200"
+              : "bg-blue-50 border-blue-200 hover:bg-blue-100"
+          }`}
+        >
+          <p className={`font-heading text-2xl font-semibold ${isAllActive ? "text-white" : "text-blue-700"}`}>
+            {students.length}
+          </p>
+          <p className={`mt-1 text-[11px] font-medium uppercase tracking-wide ${isAllActive ? "text-blue-100" : "text-blue-500"}`}>
             Jumlah Pelajar
           </p>
-        </div>
+        </button>
 
         {/* Lelaki filter card */}
         <button
@@ -488,29 +526,42 @@ export function AsramaStudentSubpage() {
         </button>
       </div>
 
-      {/* Filter label */}
-      {genderFilter !== "all" && (
-        <div className="flex items-center gap-2 -mt-4">
-          <span className="text-xs text-muted-foreground">Menapis:</span>
-          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${genderFilter === "lelaki" ? "bg-blue-100 text-blue-700" : "bg-pink-100 text-pink-700"}`}>
-            {genderFilter === "lelaki" ? "Pelajar Lelaki" : "Pelajar Perempuan"}
-          </span>
-          <button
-            type="button"
-            onClick={() => setGenderFilter("all")}
-            className="text-xs text-muted-foreground underline hover:text-foreground"
-          >
-            Padam penapis
-          </button>
-        </div>
-      )}
+      {/* Tingkatan & Dorm filters */}
+      <div className="flex flex-wrap gap-3 -mt-4">
+        <Select value={tingkatanFilter} onValueChange={setTingkatanFilter}>
+          <SelectTrigger className="w-full sm:w-48">
+            <SelectValue placeholder="Semua Tingkatan" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua Tingkatan</SelectItem>
+            {tingkatanOptions.map((t) => (
+              <SelectItem key={t} value={t}>
+                {t}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={dormFilter} onValueChange={setDormFilter}>
+          <SelectTrigger className="w-full sm:w-48">
+            <SelectValue placeholder="Semua Dorm" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua Dorm</SelectItem>
+            {dormOptions.map((d) => (
+              <SelectItem key={d} value={d}>
+                {d}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
       {/* Tables section */}
       <div className="space-y-12">
         {(genderFilter === "all" || genderFilter === "lelaki") && (
           <PaginatedStudentTable
             title="Aspura (Pelajar Lelaki)"
-            students={boys}
+            students={applyExtraFilters(boys)}
             search={search}
             onSelectStudent={handleSelectStudent}
             colorScheme="blue"
@@ -519,7 +570,7 @@ export function AsramaStudentSubpage() {
         {(genderFilter === "all" || genderFilter === "perempuan") && (
           <PaginatedStudentTable
             title="Aspuri (Pelajar Perempuan)"
-            students={girls}
+            students={applyExtraFilters(girls)}
             search={search}
             onSelectStudent={handleSelectStudent}
             colorScheme="pink"

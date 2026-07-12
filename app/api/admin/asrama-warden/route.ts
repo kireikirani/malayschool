@@ -1,6 +1,6 @@
 import { asc, count, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { asramaWardens } from "@/db/schema";
+import { asramaWardens, teachers } from "@/db/schema";
 import { handleApiError } from "@/lib/api/error-handler";
 import { created, fail, paginated } from "@/lib/api/response";
 import { parseBody, parseQuery } from "@/lib/api/validate-request";
@@ -32,11 +32,16 @@ export async function POST(req: Request) {
     }
 
     const body = await parseBody(req, createAsramaWardenSchema);
+
+    const [teacher] = await db.select().from(teachers).where(eq(teachers.id, body.teacherId)).limit(1);
+    if (!teacher) return fail("Guru/staff tidak dijumpai", 404);
+
     const [result] = await db.insert(asramaWardens).values({
-      nama: body.nama,
-      jawatan: body.jawatan,
-      telefon: body.telefon ?? null,
-      foto: body.foto ?? null,
+      teacherId: teacher.id,
+      nama: teacher.name,
+      jawatan: teacher.position ?? "-",
+      telefon: teacher.phone ?? null,
+      foto: teacher.photo ?? null,
       sortOrder: body.sortOrder,
     });
 

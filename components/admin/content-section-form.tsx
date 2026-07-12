@@ -293,6 +293,8 @@ export function ContentSectionForm({
   const [values, setValues] = useState<SectionValues>(normalizeInitialValue(initialValue));
   const [isSaving, setIsSaving] = useState(false);
 
+  const isFileList = values.type === "file_list";
+
   function setField<K extends keyof SectionValues>(key: K, value: SectionValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));
   }
@@ -499,11 +501,29 @@ export function ContentSectionForm({
                     <Input value={item.title ?? ""} onChange={(e) => updateItem(index, { title: e.target.value })} placeholder="Tajuk item" />
                     <p className="text-xs text-muted-foreground">Nama atau tajuk entri ini.</p>
                   </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs">Value / Jawatan</Label>
-                    <Input value={item.value ?? ""} onChange={(e) => updateItem(index, { value: e.target.value })} placeholder="Nilai atau jawatan" />
-                    <p className="text-xs text-muted-foreground">Nilai, jawatan, atau maklumat utama untuk entri ini.</p>
-                  </div>
+                  {isFileList ? (
+                    <div className="space-y-1.5">
+                      <Label className="text-xs">Link / File URL</Label>
+                      <Input
+                        value={item.fileUrl ?? item.url ?? ""}
+                        onChange={(e) => updateItem(index, { fileUrl: e.target.value, url: e.target.value })}
+                        placeholder="https://drive.google.com/..."
+                      />
+                      <p className="text-xs text-muted-foreground">URL Google Drive atau pautan fail.</p>
+                      <UploadButton
+                        endpoint="documentUploader"
+                        onClientUploadComplete={(files) => { if (files[0]) updateItem(index, { fileUrl: files[0].ufsUrl, url: files[0].ufsUrl }); }}
+                        onUploadError={(error) => { toast.error(error.message); }}
+                        appearance={{ button: "text-xs h-auto px-2 py-1", allowedContent: "hidden" }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="space-y-1.5">
+                      <Label className="text-xs">Value / Jawatan</Label>
+                      <Input value={item.value ?? ""} onChange={(e) => updateItem(index, { value: e.target.value })} placeholder="Nilai atau jawatan" />
+                      <p className="text-xs text-muted-foreground">Nilai, jawatan, atau maklumat utama untuk entri ini.</p>
+                    </div>
+                  )}
                 </div>
 
                 <Collapsible label="Lanjutan (Label, Body, URL, Fail, Gambar, Urutan)">

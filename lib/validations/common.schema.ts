@@ -35,6 +35,18 @@ export const imagePathSchema = z
     message: "Invalid URL",
   });
 
+// Optional variant that treats empty string / null as "not provided" — needed
+// because admin forms initialise upload fields to "" instead of leaving them
+// undefined, which would otherwise fail imagePathSchema's min(1) refinement.
+export const optionalImagePath = z.preprocess(
+  (value) => {
+    if (value == null) return undefined;
+    if (typeof value === "string" && value.trim() === "") return undefined;
+    return value;
+  },
+  imagePathSchema.optional(),
+);
+
 export const richTextContentSchema = z.string().trim().min(1).superRefine((value, ctx) => {
   const textOnly = value
     .replace(/<[^>]+>/g, " ")

@@ -9,6 +9,18 @@ const wardenFields = z.object({
   sortOrder: z.coerce.number().int().min(0).max(9999).default(0),
 });
 
-export const createAsramaWardenSchema = wardenFields;
-export const updateAsramaWardenSchema = wardenFields.partial();
+export const createAsramaWardenSchema = z.object({
+  teacherId: z.string().min(1, "Sila pilih guru/staff").max(36),
+  sortOrder: z.coerce.number().int().min(0).max(9999).default(0),
+});
+
+export const updateAsramaWardenSchema = z.object({
+  teacherId: z.string().min(1).max(36).optional(),
+  sortOrder: z.coerce.number().int().min(0).max(9999).optional(),
+  nama: wardenFields.shape.nama.optional(),
+  jawatan: wardenFields.shape.jawatan.optional(),
+  telefon: wardenFields.shape.telefon,
+  foto: wardenFields.shape.foto,
+});
+
 export const asramaWardenQuerySchema = paginationSchema;
