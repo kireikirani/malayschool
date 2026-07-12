@@ -82,7 +82,7 @@ function Collapsible({ label, children, defaultOpen = false }: { label: string; 
   );
 }
 
-function SectionHeading({ title, subtitle }: { title?: string; subtitle?: string }) {
+function SectionHeading({ title, subtitle }: { title?: string | null; subtitle?: string | null }) {
   if (!title && !subtitle) return null;
 
   return (
