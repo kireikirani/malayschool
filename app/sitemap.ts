@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { news, teachers, galleryAlbums } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
+export const dynamic = "force-dynamic";
+
 const BASE = process.env.NEXT_PUBLIC_APP_URL ?? "https://malayschool.vercel.app/";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
