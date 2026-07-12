@@ -21,6 +21,7 @@ export type SiteSettings = {
   pibgAccountName: string;
   pibgBankName: string;
   pibgAccountNumber: string;
+  pibgQrImageUrl: string;
   spmDate: string;
   themeColor: ThemeColor;
   asramaPassword?: string;
@@ -63,6 +64,7 @@ const DEFAULTS: SiteSettings = {
   pibgAccountName: brand.PIBG_ACCOUNT_NAME,
   pibgBankName: brand.PIBG_BANK_NAME,
   pibgAccountNumber: brand.PIBG_ACCOUNT_NUMBER,
+  pibgQrImageUrl: "",
   spmDate: brand.SCHOOL_SPM_DATE,
   themeColor: "navy",
   asramaPassword: "PENTADBIRAN2026",
@@ -111,6 +113,7 @@ export const getSettings = cache(async (): Promise<SiteSettings> => {
       pibgAccountName: map.pibgAccountName ?? DEFAULTS.pibgAccountName,
       pibgBankName: map.pibgBankName ?? DEFAULTS.pibgBankName,
       pibgAccountNumber: map.pibgAccountNumber ?? DEFAULTS.pibgAccountNumber,
+      pibgQrImageUrl: map.pibgQrImageUrl ?? DEFAULTS.pibgQrImageUrl,
       spmDate: map.spmDate ?? DEFAULTS.spmDate,
       themeColor: (map.themeColor as ThemeColor) ?? DEFAULTS.themeColor,
       asramaPassword: map.asramaPassword ?? DEFAULTS.asramaPassword,

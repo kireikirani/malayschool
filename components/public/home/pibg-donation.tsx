@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { QrCode } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollAnimation } from "@/components/ui/scroll-animation";
@@ -9,6 +10,7 @@ export function PibgDonation({
   accountName,
   bankName,
   accountNumber,
+  qrImageUrl,
 }: {
   title: string;
   subtitle?: string | null;
@@ -16,6 +18,7 @@ export function PibgDonation({
   accountName: string;
   bankName: string;
   accountNumber: string;
+  qrImageUrl?: string;
 }) {
   return (
     <section className="bg-primary text-primary-foreground py-16 md:py-24">
@@ -53,9 +56,15 @@ export function PibgDonation({
           <ScrollAnimation direction="right" delay={0.1}>
             <Card>
               <CardContent className="flex flex-col items-center justify-center gap-3 text-center">
-                <span className="flex size-28 items-center justify-center border border-primary/15 bg-primary/8 text-primary">
-                  <QrCode className="size-14" />
-                </span>
+                {qrImageUrl ? (
+                  <div className="relative size-40 overflow-hidden bg-white">
+                    <Image src={qrImageUrl} alt="DuitNow QR PIBG" fill className="object-contain p-2" />
+                  </div>
+                ) : (
+                  <span className="flex size-28 items-center justify-center border border-primary/15 bg-primary/8 text-primary">
+                    <QrCode className="size-14" />
+                  </span>
+                )}
                 <h3 className="font-heading text-lg font-semibold">Imbas DuitNow QR untuk Menyumbang</h3>
                 <p className="text-sm text-muted-foreground">Sumbangan Online</p>
               </CardContent>

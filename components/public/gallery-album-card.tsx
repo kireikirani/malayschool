@@ -15,7 +15,7 @@ export function GalleryAlbumCard({
 }) {
   return (
     <Link href={`/gallery/${id}`} className="group block">
-      <div className="relative aspect-[3/4] overflow-hidden rounded-lg border border-border/70 bg-muted transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_20px_40px_-24px_rgba(35,24,16,0.6)]">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-none bg-muted transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_20px_40px_-24px_rgba(35,24,16,0.6)]">
         {coverImage ? (
           <Image src={coverImage} alt={name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (

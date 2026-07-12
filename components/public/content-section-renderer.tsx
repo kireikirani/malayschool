@@ -5,6 +5,7 @@ import type { ContentSection } from "@/lib/content";
 import { FileCard } from "@/components/public/file-card";
 import { UnitDocumentsList } from "@/components/public/unit-documents-list";
 import { DocumentPortal } from "@/components/public/document-portal";
+import { GDriveFolderEmbed, extractDriveFolderId } from "@/components/public/gdrive-folder-embed";
 import { MarkdownContent } from "@/components/public/markdown-content";
 import { Button } from "@/components/ui/button";
 
@@ -222,6 +223,17 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
   }
 
   if (section.type === "file_list") {
+    const driveItem = section.items.find(
+      (item) => (item.fileUrl && extractDriveFolderId(item.fileUrl)) || (item.url && extractDriveFolderId(item.url)),
+    );
+    if (driveItem) {
+      const driveUrl = (driveItem.fileUrl && extractDriveFolderId(driveItem.fileUrl)) ? driveItem.fileUrl! : driveItem.url!;
+      return (
+        <div id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? section.sectionKey}>
+          <GDriveFolderEmbed url={driveUrl} title={section.title} subtitle={section.subtitle} />
+        </div>
+      );
+    }
     if (section.unitSlug) {
       return (
         <div id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? section.sectionKey}>

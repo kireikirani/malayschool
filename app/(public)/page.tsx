@@ -10,8 +10,6 @@ import { NewsCard } from "@/components/public/news-card";
 import { GalleryAlbumCard } from "@/components/public/gallery-album-card";
 import { AdSlot } from "@/components/public/ad-slot";
 import { Hero } from "@/components/public/home/hero";
-import { WhyChooseUs } from "@/components/public/home/why-choose-us";
-import { AcademicPrograms } from "@/components/public/home/academic-programs";
 import { PrincipalMessage } from "@/components/public/home/principal-message";
 import { FacilitiesPreview } from "@/components/public/home/facilities-preview";
 import { AdmissionsCta } from "@/components/public/home/admissions-cta";
@@ -81,8 +79,6 @@ export default async function HomePage() {
 
       <VisionMission vision={settings.schoolVision} mission={settings.schoolMission} />
 
-      <WhyChooseUs />
-      <AcademicPrograms />
       {principal && (
         <PrincipalMessage
           name={principal.name}
@@ -129,7 +125,7 @@ export default async function HomePage() {
             <div className="mt-8 grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
               {announcements.map((item, index) => (
                 <ScrollAnimation key={item.id} direction="up" delay={index * 0.08} className="h-full">
-                  <Link href={item.linkUrl || "/news"} className="group flex h-full flex-col overflow-hidden border border-border/70 bg-card">
+                  <Link href={item.linkUrl || "/news"} className="group flex h-full flex-col overflow-hidden rounded-none bg-card">
                     <div className="relative aspect-[3/4] w-full overflow-hidden">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={item.imageUrl} alt={item.tajuk} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
@@ -153,6 +149,7 @@ export default async function HomePage() {
         accountName={settings.pibgAccountName}
         bankName={settings.pibgBankName}
         accountNumber={settings.pibgAccountNumber}
+        qrImageUrl={settings.pibgQrImageUrl || undefined}
       />
 
       <section className="py-16 md:py-20">

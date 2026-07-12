@@ -1,17 +1,18 @@
 export const dynamic = "force-dynamic";
 
-import { asc, desc, eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { media, unitDocuments } from "@/db/schema";
+import { unitDocuments } from "@/db/schema";
 import { PageHeader } from "@/components/public/page-header";
 import { ASRAMA_DOCUMENT_CATEGORIES, UNITS } from "@/lib/units";
 import { BorangClient } from "@/components/public/borang-client";
 
 export default async function BorangPage() {
-  const [schoolDocs, uploadedUnitDocs] = await Promise.all([
-    db.select().from(media).where(eq(media.folder, "documents")).orderBy(desc(media.uploadedAt)).limit(50),
-    db.select().from(unitDocuments).where(eq(unitDocuments.type, "dokumen")).orderBy(asc(unitDocuments.unitSlug), asc(unitDocuments.sortOrder)),
-  ]);
+  const uploadedUnitDocs = await db
+    .select()
+    .from(unitDocuments)
+    .where(eq(unitDocuments.type, "dokumen"))
+    .orderBy(asc(unitDocuments.unitSlug), asc(unitDocuments.sortOrder));
 
   const unitsMeta = UNITS.map((u) => ({ slug: u.slug, navLabel: u.navLabel }));
 
@@ -24,12 +25,6 @@ export default async function BorangPage() {
       />
       <BorangClient
         categories={ASRAMA_DOCUMENT_CATEGORIES}
-        schoolDocs={schoolDocs.map((d) => ({
-          id: d.id,
-          fileName: d.fileName,
-          filePath: d.filePath,
-          fileSize: d.fileSize,
-        }))}
         uploadedUnitDocs={uploadedUnitDocs.map((d) => ({
           id: d.id,
           unitSlug: d.unitSlug,

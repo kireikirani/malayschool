@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { THEME_PRESETS, type ThemeColor } from "@/lib/theme";
+import { ImagePicker } from "@/components/admin/image-picker";
 
 type Settings = Record<string, string>;
 
@@ -314,6 +315,16 @@ export default function SettingsPage() {
                   <Label>Nombor Akaun</Label>
                   <Input value={val("pibgAccountNumber")} onChange={(e) => set("pibgAccountNumber", e.target.value)} />
                 </div>
+              </div>
+              <div className="space-y-1.5 border-t border-border/60 pt-4">
+                <Label>DuitNow QR Code</Label>
+                <p className="text-xs text-muted-foreground">
+                  Muat naik imej QR DuitNow untuk dipaparkan di seksyen Sumbangan PIBG halaman utama.
+                </p>
+                <ImagePicker
+                  value={val("pibgQrImageUrl")}
+                  onChange={(url) => set("pibgQrImageUrl", url)}
+                />
               </div>
             </CardContent>
           </Card>

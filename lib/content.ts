@@ -10,7 +10,7 @@ import {
   unitJkMembers,
 } from "@/db/schema";
 import { getSettings } from "@/lib/site-settings";
-import { ASRAMA_FASILITI, JK_ASRAMA, WARDENS } from "@/lib/asrama";
+import { ASRAMA_FASILITI, JK_ASRAMA } from "@/lib/asrama";
 import { SCHOOL_NAME } from "@/lib/brand";
 import { UNITS } from "@/lib/units";
 
@@ -238,20 +238,6 @@ function defaultHomeSections(settings: Awaited<ReturnType<typeof getSettings>>):
 
 function defaultAsramaSections(): ContentSection[] {
   return [
-    {
-      sectionKey: "warden-cards",
-      type: "card_grid",
-      title: "Warden Asrama",
-      subtitle: "Pasukan pengurusan dan penyelia asrama.",
-      isActive: true,
-      sortOrder: 10,
-      items: WARDENS.map((warden, index) => ({
-        title: warden.name,
-        body: warden.position,
-        value: warden.phone ?? null,
-        sortOrder: index,
-      })),
-    },
     {
       sectionKey: "jk-asrama",
       type: "jk_table",

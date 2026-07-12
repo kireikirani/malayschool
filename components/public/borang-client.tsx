@@ -8,13 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FileCard } from "@/components/public/file-card";
 
-type SchoolDoc = {
-  id: string;
-  fileName: string;
-  filePath: string;
-  fileSize: number | null;
-};
-
 type UnitDoc = {
   id: number;
   unitSlug: string;
@@ -29,12 +22,10 @@ type UnitMeta = {
 
 export function BorangClient({
   categories,
-  schoolDocs,
   uploadedUnitDocs,
   units,
 }: {
   categories: string[];
-  schoolDocs: SchoolDoc[];
   uploadedUnitDocs: UnitDoc[];
   units: UnitMeta[];
 }) {
@@ -46,15 +37,6 @@ export function BorangClient({
   const filteredCategories = useMemo(
     () => (q ? categories.filter((c) => c.toLowerCase().includes(q)) : categories),
     [categories, q]
-  );
-
-  // Filter school docs
-  const filteredSchoolDocs = useMemo(
-    () =>
-      q
-        ? schoolDocs.filter((d) => d.fileName.toLowerCase().includes(q))
-        : schoolDocs,
-    [schoolDocs, q]
   );
 
   // Filter unit docs & units that still have matching docs
@@ -147,36 +129,6 @@ export function BorangClient({
         </section>
       )}
 
-      {/* ── School Docs ─────────────────────────────────────────────────────── */}
-      <section>
-        <div className="mb-6">
-          <h2 className="font-heading text-2xl font-semibold tracking-tight md:text-3xl">
-            Dokumen Sekolah
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Dokumen umum yang telah dimuat naik melalui dashboard admin.
-          </p>
-        </div>
-        <div className="space-y-4">
-          {filteredSchoolDocs.length === 0 ? (
-            <div className="border border-dashed border-border/70 bg-muted/30 px-6 py-8 text-center text-sm text-muted-foreground">
-              {q ? `Tiada dokumen sekolah sepadan dengan "${search}".` : "Belum ada dokumen sekolah dimuat naik."}
-            </div>
-          ) : (
-            filteredSchoolDocs.map((doc) => (
-              <FileCard
-                key={doc.id}
-                name={doc.fileName}
-                url={doc.filePath}
-                size={doc.fileSize}
-                showTable={false}
-              />
-            ))
-          )}
-        </div>
-      </section>
-
-      {/* ── Unit Docs ───────────────────────────────────────────────────────── */}
       <section>
         <div className="mb-6">
           <h2 className="font-heading text-2xl font-semibold tracking-tight md:text-3xl">

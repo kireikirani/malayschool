@@ -160,31 +160,6 @@ export const unitJkSteps: Step[] = [
   },
 ];
 
-// ─── Asrama Warden ────────────────────────────────────────────────────────────
-export const asramaWardenSteps: Step[] = [
-  {
-    target: "[data-tour='warden-table']",
-    title: "Senarai Warden",
-    content: "Semua warden asrama tersenarai di sini. Data ini dipaparkan di halaman Asrama laman web.",
-    placement: "bottom",
-    skipBeacon: true,
-  },
-  {
-    target: "[data-tour='warden-add']",
-    title: "Tambah Warden",
-    content: "Klik untuk menambah warden baharu. Isi nama, jawatan, nombor telefon, dan muat naik foto profil yang akan dipaparkan di halaman Asrama.",
-    placement: "bottom",
-    skipBeacon: true,
-  },
-  {
-    target: "[data-tour='warden-sort']",
-    title: "Urutan Paparan",
-    content: "Nombor urutan menentukan susunan warden dalam senarai. Nombor lebih kecil dipapar dahulu.",
-    placement: "left",
-    skipBeacon: true,
-  },
-];
-
 // ─── Asrama Fasiliti ──────────────────────────────────────────────────────────
 export const asramaFasilitiSteps: Step[] = [
   {

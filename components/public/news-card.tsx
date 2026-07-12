@@ -14,8 +14,8 @@ export function NewsCard({
   publishDate?: string | null;
 }) {
   return (
-    <Link href={`/news/${id}`} className="group block h-full">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-none border border-border/70 bg-muted transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_20px_40px_-24px_rgba(35,24,16,0.6)]">
+    <Link href={`/news/${id}`} className="group mx-auto block h-full w-[85%]">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-none bg-muted transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_20px_40px_-24px_rgba(35,24,16,0.6)]">
         {thumbnail ? (
           <Image src={thumbnail} alt={title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (

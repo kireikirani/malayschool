@@ -1,12 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { BedDouble, Utensils, BookOpen, Landmark, Trophy, Shirt, Wifi, ShieldCheck } from "lucide-react";
 
-export type WardenCard = {
-  name: string;
-  position: string;
-  phone?: string;
-};
-
 export type JkAsramaMember = {
   name: string;
   jawatan: string;
@@ -25,15 +19,6 @@ export const ASRAMA_STATS = {
   blok: 4,
   kapasitiBilik: 150,
 };
-
-export const WARDENS: WardenCard[] = [
-  { name: "Puan Norhaiza binti Ahmad", position: "Penyelia Asrama (Perempuan)" },
-  { name: "Encik Zaharudin bin Hassan", position: "Penyelia Asrama (Lelaki)" },
-  { name: "Puan Siti Aisyah binti Mahmud", position: "Warden Kanan" },
-  { name: "Encik Hafizuddin bin Mokhtar", position: "Warden Kanan" },
-  { name: "Puan Rohani binti Kamarudin", position: "Warden" },
-  { name: "Encik Azlan bin Sulaiman", position: "Warden" },
-];
 
 export const JK_ASRAMA: JkAsramaMember[] = [
   { name: "Puan Norhaiza binti Ahmad", jawatan: "Pengerusi" },

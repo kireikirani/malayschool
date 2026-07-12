@@ -18,17 +18,6 @@ const STATEMENTS = [
     \`updated_at\` timestamp NOT NULL DEFAULT NOW() ON UPDATE NOW(),
     CONSTRAINT \`unit_jk_documents_id\` PRIMARY KEY(\`id\`)
   );`,
-  `CREATE TABLE IF NOT EXISTS \`asrama_wardens\` (
-    \`id\` int AUTO_INCREMENT NOT NULL,
-    \`nama\` varchar(200) NOT NULL,
-    \`jawatan\` varchar(200) NOT NULL,
-    \`telefon\` varchar(50),
-    \`foto\` varchar(2048),
-    \`sort_order\` int NOT NULL DEFAULT 0,
-    \`created_at\` timestamp NOT NULL DEFAULT NOW(),
-    \`updated_at\` timestamp NOT NULL DEFAULT NOW() ON UPDATE NOW(),
-    CONSTRAINT \`asrama_wardens_id\` PRIMARY KEY(\`id\`)
-  );`,
   `CREATE TABLE IF NOT EXISTS \`asrama_fasiliti\` (
     \`id\` int AUTO_INCREMENT NOT NULL,
     \`icon_name\` varchar(100) NOT NULL,
@@ -65,7 +54,6 @@ const STATEMENTS = [
   `CREATE INDEX \`unit_jk_docs_unit_slug_idx\` ON \`unit_jk_documents\` (\`unit_slug\`);`,
   `CREATE INDEX \`unit_jk_docs_jk_code_idx\` ON \`unit_jk_documents\` (\`jk_code\`);`,
   `CREATE INDEX \`unit_jk_docs_compound_idx\` ON \`unit_jk_documents\` (\`unit_slug\`,\`jk_code\`);`,
-  `CREATE INDEX \`asrama_wardens_sort_order_idx\` ON \`asrama_wardens\` (\`sort_order\`);`,
   `CREATE INDEX \`asrama_fasiliti_sort_order_idx\` ON \`asrama_fasiliti\` (\`sort_order\`);`,
   `CREATE INDEX \`user_role_idx\` ON \`user\` (\`role\`);`,
   `CREATE INDEX \`user_is_approved_idx\` ON \`user\` (\`is_approved\`);`,

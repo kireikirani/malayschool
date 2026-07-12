@@ -10,7 +10,6 @@ export * from "./unit-documents.schema";
 export * from "./pengumuman.schema";
 export * from "./unit-jk.schema";
 export * from "./unit-jk-documents.schema";
-export * from "./asrama-wardens.schema";
 export * from "./asrama-fasiliti.schema";
 export * from "./public-content.schema";
 export * from "./unit-sections.schema";

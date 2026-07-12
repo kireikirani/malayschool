@@ -3,7 +3,7 @@ import { sql } from "drizzle-orm";
 import { db } from "../lib/db";
 
 async function main() {
-  const tables = ["asrama_wardens", "asrama_fasiliti", "unit_jk_members"];
+  const tables = ["asrama_fasiliti", "unit_jk_members"];
   for (const table of tables) {
     const result = await db.execute(sql`SELECT COUNT(*) as total FROM \`${sql.raw(table)}\``);
     const raw = result as unknown;

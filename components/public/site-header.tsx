@@ -74,7 +74,7 @@ export function SiteHeader() {
       <header className="border-b border-border/90 bg-background">
         <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 shrink-0">
-            <SchoolLogo className="size-9 sm:size-10" />
+            <SchoolLogo className="size-11 sm:size-12" />
             <span className="flex flex-col leading-tight">
               <span className="font-heading text-sm sm:text-base font-semibold text-foreground">
                 {SCHOOL_NAME}

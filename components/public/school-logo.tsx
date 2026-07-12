@@ -26,7 +26,7 @@ export function SchoolLogo({ className }: { className?: string }) {
       src={SCHOOL_LOGO_URL}
       alt={SCHOOL_SHORT_NAME}
       onError={() => setFailed(true)}
-      className={cn("shrink-0 rounded-t-2xl rounded-b-md object-contain", className)}
+      className={cn("shrink-0 rounded-md object-contain", className)}
     />
   );
 }
