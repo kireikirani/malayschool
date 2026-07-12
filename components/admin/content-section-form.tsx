@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { UploadButton } from "@/lib/uploadthing-client";
+import { ApiValidationError, formatFieldErrors, throwApiError } from "@/lib/api/client-errors";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import type { ContentItem, ContentSection, SectionType } from "@/lib/content";
 
@@ -342,13 +343,16 @@ export function ContentSectionForm({
       };
 
       const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-      const body = await res.json().catch(() => null);
-      if (!res.ok) throw new Error(body?.error?.message ?? "Gagal menyimpan");
+      if (!res.ok) await throwApiError(res);
       toast.success(action === "create" ? "Seksyen ditambah" : "Seksyen dikemaskini");
       router.push(redirectTo);
       router.refresh();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Gagal menyimpan");
+      if (error instanceof ApiValidationError) {
+        toast.error(error.message, { description: formatFieldErrors(error.fieldErrors) });
+      } else {
+        toast.error(error instanceof Error ? error.message : "Gagal menyimpan");
+      }
     } finally {
       setIsSaving(false);
     }

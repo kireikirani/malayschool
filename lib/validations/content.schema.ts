@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { imagePathSchema, optionalTrimmedString, paginationSchema, trimmedString } from "./common.schema";
+import { optionalImagePath, optionalTrimmedString, paginationSchema, trimmedString } from "./common.schema";
 
 export const sectionTypeSchema = z.enum([
   "hero",
@@ -26,9 +26,9 @@ export const contentItemSchema = z.object({
     .max(500)
     .optional()
     .transform((value) => (value && value.length > 0 ? value : undefined)),
-  fileUrl: imagePathSchema.optional(),
-  imageUrl: imagePathSchema.optional(),
-  meta: z.record(z.string(), z.unknown()).optional(),
+  fileUrl: optionalImagePath,
+  imageUrl: optionalImagePath,
+  meta: z.preprocess((v) => (v == null ? undefined : v), z.record(z.string(), z.unknown()).optional()),
   sortOrder: z.coerce.number().int().min(0).default(0),
 });
 
@@ -39,7 +39,7 @@ export const createPublicContentSchema = z.object({
   title: optionalTrimmedString(255),
   subtitle: optionalTrimmedString(5000),
   body: optionalTrimmedString(5000),
-  imageUrl: imagePathSchema.optional(),
+  imageUrl: optionalImagePath,
   linkLabel: optionalTrimmedString(255),
   linkUrl: z
     .string()
@@ -65,7 +65,7 @@ export const createUnitSectionSchema = z.object({
   title: optionalTrimmedString(255),
   subtitle: optionalTrimmedString(5000),
   body: optionalTrimmedString(5000),
-  imageUrl: imagePathSchema.optional(),
+  imageUrl: optionalImagePath,
   linkLabel: optionalTrimmedString(255),
   linkUrl: z
     .string()
