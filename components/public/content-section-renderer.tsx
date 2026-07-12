@@ -42,7 +42,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
 
   if (section.sectionKey === "log-harian-pengetua" || (section.type === "text_block" && section.linkUrl?.includes("canva.site"))) {
     return (
-      <section className="relative flex min-h-[320px] flex-col items-center justify-center overflow-hidden rounded-md p-8 text-center text-white md:p-14">
+      <section id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? "Log Harian"} className="relative flex min-h-[320px] flex-col items-center justify-center overflow-hidden rounded-md p-8 text-center text-white md:p-14">
         <Image
           src="/gallery/sekolah/bangunan-sekolah.jpg"
           alt=""
@@ -83,7 +83,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
 
   if (section.type === "text_block") {
     return (
-      <section className="bg-card px-6 py-6 shadow-sm">
+      <section id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? section.sectionKey} className="bg-card px-6 py-6 shadow-sm">
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         {section.body ? (
           <MarkdownContent
@@ -99,7 +99,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
 
   if (section.type === "stats") {
     return (
-      <section>
+      <section id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? section.sectionKey}>
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {section.items.map((item) => (
@@ -115,7 +115,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
 
   if (section.type === "poster") {
     return (
-      <section>
+      <section id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? section.sectionKey}>
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         {section.imageUrl ? (
           <div className="relative overflow-hidden border border-border/70 bg-card">
@@ -138,7 +138,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
 
   if (section.type === "quick_links") {
     return (
-      <section className="bg-card px-6 py-6 shadow-sm">
+      <section id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? section.sectionKey} className="bg-card px-6 py-6 shadow-sm">
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         <div className="grid gap-3 sm:grid-cols-2">
           {section.items.map((item) => (
@@ -161,7 +161,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
 
   if (section.type === "simple_table" || section.type === "jk_table") {
     return (
-      <section>
+      <section id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? section.sectionKey}>
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         <div className={section.imageUrl ? "grid gap-6 md:grid-cols-[240px_1fr] md:items-start" : ""}>
           {section.imageUrl ? (
@@ -200,7 +200,7 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
 
   if (section.type === "card_grid" || section.type === "gallery") {
     return (
-      <section>
+      <section id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? section.sectionKey}>
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {section.items.map((item) => (
@@ -224,19 +224,23 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
   if (section.type === "file_list") {
     if (section.unitSlug) {
       return (
-        <DocumentPortal
-          unitSlug={section.unitSlug}
-          title={section.title}
-          subtitle={section.subtitle}
-        />
+        <div id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? section.sectionKey}>
+          <DocumentPortal
+            unitSlug={section.unitSlug}
+            title={section.title}
+            subtitle={section.subtitle}
+          />
+        </div>
       );
     }
     return (
-      <UnitDocumentsList
-        items={section.items}
-        title={section.title}
-        subtitle={section.subtitle}
-      />
+      <div id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? section.sectionKey}>
+        <UnitDocumentsList
+          items={section.items}
+          title={section.title}
+          subtitle={section.subtitle}
+        />
+      </div>
     );
   }
 

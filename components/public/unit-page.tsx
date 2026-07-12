@@ -3,6 +3,7 @@ import { PageHeader } from "@/components/public/page-header";
 import { ContentSectionRenderer } from "@/components/public/content-section-renderer";
 import { DocumentPortal } from "@/components/public/document-portal";
 import { JkDocumentSection } from "@/components/public/jk-document-section";
+import { UnitPageJumpNav } from "@/components/public/unit-page-jump-nav";
 import { UNIT_OPERATING_HOURS, type Unit } from "@/lib/units";
 import { SCHOOL_NAME } from "@/lib/brand";
 import { getUnitSections } from "@/lib/content";
@@ -15,6 +16,7 @@ export async function UnitPage({ unit }: { unit: Unit }) {
 
   return (
     <div>
+      <UnitPageJumpNav />
       <PageHeader eyebrow={SCHOOL_NAME} title={unit.title} description={`${unit.headName} - ${unit.headPosition}`} />
 
       <div className="mx-auto max-w-6xl space-y-12 px-4 py-12 md:py-16">
