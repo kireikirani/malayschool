@@ -20,7 +20,9 @@ import {
   Info,
   X,
   AlertCircle,
-  Loader2
+  Loader2,
+  PanelLeftClose,
+  PanelLeftOpen
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -196,9 +198,10 @@ function FolderNode({
 interface DocumentExplorerProps {
   title?: string;
   scopedUnitSlug?: string; // e.g. "hem"
+  driveFolderId?: string;
 }
 
-export function DocumentExplorer({ title = "PORTAL DOKUMEN SEKOLAH", scopedUnitSlug }: DocumentExplorerProps) {
+export function DocumentExplorer({ title = "PORTAL DOKUMEN SEKOLAH", scopedUnitSlug, driveFolderId }: DocumentExplorerProps) {
   const [rootFolder, setRootFolder] = useState<FolderItem | null>(null);
   const [activeFolder, setActiveFolder] = useState<FolderItem | null>(null);
   const [activeFile, setActiveFile] = useState<FileItem | null>(null);
@@ -207,13 +210,17 @@ export function DocumentExplorer({ title = "PORTAL DOKUMEN SEKOLAH", scopedUnitS
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showInfo, setShowInfo] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Load documents structure from API
   const loadData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/school-documents");
+      const url = driveFolderId
+        ? `/api/school-documents?folderId=${encodeURIComponent(driveFolderId)}`
+        : "/api/school-documents";
+      const res = await fetch(url);
       if (!res.ok) {
         throw new Error("Gagal mengambil data dari pelayan");
       }
@@ -258,7 +265,7 @@ export function DocumentExplorer({ title = "PORTAL DOKUMEN SEKOLAH", scopedUnitS
     } finally {
       setLoading(false);
     }
-  }, [scopedUnitSlug]);
+  }, [scopedUnitSlug, driveFolderId]);
 
   useEffect(() => {
     loadData();
@@ -451,43 +458,81 @@ export function DocumentExplorer({ title = "PORTAL DOKUMEN SEKOLAH", scopedUnitS
           Tiada folder dijumpai.
         </div>
       ) : (
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-border min-h-[500px]">
-          {/* Lajur 1: KATEGORI / FOLDER TREE (col-span-3) */}
-          <div className="col-span-1 md:col-span-3 bg-muted/5 py-4 px-3 overflow-y-auto max-h-[250px] md:max-h-[500px]">
-            <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider px-2 mb-2 flex items-center gap-1.5">
-              <Folder className="size-3 text-amber-500" />
-              Struktur Folder
-            </h3>
-            <div className="space-y-0.5">
-              {/* Root Node */}
-              <div
-                className={cn(
-                  "flex items-center gap-2 py-1.5 px-2 cursor-pointer hover:bg-accent/40 rounded transition-colors text-xs font-bold text-foreground",
-                  activeFolder?.id === rootFolder.id && "bg-primary/10 text-primary"
-                )}
-                onClick={() => handleSelectFolder(rootFolder)}
+        <div
+          className={cn(
+            "flex-1 grid grid-cols-1 divide-y md:divide-y-0 md:divide-x divide-border min-h-[620px]",
+            sidebarCollapsed
+              ? "md:grid-cols-[44px_minmax(0,1fr)_minmax(0,1.4fr)]"
+              : "md:grid-cols-12"
+          )}
+        >
+          {/* Lajur 1: KATEGORI / FOLDER TREE */}
+          {sidebarCollapsed ? (
+            <div className="hidden md:flex flex-col items-center bg-muted/5 py-3 border-r border-border/60">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSidebarCollapsed(false)}
+                className="size-8"
+                title="Buka struktur folder"
               >
-                <FolderOpen className="size-4 text-amber-500 shrink-0" />
-                <span>{rootFolder.name}</span>
+                <PanelLeftOpen className="size-4 text-muted-foreground" />
+              </Button>
+              <div className="mt-2 flex-1 flex items-center">
+                <span className="[writing-mode:vertical-rl] rotate-180 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">
+                  Struktur Folder
+                </span>
               </div>
-              
-              {/* Subfolders list recursively */}
-              {rootFolder.folders?.map((folder) => (
-                <FolderNode
-                  key={folder.id}
-                  folder={folder}
-                  level={1}
-                  selectedId={activeFolder?.id || ""}
-                  expandedIds={expandedIds}
-                  onSelect={handleSelectFolder}
-                  onToggleExpand={toggleExpand}
-                />
-              ))}
             </div>
-          </div>
+          ) : (
+            <div className="col-span-1 md:col-span-3 bg-muted/5 py-4 px-3 overflow-y-auto max-h-[250px] md:max-h-[620px]">
+              <div className="flex items-center justify-between px-2 mb-2">
+                <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                  <Folder className="size-3 text-amber-500" />
+                  Struktur Folder
+                </h3>
+                <button
+                  onClick={() => setSidebarCollapsed(true)}
+                  className="hidden md:inline-flex items-center justify-center size-5 rounded hover:bg-accent/60 text-muted-foreground hover:text-foreground"
+                  title="Tutup struktur folder"
+                >
+                  <PanelLeftClose className="size-3.5" />
+                </button>
+              </div>
+              <div className="space-y-0.5">
+                {/* Root Node */}
+                <div
+                  className={cn(
+                    "flex items-center gap-2 py-1.5 px-2 cursor-pointer hover:bg-accent/40 rounded transition-colors text-xs font-bold text-foreground",
+                    activeFolder?.id === rootFolder.id && "bg-primary/10 text-primary"
+                  )}
+                  onClick={() => handleSelectFolder(rootFolder)}
+                >
+                  <FolderOpen className="size-4 text-amber-500 shrink-0" />
+                  <span>{rootFolder.name}</span>
+                </div>
 
-          {/* Lajur 2: FILE TABLE (col-span-5) */}
-          <div className="col-span-1 md:col-span-5 flex flex-col bg-background max-h-[500px]">
+                {/* Subfolders list recursively */}
+                {rootFolder.folders?.map((folder) => (
+                  <FolderNode
+                    key={folder.id}
+                    folder={folder}
+                    level={1}
+                    selectedId={activeFolder?.id || ""}
+                    expandedIds={expandedIds}
+                    onSelect={handleSelectFolder}
+                    onToggleExpand={toggleExpand}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Lajur 2: FILE TABLE */}
+          <div className={cn(
+            "col-span-1 flex flex-col bg-background max-h-[620px]",
+            !sidebarCollapsed && "md:col-span-5"
+          )}>
             <div className="border-b border-border/60 bg-muted/10 px-4 py-2.5 flex items-center justify-between">
               <h3 className="text-xs font-semibold text-foreground flex items-center gap-1.5 truncate">
                 <FolderOpen className="size-3.5 text-amber-500 shrink-0" />
@@ -597,8 +642,11 @@ export function DocumentExplorer({ title = "PORTAL DOKUMEN SEKOLAH", scopedUnitS
             )}
           </div>
 
-          {/* Lajur 3: PREVIEW PANEL (col-span-4) */}
-          <div className="col-span-1 md:col-span-4 flex flex-col bg-muted/5 max-h-[500px]">
+          {/* Lajur 3: PREVIEW PANEL */}
+          <div className={cn(
+            "col-span-1 flex flex-col bg-muted/5 max-h-[620px]",
+            !sidebarCollapsed && "md:col-span-4"
+          )}>
             {activeFile ? (
               <div className="flex-1 flex flex-col h-full overflow-hidden">
                 <div className="border-b border-border px-4 py-2.5 bg-background flex items-center justify-between shrink-0">

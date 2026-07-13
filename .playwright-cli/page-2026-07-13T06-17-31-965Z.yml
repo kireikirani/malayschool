@@ -1,0 +1,46 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - img "SMK TPG" [ref=e4]
+      - generic [ref=e5]:
+        - paragraph [ref=e6]: SMK TPG
+        - paragraph [ref=e7]: SMK Telok Panglima Garang
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - heading "Daftar Akaun Guru" [level=1] [ref=e12]
+        - paragraph [ref=e13]: Isi maklumat anda. Pendaftaran perlu diluluskan admin sebelum boleh log masuk.
+      - group [ref=e14]:
+        - generic [ref=e15]: Nama Penuh
+        - textbox "Nama Penuh" [ref=e16]:
+          - /placeholder: Nama seperti dalam dokumen rasmi
+      - group [ref=e17]:
+        - generic [ref=e18]: Email
+        - textbox "Email" [ref=e19]:
+          - /placeholder: nama@moe.edu.my
+      - group [ref=e20]:
+        - generic [ref=e21]: No. Telefon
+        - textbox "No. Telefon" [ref=e22]:
+          - /placeholder: 01x-xxxxxxx
+        - paragraph [ref=e23]: Untuk dihubungi oleh admin sekolah.
+      - group [ref=e24]:
+        - generic [ref=e25]: Subjek Diajar
+        - textbox "Subjek Diajar" [ref=e26]:
+          - /placeholder: "Contoh: Matematik, Sains, Bahasa Melayu"
+      - group [ref=e27]:
+        - generic [ref=e28]: Nota (pilihan)
+        - textbox "Nota (pilihan)" [ref=e29]:
+          - /placeholder: "Maklumat tambahan untuk admin, contoh: Guru Kanan Matematik"
+      - group [ref=e30]:
+        - generic [ref=e31]: Kata Laluan
+        - textbox "Kata Laluan" [ref=e32]
+        - paragraph [ref=e33]: Minimum 8 aksara.
+      - group [ref=e34]:
+        - generic [ref=e35]: Sahkan Kata Laluan
+        - textbox "Sahkan Kata Laluan" [ref=e36]
+      - group [ref=e37]:
+        - button "Daftar" [ref=e38]
+      - paragraph [ref=e39]:
+        - text: Sudah ada akaun?
+        - link "Log masuk" [ref=e40] [cursor=pointer]:
+          - /url: /login
+  - region "Notifications alt+T"

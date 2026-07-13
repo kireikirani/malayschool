@@ -1,0 +1,223 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - link:
+              - /url: /admin/dashboard
+              - generic: SMK TPG
+          - generic:
+            - generic:
+              - generic: Overview
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /admin/dashboard
+                    - generic: Dashboard
+            - generic:
+              - generic: Public Content
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /admin/content
+                    - generic: Public Content
+                - listitem:
+                  - link:
+                    - /url: /admin/pengumuman
+                    - generic: Pengumuman
+                - listitem:
+                  - link:
+                    - /url: /admin/news
+                    - generic: Berita
+                - listitem:
+                  - link:
+                    - /url: /admin/gallery
+                    - generic: Galeri
+                - listitem:
+                  - link:
+                    - /url: /admin/advertisements
+                    - generic: Iklan
+            - generic:
+              - generic: Media & Files
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /admin/media
+                    - generic: Media
+                - listitem:
+                  - link:
+                    - /url: /admin/documents
+                    - generic: Dokumen Sekolah
+                - listitem:
+                  - link:
+                    - /url: /admin/unit-dokumen
+                    - generic: Dokumen Unit
+            - generic:
+              - generic: Units
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /admin/units
+                    - generic: Unit Sections
+                - listitem:
+                  - link:
+                    - /url: /admin/teachers
+                    - generic: Guru
+            - generic:
+              - generic: Asrama
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /admin/asrama-pelajar
+                    - generic: Pelajar Asrama
+                - listitem:
+                  - link:
+                    - /url: /admin/asrama-fasiliti
+                    - generic: Fasiliti Asrama
+                - listitem:
+                  - link:
+                    - /url: /admin/asrama-warden
+                    - generic: Warden Asrama
+            - generic:
+              - generic: Jawatankuasa
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /admin/unit-jk
+                    - generic: Ahli JK
+          - generic:
+            - list:
+              - listitem:
+                - link:
+                  - /url: /admin/settings
+                  - generic: Tetapan Laman
+    - main:
+      - generic:
+        - generic:
+          - generic:
+            - button:
+              - generic: Toggle Sidebar
+            - navigation:
+              - list:
+                - listitem:
+                  - link [disabled]: Public Content
+          - generic: CA
+      - main:
+        - generic:
+          - generic:
+            - heading [level=1]: Tambah Public Content
+            - paragraph: Tambah seksyen baharu untuk homepage, about, asrama, atau borang.
+          - generic:
+            - generic:
+              - generic: Maklumat Seksyen
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: Halaman
+                    - combobox:
+                      - generic: about
+                    - paragraph: Halaman awam di mana seksyen ini akan dipaparkan.
+                  - generic:
+                    - generic: Jenis Seksyen
+                    - combobox [expanded]:
+                      - generic: text_block
+                    - paragraph: Tentukan bagaimana konten seksyen ini akan dipaparkan.
+                - generic:
+                  - generic:
+                    - generic: Tajuk
+                    - textbox:
+                      - /placeholder: Tajuk seksyen
+                      - text: QA Google Drive Section
+                    - paragraph: Judul seksyen yang dipaparkan kepada pengunjung laman web.
+                  - generic:
+                    - generic: Urutan
+                    - spinbutton: "0"
+                    - paragraph: Nombor lebih kecil dipapar dahulu.
+                - generic:
+                  - checkbox [checked]
+                  - generic: Aktif
+                  - generic: "- Nyahtanda untuk menyembunyikan seksyen ini dari laman web."
+                - generic:
+                  - button: Tetapan Lanjutan (Section Key, Subtitle, Body, Gambar, Pautan)
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: Section Key
+                        - textbox:
+                          - /placeholder: "contoh: kpi, jk-1"
+                        - paragraph: ID unik seksyen dalam kod. Hanya ubah jika benar-benar perlu.
+                      - generic:
+                        - generic: Subtitle
+                        - textbox
+                        - paragraph: Sub tajuk di bawah tajuk utama seksyen.
+                    - generic:
+                      - generic: Body
+                      - generic:
+                        - generic:
+                          - button
+                          - button
+                          - button
+                          - button
+                          - button
+                          - button
+                          - button
+                          - button
+                          - button
+                          - button
+                          - button
+                          - button
+                          - button
+                          - button
+                        - generic:
+                          - generic:
+                            - paragraph
+                        - generic:
+                          - paragraph: Mendukung format Markdown · Ctrl+B Bold · Ctrl+I Italic · Ctrl+Z Undo
+                      - paragraph: Teks utama atau huraian untuk seksyen ini. Menyokong format Markdown.
+                    - generic:
+                      - generic:
+                        - generic: Gambar (Image URL)
+                        - textbox:
+                          - /placeholder: https://...
+                        - paragraph: URL gambar atau gunakan butang muat naik di bawah.
+                        - generic:
+                          - button: Pilih Fail
+                      - generic:
+                        - generic: Pautan
+                        - generic:
+                          - textbox:
+                            - /placeholder: Label pautan
+                          - textbox:
+                            - /placeholder: URL pautan
+                        - paragraph: Label dan URL untuk butang atau pautan di seksyen ini.
+            - generic:
+              - generic:
+                - generic: Item Seksyen
+                - button: Tambah Item
+              - generic: Belum ada item. Klik Tambah Item untuk mula.
+            - generic:
+              - generic: Live Preview
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading [level=2]: QA Google Drive Section
+                    - generic: Kandungan akan muncul di sini.
+            - generic:
+              - button: Batal
+              - button: Tambah Seksyen
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f2e210] [cursor=pointer]
+  - alert
+  - listbox [ref=f2e270]:
+    - option "hero" [ref=f2e271]
+    - option "text_block" [active] [selected] [ref=f2e273]
+    - option "stats" [ref=f2e275]
+    - option "poster" [ref=f2e277]
+    - option "file_list" [ref=f2e279]
+    - option "quick_links" [ref=f2e281]
+    - option "simple_table" [ref=f2e283]
+    - option "card_grid" [ref=f2e285]
+    - option "gallery" [ref=f2e287]
+    - option "jk_table" [ref=f2e289]

@@ -1,0 +1,207 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - generic [ref=f2e5]:
+      - link "SMK TPG SMK TPG" [ref=f2e7] [cursor=pointer]:
+        - /url: /admin/dashboard
+        - img "SMK TPG" [ref=f2e8]
+        - generic [ref=f2e9]: SMK TPG
+      - generic [ref=f2e10]:
+        - generic [ref=f2e11]:
+          - generic [ref=f2e12]: Overview
+          - list [ref=f2e13]:
+            - listitem [ref=f2e14]:
+              - link "Dashboard" [ref=f2e15] [cursor=pointer]:
+                - /url: /admin/dashboard
+        - generic [ref=f2e22]:
+          - generic [ref=f2e23]: Public Content
+          - list [ref=f2e24]:
+            - listitem [ref=f2e25]:
+              - link "Public Content" [ref=f2e26] [cursor=pointer]:
+                - /url: /admin/content
+            - listitem [ref=f2e30]:
+              - link "Pengumuman" [ref=f2e31] [cursor=pointer]:
+                - /url: /admin/pengumuman
+            - listitem [ref=f2e36]:
+              - link "Berita" [ref=f2e37] [cursor=pointer]:
+                - /url: /admin/news
+            - listitem [ref=f2e42]:
+              - link "Galeri" [ref=f2e43] [cursor=pointer]:
+                - /url: /admin/gallery
+            - listitem [ref=f2e50]:
+              - link "Iklan" [ref=f2e51] [cursor=pointer]:
+                - /url: /admin/advertisements
+        - generic [ref=f2e56]:
+          - generic [ref=f2e57]: Media & Files
+          - list [ref=f2e58]:
+            - listitem [ref=f2e59]:
+              - link "Media" [ref=f2e60] [cursor=pointer]:
+                - /url: /admin/media
+            - listitem [ref=f2e64]:
+              - link "Dokumen Sekolah" [ref=f2e65] [cursor=pointer]:
+                - /url: /admin/documents
+            - listitem [ref=f2e70]:
+              - link "Dokumen Unit" [ref=f2e71] [cursor=pointer]:
+                - /url: /admin/unit-dokumen
+        - generic [ref=f2e76]:
+          - generic [ref=f2e77]: Units
+          - list [ref=f2e78]:
+            - listitem [ref=f2e79]:
+              - link "Unit Sections" [ref=f2e80] [cursor=pointer]:
+                - /url: /admin/units
+            - listitem [ref=f2e86]:
+              - link "Guru" [ref=f2e87] [cursor=pointer]:
+                - /url: /admin/teachers
+        - generic [ref=f2e92]:
+          - generic [ref=f2e93]: Asrama
+          - list [ref=f2e94]:
+            - listitem [ref=f2e95]:
+              - link "Pelajar Asrama" [ref=f2e96] [cursor=pointer]:
+                - /url: /admin/asrama-pelajar
+            - listitem [ref=f2e101]:
+              - link "Fasiliti Asrama" [ref=f2e102] [cursor=pointer]:
+                - /url: /admin/asrama-fasiliti
+            - listitem [ref=f2e107]:
+              - link "Warden Asrama" [ref=f2e108] [cursor=pointer]:
+                - /url: /admin/asrama-warden
+        - generic [ref=f2e115]:
+          - generic [ref=f2e116]: Jawatankuasa
+          - list [ref=f2e117]:
+            - listitem [ref=f2e118]:
+              - link "Ahli JK" [ref=f2e119] [cursor=pointer]:
+                - /url: /admin/unit-jk
+      - list [ref=f2e127]:
+        - listitem [ref=f2e128]:
+          - link "Tetapan Laman" [ref=f2e129] [cursor=pointer]:
+            - /url: /admin/settings
+    - main [ref=f2e134]:
+      - generic [ref=f2e136]:
+        - generic [ref=f2e137]:
+          - button "Toggle Sidebar" [ref=f2e138]
+          - navigation "breadcrumb" [ref=f2e140]:
+            - list [ref=f2e141]:
+              - listitem [ref=f2e142]:
+                - link "Public Content" [disabled] [ref=f2e143]
+        - generic [ref=f2e146]: CA
+      - main [ref=f2e149]:
+        - generic [ref=f2e150]:
+          - generic [ref=f2e151]:
+            - heading "Tambah Public Content" [level=1] [ref=f2e152]
+            - paragraph [ref=f2e153]: Tambah seksyen baharu untuk homepage, about, asrama, atau borang.
+          - generic [ref=f2e154]:
+            - generic [ref=f2e155]:
+              - generic [ref=f2e156]: Maklumat Seksyen
+              - generic [ref=f2e158]:
+                - generic [ref=f2e159]:
+                  - generic [ref=f2e160]:
+                    - generic [ref=f2e161]: Halaman
+                    - combobox [ref=f2e162]:
+                      - generic: about
+                    - paragraph [ref=f2e164]: Halaman awam di mana seksyen ini akan dipaparkan.
+                  - generic [ref=f2e165]:
+                    - generic [ref=f2e166]: Jenis Seksyen
+                    - combobox [ref=f2e167]:
+                      - generic: file_list
+                    - paragraph [ref=f2e169]: Tentukan bagaimana konten seksyen ini akan dipaparkan.
+                - generic [ref=f2e170]:
+                  - generic [ref=f2e171]:
+                    - generic [ref=f2e172]: Tajuk
+                    - textbox "Tajuk seksyen" [ref=f2e173]: QA Google Drive Section
+                    - paragraph [ref=f2e174]: Judul seksyen yang dipaparkan kepada pengunjung laman web.
+                  - generic [ref=f2e175]:
+                    - generic [ref=f2e176]: Urutan
+                    - spinbutton [ref=f2e177]: "0"
+                    - paragraph [ref=f2e178]: Nombor lebih kecil dipapar dahulu.
+                - generic [ref=f2e179]:
+                  - checkbox "Aktif" [checked] [ref=f2e180]
+                  - generic [ref=f2e181]: Aktif
+                  - generic [ref=f2e182]: "- Nyahtanda untuk menyembunyikan seksyen ini dari laman web."
+                - generic [ref=f2e183]:
+                  - button "Tetapan Lanjutan (Section Key, Subtitle, Body, Gambar, Pautan)" [ref=f2e184]
+                  - generic [ref=f2e219]:
+                    - generic [ref=f2e220]:
+                      - generic [ref=f2e221]:
+                        - generic [ref=f2e222]: Section Key
+                        - 'textbox "contoh: kpi, jk-1" [ref=f2e223]': qa-gdrive-section
+                        - paragraph [ref=f2e224]: ID unik seksyen dalam kod. Hanya ubah jika benar-benar perlu.
+                      - generic [ref=f2e225]:
+                        - generic [ref=f2e226]: Subtitle
+                        - textbox [ref=f2e227]: Drive link smoke test
+                        - paragraph [ref=f2e228]: Sub tajuk di bawah tajuk utama seksyen.
+                    - generic [ref=f2e229]:
+                      - generic [ref=f2e230]: Body
+                      - generic [ref=f2e231]:
+                        - generic [ref=f2e232]:
+                          - button "Undo" [ref=f2e404]
+                          - button "Redo" [ref=f2e405]
+                          - button "Heading 1" [ref=f2e406]
+                          - button "Heading 2" [ref=f2e407]
+                          - button "Heading 3" [ref=f2e408]
+                          - button "Bold" [ref=f2e409]
+                          - button "Italic" [ref=f2e410]
+                          - button "Strikethrough" [ref=f2e411]
+                          - button "Inline Code" [ref=f2e412]
+                          - button "Insert Link" [ref=f2e413]
+                          - button "Bullet List" [ref=f2e414]
+                          - button "Numbered List" [ref=f2e415]
+                          - button "Blockquote" [ref=f2e416]
+                          - button "Horizontal Rule" [ref=f2e417]
+                        - paragraph [ref=f2e249]
+                        - paragraph [ref=f2e251]: Mendukung format Markdown · Ctrl+B Bold · Ctrl+I Italic · Ctrl+Z Undo
+                      - paragraph [ref=f2e252]: Teks utama atau huraian untuk seksyen ini. Menyokong format Markdown.
+                    - generic [ref=f2e253]:
+                      - generic [ref=f2e254]:
+                        - generic [ref=f2e255]: Gambar (Image URL)
+                        - textbox "https://..." [ref=f2e256]
+                        - paragraph [ref=f2e257]: URL gambar atau gunakan butang muat naik di bawah.
+                        - button "Pilih Fail" [ref=f2e259]
+                      - generic [ref=f2e264]:
+                        - generic [ref=f2e265]: Pautan
+                        - generic [ref=f2e266]:
+                          - textbox "Label pautan" [ref=f2e267]
+                          - textbox "URL pautan" [ref=f2e268]
+                        - paragraph [ref=f2e269]: Label dan URL untuk butang atau pautan di seksyen ini.
+            - generic [ref=f2e187]:
+              - generic [ref=f2e188]:
+                - generic [ref=f2e189]: Item Seksyen
+                - button "Tambah Item" [ref=f2e190]
+              - generic [ref=f2e324]:
+                - generic [ref=f2e325]:
+                  - 'heading "Item #1" [level=3] [ref=f2e326]'
+                  - button [ref=f2e327]
+                - generic [ref=f2e328]:
+                  - generic [ref=f2e329]:
+                    - generic [ref=f2e330]: Tajuk / Nama
+                    - textbox "Tajuk item" [ref=f2e331]: Buku Panduan
+                    - paragraph [ref=f2e332]: Nama atau tajuk entri ini.
+                  - generic [ref=f2e333]:
+                    - generic [ref=f2e334]: Link / File URL
+                    - textbox "https://drive.google.com/..." [ref=f2e335]: https://drive.google.com/file/d/1AbCdEfGhIjKlMnOpQrStUvWxYz123456/view?usp=sharing
+                    - paragraph [ref=f2e336]: URL Google Drive atau pautan fail.
+                    - button "Pilih Fail" [ref=f2e338]
+                - button "Lanjutan (Label, Body, URL, Fail, Gambar, Urutan)" [ref=f2e344]
+            - generic [ref=f2e193]:
+              - generic [ref=f2e194]: Live Preview
+              - generic [ref=f2e200]:
+                - generic [ref=f2e215]:
+                  - heading "QA Google Drive Section" [level=2] [ref=f2e216]
+                  - paragraph [ref=f2e361]: Drive link smoke test
+                - generic [ref=f2e305]:
+                  - generic [ref=f2e306]: Portal / daftar fail preview
+                  - generic [ref=f2e307]:
+                    - generic [ref=f2e308]: Buku Panduan
+                    - generic [ref=f2e309]: https://drive.google.com/file/d/1AbCdEfGhIjKlMnOpQrStUvWxYz123456/view?usp=sharing
+            - generic [ref=f2e202]:
+              - button "Batal" [ref=f2e203]
+              - button "Tambah Seksyen" [ref=f2e204]
+  - region "Notifications alt+T":
+    - list:
+      - listitem [ref=f2e418]:
+        - generic [ref=f2e423]: Seksyen ditambah
+  - button "Open Next.js Dev Tools" [ref=f2e425] [cursor=pointer]:
+    - generic [ref=f2e428]:
+      - text: Compiling
+      - generic [ref=f2e429]:
+        - generic [ref=f2e430]: .
+        - generic [ref=f2e431]: .
+        - generic [ref=f2e432]: .
+  - alert [ref=f2e214]

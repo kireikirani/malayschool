@@ -29,9 +29,10 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const forceLocal = searchParams.get("local") === "true";
+    const overrideFolderId = searchParams.get("folderId");
     const settings = await getSettings();
     const gasUrl = settings.googleAppsScriptUrl;
-    const driveFolderId = settings.googleDriveFolderId;
+    const driveFolderId = overrideFolderId || settings.googleDriveFolderId;
 
     // 1. If Google Apps Script is configured and we don't force local, try to fetch from it
     if (gasUrl && !forceLocal) {
