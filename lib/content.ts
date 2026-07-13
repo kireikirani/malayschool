@@ -163,7 +163,7 @@ function defaultAboutSections(): ContentSection[] {
       type: "text_block",
       title: "Lagu Sekolah",
       body:
-        "SMK Telok Panglima Garang\nSekolah kami yang tercinta\nTempat kami menimba ilmu\nUntuk masa depan yang mulia\n\nBersama kami belajar rajin\nGuru-guru kami panduan\nBersatu hati teguh semangat\nMenuju kejayaan gemilang",
+        "Warga SMKTPG\nBerikrar dan berjanji\nTekun ilmu dicari\nMencapai hasrat murni\n\nWarga SMKTPG\nTekad usaha bersatu\nMurnikan azam kita\nMencapai cita-cita\n\nc/o\nMari teman semua\nKita bersatu padu\nUntuk menjayakan cita yang direstu\n\nJangan lupa nasihat\nIbu bapa dan guru\nUntuk mencapai wawasan yang dituju\n\nMegah SMKTPG\nMaju jaya berbakti\nIlmu amal diberi\nKita harus syukuri\nKita harus syukuri\n\nKomposer: Abdul Rahim Hj Anuar\nLirik: Abd Malek Shaari",
       isActive: true,
       sortOrder: 40,
       items: [],
@@ -173,7 +173,7 @@ function defaultAboutSections(): ContentSection[] {
       type: "text_block",
       title: "Lagu Jom Jadi Best",
       body:
-        "Jom jadi best, jom jadi best\nPelajar TPG yang bersemangat\nJom jadi best, jom jadi best\nBersatu hati raih kejayaan",
+        "Jom jom aku jadi BEST\nJom jom kamu jadi BEST\nJom jom jom kita BEST\nJom jom jadi BEST\n\nJom jom aku jadi BEST\nJom jom kamu jadi BEST\nJom jom jom kita BEST\nJom jom jom jadi BEST\n\nB.E.S.T\nB.E.S.T\nB.E.S.T\nJom jadi BEST\n\nBaik\nEfisien\nSyukur\nTerbilang\n\nBaik\nEfisien\nSyukur\nTerbilang\n\nJom jom jadi BEST\nJom jom jadi BEST\nSMKTPG jadi BEST",
       isActive: true,
       sortOrder: 50,
       items: [],
