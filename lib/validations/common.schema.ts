@@ -6,6 +6,7 @@ export const trimmedString = (min = 1, max = 255) => z.string().trim().min(min).
 export const optionalTrimmedString = (max = 255) =>
   z.preprocess(
     (value) => {
+      if (value == null) return undefined;
       if (typeof value !== "string") return value;
       const trimmed = value.trim();
       return trimmed === "" ? undefined : trimmed;
