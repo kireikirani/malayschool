@@ -334,7 +334,8 @@ export function DocumentExplorer({ title = "PORTAL DOKUMEN SEKOLAH", scopedUnitS
 
   // Renders the preview frame URL
   const previewUrl = activeFile ? getDrivePreviewUrl(activeFile.url) : "";
-  const isImg = activeFile ? isImageUrl(activeFile.url, activeFile.name) : false;
+  const isDriveUrl = activeFile ? activeFile.url.includes("drive.google.com") : false;
+  const isImg = activeFile && !isDriveUrl ? isImageUrl(activeFile.url, activeFile.name) : false;
 
   return (
     <div className="w-full flex flex-col border border-border bg-card shadow-lg rounded-lg overflow-hidden min-h-[500px]">
