@@ -61,7 +61,7 @@ async function fetchWardens(): Promise<WardenRow[]> {
 }
 
 async function fetchTeachers(): Promise<TeacherOption[]> {
-  const res = await fetch("/api/teachers?limit=200");
+  const res = await fetch("/api/teachers?limit=100");
   const body = await res.json();
   if (!res.ok) throw new Error(body.error?.message ?? "Gagal memuat guru");
   return body.data;

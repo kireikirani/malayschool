@@ -13,13 +13,29 @@ export function UnitPageJumpNav() {
   useEffect(() => {
     // Find all elements with data-jump-id attribute (set by UnitPage sections)
     function collect() {
-      const els = document.querySelectorAll<HTMLElement>("[data-jump-id]");
       const collected: JumpNavItem[] = [];
-      els.forEach((el) => {
+      const seen = new Set<string>();
+
+      document.querySelectorAll<HTMLElement>("[data-jump-id]").forEach((el) => {
         const id = el.getAttribute("data-jump-id");
         const label = el.getAttribute("data-jump-label") || el.id || "";
-        if (id && label) collected.push({ id, label });
+        if (id && label && !seen.has(id)) {
+          seen.add(id);
+          collected.push({ id, label });
+        }
       });
+
+      document.querySelectorAll<HTMLElement>("main section[id]").forEach((el) => {
+        const id = el.id;
+        if (!id || seen.has(id)) return;
+        const heading = el.querySelector<HTMLElement>("h1, h2, h3");
+        const label = heading?.textContent?.trim();
+        if (label) {
+          seen.add(id);
+          collected.push({ id, label });
+        }
+      });
+
       setItems(collected);
     }
 

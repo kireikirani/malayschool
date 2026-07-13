@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/public/page-header";
 import { ContentSectionRenderer } from "@/components/public/content-section-renderer";
 import { VisionMission } from "@/components/public/home/vision-mission";
-import { SchoolSongs } from "@/components/public/school-songs";
 import { getPublicContent } from "@/lib/content";
 import { getSettings } from "@/lib/site-settings";
 
@@ -29,8 +28,6 @@ export default async function AboutPage() {
           <ContentSectionRenderer key={`${section.sectionKey}-${section.sortOrder}`} section={section} />
         ))}
       </div>
-
-      <SchoolSongs />
     </div>
   );
 }

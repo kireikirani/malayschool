@@ -14,4 +14,5 @@ export * from "./asrama-fasiliti.schema";
 export * from "./asrama-wardens.schema";
 export * from "./public-content.schema";
 export * from "./unit-sections.schema";
+export * from "./psikometrik.schema";
 export * from "./relations";

@@ -11,8 +11,6 @@ import { GalleryAlbumCard } from "@/components/public/gallery-album-card";
 import { AdSlot } from "@/components/public/ad-slot";
 import { Hero } from "@/components/public/home/hero";
 import { PrincipalMessage } from "@/components/public/home/principal-message";
-import { FacilitiesPreview } from "@/components/public/home/facilities-preview";
-import { AdmissionsCta } from "@/components/public/home/admissions-cta";
 import { ContactSection } from "@/components/public/home/contact-section";
 import { StatsCounter } from "@/components/public/home/stats-counter";
 import { PibgDonation } from "@/components/public/home/pibg-donation";
@@ -61,6 +59,29 @@ export default async function HomePage() {
 
       <AdSlot placement="homepage_top" className="mx-auto max-w-7xl px-4 sm:px-6 pt-12" />
 
+      <CountdownSpm
+        spmDate={settings.spmDate}
+        eyebrow={settings.homeCountdownEyebrow}
+        title={settings.homeCountdownTitle}
+        pastTitle={settings.homeCountdownPastTitle}
+        quote={settings.homeCountdownQuote}
+        labels={{
+          days: settings.homeCountdownDaysLabel,
+          hours: settings.homeCountdownHoursLabel,
+          minutes: settings.homeCountdownMinutesLabel,
+          seconds: settings.homeCountdownSecondsLabel,
+        }}
+      />
+
+      {principal && (
+        <PrincipalMessage
+          name={principal.name}
+          position={principal.position}
+          photo={principal.photo}
+          message={principal.biography}
+        />
+      )}
+
       <StatsCounter
         teacherCount={teacherCount.value}
         students={settings.statsStudents}
@@ -79,27 +100,14 @@ export default async function HomePage() {
 
       <VisionMission vision={settings.schoolVision} mission={settings.schoolMission} />
 
-      {principal && (
-        <PrincipalMessage
-          name={principal.name}
-          position={principal.position}
-          photo={principal.photo}
-          message={principal.biography}
-        />
-      )}
-      <FacilitiesPreview />
-      <CountdownSpm
-        spmDate={settings.spmDate}
-        eyebrow={settings.homeCountdownEyebrow}
-        title={settings.homeCountdownTitle}
-        pastTitle={settings.homeCountdownPastTitle}
-        quote={settings.homeCountdownQuote}
-        labels={{
-          days: settings.homeCountdownDaysLabel,
-          hours: settings.homeCountdownHoursLabel,
-          minutes: settings.homeCountdownMinutesLabel,
-          seconds: settings.homeCountdownSecondsLabel,
-        }}
+      <PibgDonation
+        title={pibgSection?.title ?? "Sumbangan Anda Membina Masa Depan Mereka"}
+        subtitle={pibgSection?.subtitle ?? undefined}
+        body={pibgSection?.body ?? undefined}
+        accountName={settings.pibgAccountName}
+        bankName={settings.pibgBankName}
+        accountNumber={settings.pibgAccountNumber}
+        qrImageUrl={settings.pibgQrImageUrl || undefined}
       />
 
       <section className="py-16 md:py-20">
@@ -141,16 +149,6 @@ export default async function HomePage() {
           )}
         </div>
       </section>
-
-      <PibgDonation
-        title={pibgSection?.title ?? "Sumbangan Anda Membina Masa Depan Mereka"}
-        subtitle={pibgSection?.subtitle ?? undefined}
-        body={pibgSection?.body ?? undefined}
-        accountName={settings.pibgAccountName}
-        bankName={settings.pibgBankName}
-        accountNumber={settings.pibgAccountNumber}
-        qrImageUrl={settings.pibgQrImageUrl || undefined}
-      />
 
       <section className="py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4">
@@ -223,7 +221,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <AdmissionsCta />
       <ContactSection />
 
       <AdSlot placement="homepage_sidebar" className="mx-auto max-w-7xl px-4 sm:px-6 pb-16" />

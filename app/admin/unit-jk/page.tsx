@@ -62,7 +62,7 @@ type JkRow = {
 type CreateValues = z.input<typeof createUnitJkSchema>;
 
 async function fetchJk(unitSlug?: string): Promise<JkRow[]> {
-  const params = new URLSearchParams({ limit: "200" });
+  const params = new URLSearchParams({ limit: "100" });
   if (unitSlug && unitSlug !== "all") params.set("unitSlug", unitSlug);
   const res = await fetch(`/api/admin/unit-jk?${params}`);
   const body = await res.json();
