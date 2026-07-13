@@ -55,7 +55,6 @@ export function BorangClient({
 
   const hasAnyResult =
     filteredCategories.length > 0 ||
-    filteredSchoolDocs.length > 0 ||
     filteredUnits.some((u) => u.docs.length > 0);
 
   return (
