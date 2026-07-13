@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { unitDocuments, media } from "@/db/schema";
 import { getSettings } from "@/lib/site-settings";
+import { fetchDriveFolder } from "@/lib/drive-scraper";
 
 // Helper to format bytes
 function formatBytes(bytes: number | null | undefined): string {
@@ -33,6 +34,16 @@ export async function GET(req: Request) {
     const settings = await getSettings();
     const gasUrl = settings.googleAppsScriptUrl;
     const driveFolderId = overrideFolderId || settings.googleDriveFolderId;
+
+    // 0. If an explicit override folderId is passed, scrape Google Drive directly.
+    if (overrideFolderId && !forceLocal) {
+      try {
+        const tree = await fetchDriveFolder(overrideFolderId, 2);
+        return NextResponse.json(tree);
+      } catch (err) {
+        console.error("Drive scrape gagal:", err);
+      }
+    }
 
     // 1. If Google Apps Script is configured and we don't force local, try to fetch from it
     if (gasUrl && !forceLocal) {

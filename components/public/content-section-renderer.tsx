@@ -5,7 +5,8 @@ import type { ContentSection } from "@/lib/content";
 import { FileCard } from "@/components/public/file-card";
 import { UnitDocumentsList } from "@/components/public/unit-documents-list";
 import { DocumentPortal } from "@/components/public/document-portal";
-import { GDriveFolderEmbed, extractDriveFolderId } from "@/components/public/gdrive-folder-embed";
+import { extractDriveFolderId } from "@/components/public/gdrive-folder-embed";
+import { DocumentExplorer } from "@/components/public/document-explorer";
 import { MarkdownContent } from "@/components/public/markdown-content";
 import { Button } from "@/components/ui/button";
 
@@ -228,10 +229,14 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
     );
     if (driveItem) {
       const driveUrl = (driveItem.fileUrl && extractDriveFolderId(driveItem.fileUrl)) ? driveItem.fileUrl! : driveItem.url!;
+      const folderId = extractDriveFolderId(driveUrl);
       return (
         <div id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? section.sectionKey}>
           <SectionHeading title={section.title} subtitle={section.subtitle} />
-          <GDriveFolderEmbed url={driveUrl} title={section.title} subtitle={section.subtitle} />
+          <DocumentExplorer
+            title={section.title ?? "PORTAL DOKUMEN"}
+            driveFolderId={folderId ?? undefined}
+          />
         </div>
       );
     }
