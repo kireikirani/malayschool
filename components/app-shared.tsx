@@ -67,6 +67,7 @@ export const navGroups: SidebarNavGroup[] = [
     items: [
       { title: "Pelajar Asrama", path: "/admin/asrama-pelajar", icon: <BedDouble className="size-4" /> },
       { title: "Fasiliti Asrama", path: "/admin/asrama-fasiliti", icon: <Sparkles className="size-4" /> },
+      { title: "Warden Asrama", path: "/admin/asrama-warden", icon: <Users className="size-4" /> },
     ],
   },
   {

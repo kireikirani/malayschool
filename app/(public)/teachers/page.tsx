@@ -37,7 +37,7 @@ export default function TeacherDirectoryPage() {
 
   return (
     <div>
-      <PageHeader eyebrow="Tenaga Pengajar" title="Direktori Guru" description="Kenali guru dan staf yang berdedikasi membimbing pelajar kami." />
+      <PageHeader eyebrow="Tenaga Pengajar" title="Guru & Staf" description="Kenali guru dan staf yang berdedikasi membimbing pelajar kami." />
 
       <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 md:py-14">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
