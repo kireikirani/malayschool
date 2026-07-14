@@ -63,7 +63,17 @@ function normalizeInitialValue(section?: Partial<ContentSection> & { pageKey?: s
     linkUrl: section?.linkUrl ?? "",
     isActive: section?.isActive ?? true,
     sortOrder: section?.sortOrder ?? 0,
-    items: section?.items?.map((item, index) => ({ ...item, sortOrder: item.sortOrder ?? index })) ?? [],
+    items: section?.items?.map((item, index) => ({
+      ...item,
+      label: item.label ?? "",
+      title: item.title ?? "",
+      value: item.value ?? "",
+      body: item.body ?? "",
+      url: item.url ?? "",
+      fileUrl: item.fileUrl ?? "",
+      imageUrl: item.imageUrl ?? "",
+      sortOrder: item.sortOrder ?? index,
+    })) ?? [],
   };
 }
 
