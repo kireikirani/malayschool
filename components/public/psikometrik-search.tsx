@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Search, Loader2, AlertCircle, User, School, Calendar, GraduationCap, Info, Printer, Filter } from "lucide-react";
+import { useState } from "react";
+import { Search, Loader2, AlertCircle, Printer, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 type Result = {
@@ -17,88 +16,158 @@ type Result = {
   scores: Record<string, number>;
 };
 
-const CONSTRUCTS: Array<{ code: string; nama: string; penerangan: { rendah: string; sederhana: string; tinggi: string } }> = [
-  { code: "AUT", nama: "Autonomi", penerangan: {
-    rendah: "Kurang keupayaan bertindak secara autonomi. Bergantung pada arahan orang lain.",
-    sederhana: "Mempunyai ciri-ciri autonomi pada tahap sederhana dari segi keakuran, kebebasan dan mengawal aktiviti harian.",
-    tinggi: "Sangat autonomi. Berani buat keputusan sendiri, bebas dan berkeyakinan tinggi dalam tindakan.",
-  } },
-  { code: "KTF", nama: "Kreatif", penerangan: {
-    rendah: "Kurang cenderung kepada idea baharu dan cara berfikir yang berbeza.",
-    sederhana: "Mempunyai ciri-ciri kreatif pada tahap sederhana. Kebanyakan hal, anda selesa dengan cara biasa.",
-    tinggi: "Sangat kreatif. Suka mencipta idea baharu, imaginatif dan menghasilkan sesuatu yang original.",
-  } },
-  { code: "AGF", nama: "Agresif", penerangan: {
-    rendah: "Cenderung lembut, mengalah dan mengelakkan konfrontasi.",
-    sederhana: "Mempunyai ciri asertif pada tahap sederhana. Dalam kebanyakan hal, anda selesa berkongsi pendapat.",
-    tinggi: "Sangat asertif. Berani menyuarakan pendapat dan mempertahankan hak.",
-  } },
-  { code: "EKT", nama: "Ekstrovet", penerangan: {
-    rendah: "Lebih pendiam dan selesa dalam kumpulan kecil atau bersendirian.",
-    sederhana: "Mempunyai ciri ekstrovet pada tahap sederhana dalam hubungan bersama orang lain.",
-    tinggi: "Sangat ekstrovet. Peramah, suka berinteraksi dan mudah mesra dengan orang lain.",
-  } },
-  { code: "PCP", nama: "Pencapaian", penerangan: {
-    rendah: "Kurang mengejar pencapaian tinggi; selesa dengan hasil semasa.",
-    sederhana: "Mempunyai motivasi dan pencapaian yang sederhana.",
-    tinggi: "Sangat berorientasikan pencapaian. Sentiasa menetapkan matlamat dan berusaha untuk cemerlang.",
-  } },
-  { code: "KPG", nama: "Kepelbagaian", penerangan: {
-    rendah: "Selesa dengan rutin dan kurang selesa dengan perubahan.",
-    sederhana: "Mempunyai tahap kepelbagaian yang sederhana.",
-    tinggi: "Sangat suka kepelbagaian dan pengalaman baharu. Kerja rutin sangat membosankan.",
-  } },
-  { code: "ITL", nama: "Intelektual", penerangan: {
-    rendah: "Kurang minat pada perkara berbentuk akademik atau ilmiah.",
-    sederhana: "Mempunyai minat pada tahap sederhana pada ilmu pengetahuan, akademik dan ilmiah.",
-    tinggi: "Sangat berminat dengan ilmu, suka membaca dan mencari ilmu berterusan.",
-  } },
-  { code: "KPN", nama: "Kepimpinan", penerangan: {
-    rendah: "Selesa mengikut dan tidak selesa mempimpin.",
-    sederhana: "Mempunyai ciri kepimpinan pada tahap sederhana.",
-    tinggi: "Sangat berupaya memimpin, tegas, tidak takut membuat keputusan dan suka menjadi ketua.",
-  } },
-  { code: "STR", nama: "Struktur", penerangan: {
-    rendah: "Lebih fleksibel dan selesa dengan kerja tanpa struktur.",
-    sederhana: "Mempunyai ciri personaliti struktur pada tahap sederhana.",
-    tinggi: "Sangat sistematik. Suka kepada peraturan, susunan dan kestabilan.",
-  } },
-  { code: "RSL", nama: "Resilien", penerangan: {
-    rendah: "Mudah terkesan dengan cabaran dan tekanan.",
-    sederhana: "Mempunyai ciri ketahanan psikologi pada tahap sederhana.",
-    tinggi: "Sangat tabah dan cekal. Mampu bangkit semula daripada kegagalan.",
-  } },
-  { code: "MLG", nama: "Menolong", penerangan: {
-    rendah: "Kurang cenderung untuk menolong secara aktif.",
-    sederhana: "Mempunyai ciri menolong pada tahap sederhana.",
-    tinggi: "Sangat prihatin, peka, mudah menghulurkan bantuan secara sukarela.",
-  } },
-  { code: "ATL", nama: "Analitikal", penerangan: {
-    rendah: "Kurang teliti dalam menganalisis, cenderung membuat keputusan berdasarkan perasaan.",
-    sederhana: "Mempunyai ciri analitikal pada tahap sederhana.",
-    tinggi: "Sangat teliti, kritis dan analitis. Suka mengkaji sesuatu secara mendalam.",
-  } },
-  { code: "KD", nama: "Kritik Diri", penerangan: {
-    rendah: "Kurang peka terhadap kesalahan diri.",
-    sederhana: "Mempunyai ciri kritik diri pada tahap sederhana.",
-    tinggi: "Sangat kritikal terhadap diri sendiri, cepat mengaku silap dan sentiasa memperbaiki diri.",
-  } },
-  { code: "WSN", nama: "Wawasan", penerangan: {
-    rendah: "Kurang memikirkan masa depan secara jauh.",
-    sederhana: "Mempunyai wawasan pada tahap sederhana.",
-    tinggi: "Sangat berwawasan, mempunyai hala tuju dan visi masa depan yang jelas.",
-  } },
-  { code: "KTN", nama: "Ketahanan", penerangan: {
-    rendah: "Mudah letih dan menyerah kalah bila berdepan tekanan.",
-    sederhana: "Mempunyai ketahanan pada tahap sederhana.",
-    tinggi: "Sangat tekun dan tabah menghadapi cabaran fizikal dan mental.",
-  } },
+const CONSTRUCTS: Array<{
+  code: string;
+  nama: string;
+  penerangan: { rendah: string; sederhana: string; tinggi: string };
+}> = [
+  {
+    code: "AUT",
+    nama: "Autonomi",
+    penerangan: {
+      rendah: "Kurang keupayaan bertindak secara autonomi. Bergantung pada arahan orang lain dalam membuat keputusan harian.",
+      sederhana: "Mempunyai ciri-ciri autonomi pada tahap sederhana dari segi keakuran, kebebasan dan mengawal aktiviti harian. Seorang individu yang agak bebas. Anda selesa membuat keputusan sendiri dalam situasi tertentu.",
+      tinggi: "Sangat autonomi. Berani buat keputusan sendiri, bebas dan berkeyakinan tinggi dalam tindakan. Anda jarang bergantung kepada orang lain dan lebih suka mengurus diri sendiri.",
+    },
+  },
+  {
+    code: "KTF",
+    nama: "Kreatif",
+    penerangan: {
+      rendah: "Kurang cenderung kepada idea baharu dan cara berfikir yang berbeza. Lebih selesa mengikuti cara yang telah ditetapkan.",
+      sederhana: "Mempunyai ciri-ciri kreatif pada tahap sederhana. TINGGI (70%-98%) Seorang yang mempunyai ciri-ciri kreatif pada tahap tinggi. Suka mencipta dan menghasilkan karya yang original dan tidak suka ikut yang berbentuk.",
+      tinggi: "Sangat kreatif. Suka mencipta idea baharu, imaginatif dan menghasilkan sesuatu yang original. Anda mempunyai daya imaginasi yang tinggi dan sentiasa berfikir di luar kotak.",
+    },
+  },
+  {
+    code: "AGF",
+    nama: "Agresif",
+    penerangan: {
+      rendah: "Cenderung lembut, mengalah dan mengelakkan konfrontasi. Lebih suka mengelak daripada berdepan masalah secara langsung.",
+      sederhana: "Mempunyai ciri asertif pada tahap sederhana. Dalam kebanyakan hal, anda selesa berkongsi pendapat dan mempertahankan hak. Tidak mudah terpengaruh oleh pandangan orang lain. Dalam kebanyakan hal, anda percaya anda boleh melakukan lebih banyak perkara bagi mempertahankan diri dan nilai-nilai anda.",
+      tinggi: "Sangat asertif. Berani menyuarakan pendapat dan mempertahankan hak. Anda tidak mudah mengalah dan sentiasa bersedia berdebat untuk mempertahankan pendirian.",
+    },
+  },
+  {
+    code: "EKT",
+    nama: "Ekstrovet",
+    penerangan: {
+      rendah: "Lebih pendiam dan selesa dalam kumpulan kecil atau bersendirian. Kurang selesa dalam situasi sosial yang besar.",
+      sederhana: "Mempunyai ciri ekstrovet pada tahap sederhana dalam hubungan bersama orang lain. Berpada-pada dalam mesra pergaulan. Rakan sebaya mengatakan bahawa anda boleh bergaul, rasa suka menghujat kerana keseorangan, jalan bersatu di hadapan orang ramai, suka menjaga dan hati berbentuk tetapi positif.",
+      tinggi: "Sangat ekstrovet. Peramah, suka berinteraksi dan mudah mesra dengan orang lain. Anda mempunyai kemahiran sosial yang tinggi dan menikmati kehadiran dalam kumpulan besar.",
+    },
+  },
+  {
+    code: "PCP",
+    nama: "Pencapaian",
+    penerangan: {
+      rendah: "Kurang mengejar pencapaian tinggi; selesa dengan hasil semasa. Tidak terlalu ambil berat tentang kejayaan.",
+      sederhana: "Mempunyai motivasi dan pencapaian yang sederhana. Seorang yang sangat bermotivasi, sukakan kejayaan melalui persaingan dan perbandingan.",
+      tinggi: "Sangat berorientasikan pencapaian. Sentiasa menetapkan matlamat dan berusaha untuk cemerlang. Anda tidak mudah berpuas hati dan sentiasa mencari peluang untuk meningkatkan diri.",
+    },
+  },
+  {
+    code: "KPG",
+    nama: "Kepelbagaian",
+    penerangan: {
+      rendah: "Selesa dengan rutin dan kurang selesa dengan perubahan. Lebih suka persekitaran yang tetap dan boleh diramal.",
+      sederhana: "Mempunyai tahap kepelbagaian yang sederhana. Seorang yang kurang berminat akan kepelbagaian. Lebih selesa melakukan kerja yang rutin dan berulang-ulang.",
+      tinggi: "Sangat suka kepelbagaian dan pengalaman baharu. Kerja rutin sangat membosankan. Anda sentiasa mencari cabaran baharu dan tidak suka terperangkap dalam rutin yang sama.",
+    },
+  },
+  {
+    code: "ITL",
+    nama: "Intelektual",
+    penerangan: {
+      rendah: "Kurang minat pada perkara berbentuk akademik atau ilmiah. Lebih suka aktiviti praktikal berbanding teori.",
+      sederhana: "Mempunyai minat pada tahap sederhana pada ilmu pengetahuan, akademik dan ilmiah. TINGGI (70%-98%) Seorang yang sangat mencintai ilmu, akademik dan berfikiran mendalam dan berpelajaran.",
+      tinggi: "Sangat berminat dengan ilmu, suka membaca dan mencari ilmu berterusan. Anda menikmati perbincangan intelektual dan suka mendalami pelbagai bidang ilmu.",
+    },
+  },
+  {
+    code: "KPN",
+    nama: "Kepimpinan",
+    penerangan: {
+      rendah: "Selesa mengikut dan tidak selesa memimpin. Lebih suka bekerja dalam peranan sokongan berbanding kepimpinan.",
+      sederhana: "Mempunyai ciri kepimpinan pada tahap sederhana. Hanya boleh memimpin kumpulan-kumpulan kecil. TINGGI (70%-98%) Seorang yang mempunyai ciri-ciri kepimpinan yang tinggi. Anda boleh memimpin jika diperlukan dan mempunyai keupayaan dan daya pengaruh yang tinggi dan boleh mempengaruhi orang lain.",
+      tinggi: "Sangat berupaya memimpin, tegas, tidak takut membuat keputusan dan suka menjadi ketua. Anda mampu mempengaruhi orang lain dan menggerakkan pasukan ke arah matlamat yang ditetapkan.",
+    },
+  },
+  {
+    code: "STR",
+    nama: "Struktur",
+    penerangan: {
+      rendah: "Lebih fleksibel dan selesa dengan kerja tanpa struktur. Tidak terlalu mementingkan peraturan dan prosedur.",
+      sederhana: "Mempunyai ciri personaliti struktur pada tahap sederhana. Seorang individu yang suka kepada keteraturan, kerapian dan keselesaan perkara secara berterusan, suka merancang hal kehidupan dan kerjaya dan sentiasa merancang kerja yang mementingkan ketelitian, peralatan, ketelitian dan berulung-ulang.",
+      tinggi: "Sangat sistematik. Suka kepada peraturan, susunan dan kestabilan. Anda mementingkan ketepatan, kesempurnaan dan memastikan segala-galanya dilakukan dengan betul mengikut prosedur.",
+    },
+  },
+  {
+    code: "RSL",
+    nama: "Resilien",
+    penerangan: {
+      rendah: "Mudah terkesan dengan cabaran dan tekanan. Memerlukan masa yang lama untuk pulih daripada kekecewaan.",
+      sederhana: "Mempunyai ciri ketahanan psikologi pada tahap sederhana. TINGGI (75%-98%) Seorang yang mempunyai daya tahan yang tinggi dan emosi serta akan sentiasa mampu serta menghadapi situasi-situasi yang pantas yang diberikan (Semangat yang tinggi, berjaya keras, azam tinggi, Akhiar bersungguh-sungguh, dan berjuang untuk-kan).",
+      tinggi: "Sangat tabah dan cekal. Mampu bangkit semula daripada kegagalan. Anda mempunyai ketahanan mental yang tinggi dan tidak mudah putus asa walaupun menghadapi cabaran yang berat.",
+    },
+  },
+  {
+    code: "MLG",
+    nama: "Menolong",
+    penerangan: {
+      rendah: "Kurang cenderung untuk menolong secara aktif. Lebih mengutamakan keperluan diri sendiri berbanding orang lain.",
+      sederhana: "Mempunyai ciri menolong pada tahap sederhana. (Simpati dan penglibatan dalam aktiviti kepada di tahap sederhana) TINGGI (70%-98%) Seorang yang mempunyai sifat empati yang tinggi, prihatin, peka, mudah menghulurkan bantuan secara sukarela.",
+      tinggi: "Sangat prihatin, peka, mudah menghulurkan bantuan secara sukarela. Anda mempunyai sifat empati yang tinggi dan sentiasa bersedia membantu orang lain tanpa mengharapkan balasan.",
+    },
+  },
+  {
+    code: "ATL",
+    nama: "Analitikal",
+    penerangan: {
+      rendah: "Kurang teliti dalam menganalisis, cenderung membuat keputusan berdasarkan perasaan daripada fakta.",
+      sederhana: "Mempunyai ciri analitikal pada tahap sederhana. Seorang yang suka kepada fakta dan pemikiran secara analitikal adalah sederhana. TINGGI (70%-98%) Seorang yang peka kepada pemikiran dan pemerhati dalam hal-hal yang tidak mudah diperhatikan, suka menganalisis dan berdasarkan faktor.",
+      tinggi: "Sangat teliti, kritis dan analitis. Suka mengkaji sesuatu secara mendalam. Anda membuat keputusan berdasarkan data dan bukti, dan suka memahami punca sesuatu masalah sebelum bertindak.",
+    },
+  },
+  {
+    code: "KD",
+    nama: "Kritik Diri",
+    penerangan: {
+      rendah: "Kurang peka terhadap kesalahan diri. Jarang mengkritik diri sendiri dan mudah berpuas hati.",
+      sederhana: "Mempunyai ciri kritik diri pada tahap sederhana. (Tahu satu cita peka & kritikan). TINGGI (75%-99%) Seorang yang sangat peka terhadap aspek moral dan psikologi sendiri. Seorang yang suka memeriksa di kiri, kenal pasti kekuatan & kelemahan serta sentimen sentiasa memperbaiki diri. Anda berkeyakinan bahawa anda adalah salah melebihi 50% dicsebabkan banyaknya yang dilakukan. Individu yang mendapat skor melebihi 50% dicadangkan berjumpa guru kaunseling.",
+      tinggi: "Sangat kritikal terhadap diri sendiri, cepat mengaku silap dan sentiasa memperbaiki diri. Anda sentiasa menilai tindakan sendiri dan berusaha untuk menjadi lebih baik. Individu yang mendapat skor melebihi 50% dicadangkan berjumpa guru kaunseling.",
+    },
+  },
+  {
+    code: "WSN",
+    nama: "Wawasan",
+    penerangan: {
+      rendah: "Kurang memikirkan masa depan secara jauh. Lebih fokus pada masa kini daripada merancang jangka panjang.",
+      sederhana: "Mempunyai wawasan pada tahap sederhana. (Matlamat dan objektif setakat ada sahaja, tiada enthusiasm). Anda individu biasa-biasa yang tidak mempunyai daya imaginasi dan cita-cita yang tinggi. Anda mempunyai hala tuju, visi dan misi yang agak jelas. (Saya yang membentangkan pandangan masa. Anda mempunyai hala tuju, visi dan misi yang agak jelas).",
+      tinggi: "Sangat berwawasan, mempunyai hala tuju dan visi masa depan yang jelas. Anda mampu merancang dengan teliti untuk jangka masa panjang dan sentiasa bermotivasi untuk mencapai impian.",
+    },
+  },
+  {
+    code: "KTN",
+    nama: "Ketahanan",
+    penerangan: {
+      rendah: "Mudah letih dan menyerah kalah bila berdepan tekanan. Memerlukan masa rehat yang kerap untuk pulih.",
+      sederhana: "Mempunyai ketahanan pada tahap sederhana. Seorang yang sederhana mempunyai ketahanan dalam menghadapi rasa penat.",
+      tinggi: "Sangat tekun dan tabah menghadapi cabaran fizikal dan mental. Anda boleh bekerja dalam waktu yang lama tanpa mudah menyerah, dan sentiasa bermotivasi walaupun dalam keadaan tertekan.",
+    },
+  },
 ];
 
-function interpretasiTahap(score: number): { label: "Rendah" | "Sederhana" | "Tinggi"; color: string; barColor: string } {
-  if (score >= 70) return { label: "Tinggi", color: "text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-950/40 dark:border-emerald-900", barColor: "bg-emerald-500" };
-  if (score >= 40) return { label: "Sederhana", color: "text-amber-700 bg-amber-50 border-amber-200 dark:text-amber-300 dark:bg-amber-950/40 dark:border-amber-900", barColor: "bg-amber-500" };
-  return { label: "Rendah", color: "text-rose-700 bg-rose-50 border-rose-200 dark:text-rose-300 dark:bg-rose-950/40 dark:border-rose-900", barColor: "bg-rose-500" };
+function interpretasiTahap(score: number): {
+  label: "Rendah" | "Sederhana" | "Tinggi";
+  range: string;
+  cellClass: string;
+} {
+  if (score >= 70)
+    return { label: "Tinggi", range: "70% hingga 99%", cellClass: "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300" };
+  if (score >= 40)
+    return { label: "Sederhana", range: "40% hingga 69%", cellClass: "bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300" };
+  return { label: "Rendah", range: "1% hingga 39%", cellClass: "bg-rose-50 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300" };
 }
 
 export function PsikometrikSearch() {
@@ -130,24 +199,39 @@ export function PsikometrikSearch() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10">
-      {/* Header */}
-      <div className="border border-emerald-500/50 bg-card rounded-lg overflow-hidden">
-        <div className="flex flex-col items-center gap-4 border-b border-border/60 bg-muted/20 px-6 py-6">
-          <div className="flex items-center gap-8">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/gallery/sekolah/jata-negara.png" alt="Kementerian Pendidikan" className="h-16 w-auto object-contain" onError={(e) => (e.currentTarget.style.display = "none")} />
-            <div className="text-center">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Kementerian Pendidikan Malaysia</p>
-              <h1 className="mt-1 font-heading text-lg font-bold tracking-tight md:text-xl">PELAPORAN PENTAKSIRAN PSIKOMETRIK</h1>
+    <div className="mx-auto max-w-5xl px-4 py-10 print:py-0 print:px-0">
+      <div className="border border-border/70 bg-card shadow-sm print:border-black print:shadow-none">
+        {/* ── Header ───────────────────────────────────────────────────────── */}
+        <div className="border-b border-border/70 px-6 py-5 print:border-black">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex h-16 w-16 shrink-0 flex-col items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/gallery/sekolah/jata-negara.png"
+                alt="Jata Negara"
+                className="h-16 w-auto object-contain"
+                onError={(e) => (e.currentTarget.style.display = "none")}
+              />
+            </div>
+            <div className="min-w-0 flex-1 text-center">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground print:text-black">
+                Kementerian Pendidikan Malaysia
+              </p>
+              <h1 className="mt-1 font-heading text-base font-bold tracking-tight md:text-lg print:text-xl">
+                PELAPORAN PENTAKSIRAN PSIKOMETRIK
+              </h1>
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Logo Sekolah" className="h-16 w-auto object-contain" onError={(e) => (e.currentTarget.style.display = "none")} />
+            <img
+              src="/brand/logo.png"
+              alt="Logo Sekolah"
+              className="h-16 w-auto shrink-0 object-contain"
+            />
           </div>
 
-          <form onSubmit={handleSearch} className="w-full max-w-md">
-            <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          {/* Search */}
+          <form onSubmit={handleSearch} className="mt-5 flex justify-center print:hidden">
+            <div className="relative w-full max-w-sm">
               <Input
                 type="text"
                 inputMode="numeric"
@@ -155,14 +239,14 @@ export function PsikometrikSearch() {
                 placeholder="Masukkan No. Pengenalan Diri"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="h-11 pl-10 pr-24 rounded-full text-center tracking-wide"
+                className="h-10 rounded-full pr-12 text-center tracking-widest"
                 disabled={loading}
               />
               <Button
                 type="submit"
                 size="icon"
                 disabled={loading}
-                className="absolute right-1 top-1/2 -translate-y-1/2 size-9 rounded-full"
+                className="absolute right-1 top-1/2 size-8 -translate-y-1/2 rounded-full"
               >
                 {loading ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}
               </Button>
@@ -170,33 +254,34 @@ export function PsikometrikSearch() {
           </form>
         </div>
 
-        {/* Body */}
+        {/* ── Body states ──────────────────────────────────────────────────── */}
         {!result && !error && !loading && (
-          <div className="flex flex-col items-center justify-center gap-3 px-6 py-16 text-center">
+          <div className="flex flex-col items-center justify-center gap-3 px-6 py-20 text-center">
             <div className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
               <Info className="size-6" />
             </div>
             <h2 className="font-heading text-base font-semibold">Semak keputusan pentaksiran anda</h2>
-            <p className="max-w-md text-sm text-muted-foreground">
-              Masukkan nombor pengenalan diri (contoh: <span className="font-mono">090310101950</span>) untuk melihat keputusan pentaksiran psikometrik individu.
+            <p className="max-w-sm text-sm text-muted-foreground">
+              Masukkan nombor pengenalan diri (contoh:{" "}
+              <span className="font-mono">090310101950</span>) untuk melihat keputusan pentaksiran psikometrik individu.
             </p>
           </div>
         )}
 
         {loading && (
-          <div className="flex flex-col items-center justify-center gap-3 px-6 py-16 text-muted-foreground">
+          <div className="flex flex-col items-center justify-center gap-3 px-6 py-20 text-muted-foreground">
             <Loader2 className="size-6 animate-spin text-primary" />
             <p className="text-sm">Mencari keputusan…</p>
           </div>
         )}
 
         {error && !loading && (
-          <div className="flex flex-col items-center justify-center gap-3 px-6 py-16 text-center">
+          <div className="flex flex-col items-center justify-center gap-3 px-6 py-20 text-center">
             <div className="flex size-14 items-center justify-center rounded-full bg-destructive/10 text-destructive">
               <AlertCircle className="size-6" />
             </div>
             <h2 className="font-heading text-base font-semibold">Keputusan tidak dijumpai</h2>
-            <p className="max-w-md text-sm text-muted-foreground">{error}</p>
+            <p className="max-w-sm text-sm text-muted-foreground">{error}</p>
           </div>
         )}
 
@@ -206,199 +291,168 @@ export function PsikometrikSearch() {
   );
 }
 
-type TahapFilter = "semua" | "Tinggi" | "Sederhana" | "Rendah";
-
-const FILTER_OPTIONS: Array<{ value: TahapFilter; label: string; dotClass: string; activeClass: string }> = [
-  { value: "semua", label: "Semua", dotClass: "bg-foreground/50", activeClass: "bg-foreground text-background" },
-  { value: "Tinggi", label: "Tinggi", dotClass: "bg-emerald-500", activeClass: "bg-emerald-500 text-white" },
-  { value: "Sederhana", label: "Sederhana", dotClass: "bg-amber-500", activeClass: "bg-amber-500 text-white" },
-  { value: "Rendah", label: "Rendah", dotClass: "bg-rose-500", activeClass: "bg-rose-500 text-white" },
-];
-
 function ResultView({ result }: { result: Result }) {
-  const [filter, setFilter] = useState<TahapFilter>("semua");
-  const [chartRevealed, setChartRevealed] = useState(false);
-  const [gridRevealed, setGridRevealed] = useState(false);
-  const chartRef = useRef<HTMLDivElement | null>(null);
-  const gridRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const targets: Array<[HTMLElement | null, () => void]> = [
-      [chartRef.current, () => setChartRevealed(true)],
-      [gridRef.current, () => setGridRevealed(true)],
-    ];
-    const observers = targets
-      .filter((t): t is [HTMLElement, () => void] => t[0] !== null)
-      .map(([el, cb]) => {
-        const io = new IntersectionObserver(
-          (entries) => {
-            if (entries.some((e) => e.isIntersecting)) {
-              cb();
-              io.disconnect();
-            }
-          },
-          { threshold: 0.15 },
-        );
-        io.observe(el);
-        return io;
-      });
-    return () => observers.forEach((o) => o.disconnect());
-  }, []);
-
-  const items = useMemo(
-    () =>
-      CONSTRUCTS.map((c) => {
-        const score = Number(result.scores[c.code] ?? 0);
-        const tahap = interpretasiTahap(score);
-        return { c, score, tahap };
-      }),
-    [result],
-  );
-
-  const filteredItems = useMemo(
-    () => (filter === "semua" ? items : items.filter((i) => i.tahap.label === filter)),
-    [items, filter],
-  );
-
-  const counts = useMemo(() => ({
-    Tinggi: items.filter((i) => i.tahap.label === "Tinggi").length,
-    Sederhana: items.filter((i) => i.tahap.label === "Sederhana").length,
-    Rendah: items.filter((i) => i.tahap.label === "Rendah").length,
-  }), [items]);
+  const items = CONSTRUCTS.map((c) => {
+    const score = Number(result.scores[c.code] ?? 0);
+    const tahap = interpretasiTahap(score);
+    const penerangan =
+      tahap.label === "Tinggi"
+        ? c.penerangan.tinggi
+        : tahap.label === "Sederhana"
+          ? c.penerangan.sederhana
+          : c.penerangan.rendah;
+    return { c, score, tahap, penerangan };
+  });
 
   return (
-    <div className="px-4 py-6 md:px-8">
-      {/* Student info */}
-      <div className="grid gap-3 rounded-md border border-border/60 bg-muted/20 p-4 sm:grid-cols-2">
-        <InfoRow icon={<User className="size-3.5" />} label="Nama Murid" value={result.namaMurid} />
-        <InfoRow icon={<GraduationCap className="size-3.5" />} label="No. Pengenalan" value={result.noPengenalan} mono />
-        <InfoRow icon={<School className="size-3.5" />} label="Sekolah" value={result.namaSekolah || "-"} />
-        <InfoRow icon={<Calendar className="size-3.5" />} label="Tarikh" value={result.tarikh || "-"} />
-        <InfoRow icon={<School className="size-3.5" />} label="Kod Sekolah" value={result.kodSekolah || "-"} mono />
-        <InfoRow icon={<GraduationCap className="size-3.5" />} label="Kelas" value={result.namaKelas || "-"} />
+    <div className="divide-y divide-border/60 print:divide-black/20">
+      {/* ── Student info ─────────────────────────────────────────────────── */}
+      <div className="px-6 py-4">
+        <dl className="space-y-1.5 text-sm">
+          {[
+            { label: "NAMA MURID", value: result.namaMurid },
+            { label: "NO. PENGENALAN DIRI", value: result.noPengenalan },
+            { label: "KOD SEKOLAH", value: result.kodSekolah || "-" },
+            { label: "NAMA SEKOLAH", value: result.namaSekolah || "-" },
+            { label: "NAMA KELAS", value: result.namaKelas || "-" },
+          ].map(({ label, value }) => (
+            <div key={label} className="flex gap-3">
+              <dt className="w-52 shrink-0 font-semibold uppercase text-foreground/70 print:text-black">
+                {label}
+              </dt>
+              <dd className="flex gap-2">
+                <span className="text-muted-foreground print:text-black">:</span>
+                <span className="font-medium print:text-black">{value}</span>
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
 
-      {/* Filter tahap */}
-      <div className="mt-6 flex flex-wrap items-center gap-2 rounded-md border border-border/60 bg-muted/20 px-3 py-2.5">
-        <span className="inline-flex items-center gap-1.5 pr-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          <Filter className="size-3" /> Tapis Tahap
-        </span>
-        {FILTER_OPTIONS.map((opt) => {
-          const isActive = filter === opt.value;
-          const count = opt.value === "semua" ? items.length : counts[opt.value];
-          return (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => setFilter(opt.value)}
-              className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border border-transparent px-3 py-1 text-xs font-medium transition-colors",
-                isActive
-                  ? opt.activeClass + " shadow-sm"
-                  : "border-border/60 bg-background text-foreground/70 hover:text-foreground hover:bg-muted",
-              )}
-            >
-              <span className={cn("size-1.5 rounded-full", isActive ? "bg-white/80" : opt.dotClass)} />
-              {opt.label}
-              <span className={cn("tabular-nums", isActive ? "text-white/85" : "text-muted-foreground")}>({count})</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Score chart */}
-      <div ref={chartRef} className="mt-6">
-        <div className="flex items-center justify-between">
-          <h2 className="font-heading text-base font-semibold">Skor Inventori Tret Personaliti (ITP)</h2>
-          <Button variant="outline" size="sm" onClick={() => window.print()} className="hidden md:inline-flex">
-            <Printer className="size-3.5" /> Cetak
+      {/* ── Score table ──────────────────────────────────────────────────── */}
+      <div className="px-6 py-4">
+        <div className="flex items-center justify-between pb-3">
+          <h2 className="font-heading text-sm font-bold uppercase tracking-wide">
+            Skor Keputusan Inventori Tret Personaliti (ITP)
+          </h2>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => window.print()}
+            className="hidden gap-1.5 text-xs md:inline-flex print:hidden"
+          >
+            <Printer className="size-3.5" />
+            Cetak Laporan
           </Button>
         </div>
-        <div className="mt-3 space-y-2 rounded-md border border-border/60 bg-card p-4">
-          {filteredItems.length === 0 ? (
-            <p className="py-6 text-center text-xs text-muted-foreground">Tiada konstruk dalam tahap ini.</p>
-          ) : (
-            filteredItems.map((item, i) => {
-              const revealDelay = i * 90;
-              const width = chartRevealed ? Math.min(100, Math.max(0, item.score)) : 0;
-              return (
-                <div
-                  key={item.c.code}
-                  className={cn(
-                    "grid grid-cols-[80px_1fr_60px] items-center gap-3 sm:grid-cols-[110px_1fr_80px] transition-all duration-500 ease-out",
-                    chartRevealed ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1",
-                  )}
-                  style={{ transitionDelay: `${revealDelay}ms` }}
-                >
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold uppercase tracking-wide">{item.c.nama}</p>
-                    <p className="text-[10px] text-muted-foreground">{item.c.code}</p>
-                  </div>
-                  <div className="h-6 overflow-hidden rounded-full bg-muted">
-                    <div
-                      className={cn("h-full ease-out", item.tahap.barColor)}
-                      style={{
-                        width: `${width}%`,
-                        transition: `width 900ms ease-out ${revealDelay + 100}ms`,
-                      }}
-                    />
-                  </div>
-                  <div className="flex items-center justify-end gap-2">
-                    <span className="tabular-nums text-sm font-semibold">{item.score}%</span>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
-        <div className="mt-3 flex flex-wrap gap-2 text-[10px]">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-rose-700 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-300"><span className="size-2 rounded-full bg-rose-500" /> Rendah &lt; 40%</span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-amber-700 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300"><span className="size-2 rounded-full bg-amber-500" /> Sederhana 40–69%</span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300"><span className="size-2 rounded-full bg-emerald-500" /> Tinggi ≥ 70%</span>
+
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-center text-xs">
+            <thead>
+              <tr className="border border-border/70 bg-muted/50 print:border-black print:bg-gray-100">
+                <th className="border border-border/70 px-3 py-2 font-semibold uppercase print:border-black">
+                  Tarikh
+                </th>
+                {CONSTRUCTS.map((c) => (
+                  <th
+                    key={c.code}
+                    className="border border-border/70 px-2 py-2 font-semibold uppercase print:border-black"
+                  >
+                    {c.code}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border border-border/70 print:border-black">
+                <td className="border border-border/70 px-3 py-2 text-muted-foreground print:border-black print:text-black">
+                  {result.tarikh || "-"}
+                </td>
+                {items.map(({ c, score, tahap }) => (
+                  <td
+                    key={c.code}
+                    className={cn(
+                      "border border-border/70 px-2 py-2 font-semibold print:border-black print:bg-transparent print:text-black",
+                      tahap.cellClass,
+                    )}
+                  >
+                    {score}&nbsp;%
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      {/* Construct interpretation */}
-      <div ref={gridRef} className="mt-6">
-        <h2 className="font-heading text-base font-semibold">Interpretasi Konstruk</h2>
-        <p className="text-xs text-muted-foreground">Penerangan tret personaliti berdasarkan skor anda.</p>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
-          {filteredItems.length === 0 ? (
-            <p className="col-span-full py-6 text-center text-xs text-muted-foreground">Tiada konstruk dalam tahap ini.</p>
-          ) : (
-            filteredItems.map((item, i) => {
-              const teks = item.tahap.label === "Tinggi" ? item.c.penerangan.tinggi : item.tahap.label === "Sederhana" ? item.c.penerangan.sederhana : item.c.penerangan.rendah;
-              return (
-                <div
-                  key={item.c.code}
-                  className={cn(
-                    "rounded-md border border-border/60 bg-card p-4 transition-all duration-500 ease-out",
-                    gridRevealed ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
-                  )}
-                  style={{ transitionDelay: `${i * 60}ms` }}
-                >
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-heading text-sm font-semibold uppercase">{item.c.nama}</h3>
-                    <Badge variant="outline" className={cn("text-[10px]", item.tahap.color)}>{item.tahap.label} · {item.score}%</Badge>
-                  </div>
-                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{teks}</p>
-                </div>
-              );
-            })
-          )}
+      {/* ── Interpretasi + Construct details ─────────────────────────────── */}
+      <div className="grid gap-0 md:grid-cols-[260px_1fr] print:grid-cols-[220px_1fr]">
+        {/* Left: interpretasi legend */}
+        <div className="border-b border-border/60 px-6 py-4 md:border-b-0 md:border-r print:border-black">
+          <h3 className="mb-3 text-[11px] font-bold uppercase tracking-wide">Interpretasi Skor</h3>
+          <table className="w-full border-collapse text-xs">
+            <thead>
+              <tr className="bg-muted/50 print:bg-gray-100">
+                <th className="border border-border/70 px-3 py-1.5 text-left font-semibold uppercase print:border-black">
+                  Interpretasi Skor
+                </th>
+                <th className="border border-border/70 px-3 py-1.5 text-left font-semibold uppercase print:border-black">
+                  Skor Dalam Peratus
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { label: "Tinggi", range: "70% hingga 99%", cls: "text-emerald-700 dark:text-emerald-400" },
+                { label: "Sederhana", range: "40% hingga 69%", cls: "text-amber-700 dark:text-amber-400" },
+                { label: "Rendah", range: "1% hingga 39%", cls: "text-rose-700 dark:text-rose-400" },
+              ].map(({ label, range, cls }) => (
+                <tr key={label}>
+                  <td className={cn("border border-border/70 px-3 py-1.5 font-semibold print:border-black print:text-black", cls)}>
+                    {label}
+                  </td>
+                  <td className="border border-border/70 px-3 py-1.5 text-muted-foreground print:border-black print:text-black">
+                    {range}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
-    </div>
-  );
-}
 
-function InfoRow({ icon, label, value, mono }: { icon: React.ReactNode; label: string; value: string; mono?: boolean }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">{icon}</span>
-      <div className="min-w-0">
-        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
-        <p className={cn("truncate text-sm font-medium", mono && "font-mono")}>{value}</p>
+        {/* Right: construct penerangan */}
+        <div className="px-6 py-4">
+          <h3 className="mb-3 text-[11px] font-bold uppercase tracking-wide">Konstruk ITP &amp; Penerangan</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-xs">
+              <thead>
+                <tr className="bg-muted/50 print:bg-gray-100">
+                  <th className="border border-border/70 px-3 py-1.5 text-left font-semibold uppercase print:border-black">
+                    Konstruk ITP
+                  </th>
+                  <th className="border border-border/70 px-3 py-1.5 text-left font-semibold uppercase print:border-black">
+                    Penerangan
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map(({ c, score, tahap, penerangan }) => (
+                  <tr key={c.code} className="align-top">
+                    <td className="border border-border/70 px-3 py-2 print:border-black">
+                      <p className="font-semibold uppercase">{c.nama}</p>
+                    </td>
+                    <td className="border border-border/70 px-3 py-2 leading-relaxed text-muted-foreground print:border-black print:text-black">
+                      <span className={cn("mr-1 font-semibold not-italic print:text-black", tahap.cellClass.split(" ")[1])}>
+                        {tahap.label.toUpperCase()} ({score}%)
+                      </span>
+                      {penerangan}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );
