@@ -199,7 +199,7 @@ export function PsikometrikSearch() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 print:py-0 print:px-0">
+    <div className="mx-auto max-w-7xl px-4 py-10 print:py-0 print:px-0">
       <div className="border border-border/70 bg-card shadow-sm print:border-black print:shadow-none">
         {/* ── Header ───────────────────────────────────────────────────────── */}
         <div className="border-b border-border/70 px-6 py-5 print:border-black">
