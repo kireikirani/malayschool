@@ -97,34 +97,35 @@ export function SectionJumpNav({ items }: SectionJumpNavProps) {
         </div>
 
         {/* Nav items */}
-        {items.map(({ id, label }) => {
-          const isActive = activeId === id;
-          return (
-            <button
-              key={id}
-              type="button"
-              onClick={() => scrollTo(id)}
-              title={label}
-              className={cn(
-                "group relative flex items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs font-medium transition-all duration-200",
-                isActive
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
-              )}
-            >
-              {/* Active dot */}
-              <span
+        <div className="overflow-y-auto" style={{ maxHeight: "min(60vh, 400px)" }}>
+          {items.map(({ id, label }) => {
+            const isActive = activeId === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => scrollTo(id)}
+                title={label}
                 className={cn(
-                  "block h-1.5 w-1.5 shrink-0 rounded-full transition-all",
-                  isActive ? "bg-primary-foreground" : "bg-muted-foreground/40 group-hover:bg-foreground/40",
+                  "group relative flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs font-medium transition-all duration-200",
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 )}
-              />
-              {!collapsed && (
-                <span className="line-clamp-1 leading-tight">{label}</span>
-              )}
-            </button>
-          );
-        })}
+              >
+                <span
+                  className={cn(
+                    "block h-1.5 w-1.5 shrink-0 rounded-full transition-all",
+                    isActive ? "bg-primary-foreground" : "bg-muted-foreground/40 group-hover:bg-foreground/40",
+                  )}
+                />
+                {!collapsed && (
+                  <span className="line-clamp-1 leading-tight">{label}</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
