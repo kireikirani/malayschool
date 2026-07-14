@@ -84,14 +84,19 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
   }
 
   if (section.type === "text_block") {
+    const isLyrics = section.sectionKey === "school-song" || section.sectionKey === "jom-jadi-best";
     return (
       <section id={section.sectionKey} data-jump-id={section.sectionKey} data-jump-label={section.title ?? section.sectionKey} className="bg-card px-6 py-6 shadow-sm">
         <SectionHeading title={section.title} subtitle={section.subtitle} />
         {section.body ? (
-          <MarkdownContent
-            markdown={section.body}
-            className="prose prose-sm prose-neutral dark:prose-invert max-w-none prose-headings:font-heading prose-p:text-muted-foreground prose-li:text-muted-foreground prose-a:text-primary hover:prose-a:underline"
-          />
+          isLyrics ? (
+            <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-muted-foreground">{section.body}</pre>
+          ) : (
+            <MarkdownContent
+              markdown={section.body}
+              className="prose prose-sm prose-neutral dark:prose-invert max-w-none prose-headings:font-heading prose-p:text-muted-foreground prose-li:text-muted-foreground prose-a:text-primary hover:prose-a:underline"
+            />
+          )
         ) : (
           <p className="text-sm text-muted-foreground">Kandungan akan dikemaskini.</p>
         )}
