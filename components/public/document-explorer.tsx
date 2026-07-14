@@ -22,7 +22,9 @@ import {
   AlertCircle,
   Loader2,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  Maximize2,
+  Minimize2
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -211,6 +213,7 @@ export function DocumentExplorer({ title = "PORTAL DOKUMEN SEKOLAH", scopedUnitS
   const [error, setError] = useState<string | null>(null);
   const [showInfo, setShowInfo] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
 
   // Load documents structure from API
   const loadData = useCallback(async () => {
@@ -657,15 +660,26 @@ export function DocumentExplorer({ title = "PORTAL DOKUMEN SEKOLAH", scopedUnitS
                       Previu Dokumen
                     </span>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    className="size-6 text-muted-foreground hover:text-foreground"
-                    onClick={() => setActiveFile(null)}
-                    title="Tutup panel previu"
-                  >
-                    <X className="size-3.5" />
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      className="size-6 text-muted-foreground hover:text-foreground"
+                      onClick={() => setFullscreen(true)}
+                      title="Besarkan previu"
+                    >
+                      <Maximize2 className="size-3.5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      className="size-6 text-muted-foreground hover:text-foreground"
+                      onClick={() => setActiveFile(null)}
+                      title="Tutup panel previu"
+                    >
+                      <X className="size-3.5" />
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="p-3 bg-background border-b border-border shrink-0">
@@ -721,6 +735,53 @@ export function DocumentExplorer({ title = "PORTAL DOKUMEN SEKOLAH", scopedUnitS
                   Klik ikon previu (mata) pada mana-mana fail di lajur tengah untuk melihat dokumen di sini.
                 </p>
               </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Fullscreen overlay */}
+      {fullscreen && activeFile && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-background">
+          <div className="flex items-center justify-between border-b border-border px-4 py-2.5 bg-background shrink-0">
+            <div className="flex items-center gap-2 min-w-0">
+              <Eye className="size-4 text-primary shrink-0" />
+              <span className="text-sm font-semibold text-foreground truncate">{activeFile.name}</span>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button variant="outline" size="sm" asChild className="h-7 text-xs rounded-none">
+                <a href={activeFile.url} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="size-3 mr-1" />
+                  Buka Google Drive
+                </a>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className="size-7 text-muted-foreground hover:text-foreground"
+                onClick={() => setFullscreen(false)}
+                title="Keluar skrin penuh"
+              >
+                <Minimize2 className="size-4" />
+              </Button>
+            </div>
+          </div>
+          <div className="flex-1 relative overflow-hidden">
+            {isImg ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={activeFile.url}
+                alt={activeFile.name}
+                className="w-full h-full object-contain p-6 drop-shadow-sm select-none"
+              />
+            ) : (
+              <iframe
+                key={`fs-${previewUrl}`}
+                src={previewUrl}
+                className="w-full h-full border-none bg-background"
+                allow="autoplay; encrypted-media"
+                title={activeFile.name}
+              />
             )}
           </div>
         </div>

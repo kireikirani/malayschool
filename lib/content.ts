@@ -151,7 +151,7 @@ function defaultAboutSections(): ContentSection[] {
       type: "simple_table",
       title: "Bendera Sekolah",
       subtitle: "Maksud warna dan lambang pada bendera SMK Telok Panglima Garang.",
-      imageUrl: "/brand/bendera-sekolah.png",
+      imageUrl: "/brand/bendera-sekolah.jpeg",
       isActive: true,
       sortOrder: 30,
       items: [
