@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { galleryAlbums, galleryItems } from "@/db/schema";
 import { GalleryLightbox } from "./lightbox";
+import { GDriveFolderEmbed } from "@/components/public/gdrive-folder-embed";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -43,15 +44,22 @@ export default async function AlbumDetailPage({ params }: { params: Promise<{ id
         {album.description && <p className="text-muted-foreground">{album.description}</p>}
       </div>
 
-      {items.length === 0 ? (
+      {items.length === 0 && album.linkGdrive ? (
+        <GDriveFolderEmbed url={album.linkGdrive} title={album.name} />
+      ) : items.length === 0 ? (
         <p className="text-sm text-muted-foreground">Belum ada foto di album ini.</p>
       ) : (
-        <GalleryLightbox
-          items={items.map((i) => ({ id: i.id, image: i.image, caption: i.caption }))}
-          albumName={album.name}
-          tarikh={album.tarikh}
-          linkGdrive={album.linkGdrive}
-        />
+        <>
+          <GalleryLightbox
+            items={items.map((i) => ({ id: i.id, image: i.image, caption: i.caption }))}
+            albumName={album.name}
+            tarikh={album.tarikh}
+            linkGdrive={album.linkGdrive}
+          />
+          {album.linkGdrive && (
+            <GDriveFolderEmbed url={album.linkGdrive} title={album.name} />
+          )}
+        </>
       )}
     </div>
   );

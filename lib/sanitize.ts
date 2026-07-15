@@ -20,6 +20,11 @@ export function sanitizeScoreKey(key: string): string | null {
   return clean;
 }
 
+/** Normalize an IC/identity number: strip dashes and spaces so format is consistent. */
+export function normalizeIc(value: string): string {
+  return value.replace(/[-\s]/g, "").trim();
+}
+
 /** Sanitize a full scores record. Returns only valid entries. */
 export function sanitizeScores(scores: Record<string, number>): Record<string, number> {
   const result: Record<string, number> = {};

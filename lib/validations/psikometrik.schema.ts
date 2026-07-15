@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { paginationSchema } from "./common.schema";
-import { sanitizeCell, sanitizeScores } from "@/lib/sanitize";
+import { sanitizeCell, sanitizeScores, normalizeIc } from "@/lib/sanitize";
 
 const safeString = (min: number, max: number) =>
   z.string().transform((v) => sanitizeCell(v)).pipe(z.string().trim().min(min).max(max));
@@ -21,7 +21,7 @@ const safeScores = z
   }));
 
 export const psikometrikFields = z.object({
-  noPengenalan: safeString(6, 20),
+  noPengenalan: z.string().transform((v) => normalizeIc(sanitizeCell(v))).pipe(z.string().min(6).max(20)),
   namaMurid: safeString(1, 200),
   kodSekolah: safeOptionalString(20),
   namaSekolah: safeOptionalString(200),

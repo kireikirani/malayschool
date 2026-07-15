@@ -5,7 +5,7 @@ import { handleApiError, ApiError } from "@/lib/api/error-handler";
 import { notFound, ok } from "@/lib/api/response";
 import { requireAdmin } from "@/lib/api/with-auth";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
-import { sanitizeCell, sanitizeScores } from "@/lib/sanitize";
+import { sanitizeCell, sanitizeScores, normalizeIc } from "@/lib/sanitize";
 
 const FIXED_COLS = new Set([
   "nopengenalan", "no pengenalan", "no_pengenalan",
@@ -108,7 +108,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     const records: PsikRecord[] = [];
     for (const row of csvRows) {
-      const noPengenalan = resolveField(row, "noPengenalan", "No Pengenalan", "no_pengenalan");
+      const noPengenalan = normalizeIc(resolveField(row, "noPengenalan", "No Pengenalan", "no_pengenalan"));
       const namaMurid = resolveField(row, "namaMurid", "Nama Murid", "nama_murid");
       if (!noPengenalan || noPengenalan.length < 6 || !namaMurid) continue;
 
