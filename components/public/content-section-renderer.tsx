@@ -213,8 +213,8 @@ export function ContentSectionRenderer({ section }: { section: ContentSection })
           {section.items.map((item) => (
             <div key={`${section.sectionKey}-${item.sortOrder}`} className="flex flex-col bg-card p-5 shadow-sm">
               {item.imageUrl ? (
-                <div className="relative mb-4 aspect-video overflow-hidden bg-muted">
-                  <Image src={item.imageUrl} alt={item.title ?? item.label ?? "Section image"} fill className="object-cover" />
+                <div className="relative mb-4 aspect-[3/4] overflow-hidden bg-muted">
+                  <Image src={item.imageUrl} alt={item.title ?? item.label ?? "Section image"} fill className="object-cover object-top" />
                 </div>
               ) : null}
               {item.label ? <p className="text-xs font-semibold uppercase tracking-wide text-primary">{item.label}</p> : null}

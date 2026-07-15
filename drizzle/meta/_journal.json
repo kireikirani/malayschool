@@ -50,6 +50,13 @@
       "when": 1784081088721,
       "tag": "0006_quiet_lady_bullseye",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1784086339306,
+      "tag": "0007_lame_sentinel",
+      "breakpoints": true
     }
   ]
 }

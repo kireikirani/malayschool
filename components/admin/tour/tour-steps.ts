@@ -314,20 +314,77 @@ export const pengumumanSteps: Step[] = [
   },
 ];
 
-// ─── Gallery (Album) ──────────────────────────────────────────────────────────
+// ─── Gallery (Album List) ─────────────────────────────────────────────────────
 export const gallerySteps: Step[] = [
   {
     target: "[data-tour='gallery-table']",
     title: "Senarai Album",
-    content: "Semua album galeri foto tersenarai di sini. Setiap album boleh mempunyai banyak gambar di dalamnya.",
+    content: "Semua album galeri foto tersenarai di sini. Klik menu tiga titik pada mana-mana album untuk kelola foto, edit maklumat, atau padam.",
     placement: "bottom",
     skipBeacon: true,
   },
   {
     target: "[data-tour='gallery-add']",
     title: "Buat Album Baharu",
-    content: "Klik untuk mencipta album foto baharu. Masukkan tajuk, tahun, dan muat naik gambar untuk album tersebut.",
+    content: "Klik untuk mencipta album foto baharu. Isi Tajuk/Program, Tarikh acara, dan Link Google Drive (jika ada). Album ini akan muncul di halaman Galeri laman web.",
     placement: "bottom",
+    skipBeacon: true,
+  },
+];
+
+// ─── Gallery Album Form (New / Edit) ─────────────────────────────────────────
+export const galleryAlbumFormSteps: Step[] = [
+  {
+    target: "[data-tour='gallery-form-title']",
+    title: "Tajuk / Program",
+    content: "Nama program atau acara (contoh: Hari Sukan 2025, Majlis Graduasi). Tajuk ini dipaparkan sebagai kepala album di laman awam.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='gallery-form-schedule']",
+    title: "Tarikh & Link Google Drive",
+    content: "Tarikh acara dipaparkan di bawah tajuk album. Link Google Drive membolehkan pengunjung melihat gambar resolusi penuh — tampal URL folder atau album Drive di sini.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='gallery-form-cover']",
+    title: "Sampul Album & Ciri Crop",
+    content: "Pilih gambar sampul yang mewakili album ini. Gunakan 'Pilih & Crop' untuk memotong gambar supaya bahagian penting (seperti muka atau tajuk) terpapar dengan tepat. Tetapkan nisbah crop yang sesuai — contohnya 3:4 untuk gambar potret.",
+    placement: "right",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='gallery-form-submit']",
+    title: "Simpan Album",
+    content: "Klik Simpan untuk menerbitkan album. Selepas itu, buka 'Kelola Foto' dari senarai album untuk muat naik gambar-gambar ke dalam album ini.",
+    placement: "top",
+    skipBeacon: true,
+  },
+];
+
+// ─── Gallery Album Items (Photo Management) ───────────────────────────────────
+export const galleryAlbumItemsSteps: Step[] = [
+  {
+    target: "[data-tour='gallery-upload']",
+    title: "Muat Naik Foto",
+    content: "Seret & lepas foto atau klik untuk memilih. Boleh muat naik beberapa foto serentak. Foto dimuat naik terus ke storan awan dan ditambah ke album ini.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='gallery-items-grid']",
+    title: "Foto dalam Album",
+    content: "Semua foto tersenarai di sini. Edit keterangan (caption) pada setiap foto — keterangan ini dipaparkan dalam lightbox apabila pengunjung klik gambar.",
+    placement: "top",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='gallery-item-reorder']",
+    title: "Susun Semula Urutan",
+    content: "Gunakan butang ↑ ↓ untuk mengubah urutan paparan foto dalam album. Foto pertama akan dipaparkan pertama dalam grid galeri laman awam.",
+    placement: "top",
     skipBeacon: true,
   },
 ];

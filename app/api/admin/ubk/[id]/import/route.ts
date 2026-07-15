@@ -17,12 +17,21 @@ const FIXED_COLS = new Set([
 ]);
 
 function sheetUrlToCsvUrl(rawUrl: string): string {
+  // Format published: /spreadsheets/d/e/PUB_ID/pub?...
+  if (/\/spreadsheets\/d\/e\/[A-Za-z0-9_-]+\/pub/.test(rawUrl)) {
+    const url = new URL(rawUrl);
+    url.searchParams.set("output", "csv");
+    url.searchParams.set("single", "true");
+    return url.toString();
+  }
+
+  // Format biasa: /spreadsheets/d/SHEET_ID/edit#gid=...
   const idMatch = rawUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
-  if (!idMatch) throw new ApiError("URL Google Sheets tidak sah", 400);
+  if (!idMatch || idMatch[1] === "e") throw new ApiError("URL Google Sheets tidak sah", 400);
   const sheetId = idMatch[1];
   const gidMatch = rawUrl.match(/[#&?]gid=(\d+)/);
-  const gid = gidMatch ? `&gid=${gidMatch[1]}` : "";
-  return `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv${gid}`;
+  const gidParam = gidMatch ? `&gid=${gidMatch[1]}` : "";
+  return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv${gidParam}`;
 }
 
 function parseCsv(text: string): Record<string, string>[] {

@@ -33,6 +33,8 @@ export function AlbumForm({
       name: initialData?.name ?? "",
       description: initialData?.description ?? "",
       coverImage: initialData?.coverImage ?? undefined,
+      tarikh: initialData?.tarikh ?? "",
+      linkGdrive: initialData?.linkGdrive ?? "",
     },
   });
 
@@ -63,16 +65,46 @@ export function AlbumForm({
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nama Album</FormLabel>
+            <FormItem data-tour="gallery-form-title">
+              <FormLabel>Tajuk / Program</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="cth: Hari Sukan 2025" {...field} />
               </FormControl>
-              <FormDescription>Nama album yang akan dipaparkan di galeri awam.</FormDescription>
+              <FormDescription>Nama program atau tajuk acara yang akan dipaparkan di galeri.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        <div className="grid grid-cols-2 gap-4" data-tour="gallery-form-schedule">
+          <FormField
+            control={form.control}
+            name="tarikh"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tarikh</FormLabel>
+                <FormControl>
+                  <Input placeholder="15 Julai 2025" {...field} value={(field.value as string) ?? ""} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="linkGdrive"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Link Google Drive</FormLabel>
+                <FormControl>
+                  <Input placeholder="https://drive.google.com/..." {...field} value={(field.value as string) ?? ""} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -81,9 +113,9 @@ export function AlbumForm({
             <FormItem>
               <FormLabel>Deskripsi</FormLabel>
               <FormControl>
-                <Textarea rows={4} {...field} value={field.value as string} />
+                <Textarea rows={3} {...field} value={field.value as string} />
               </FormControl>
-              <FormDescription>Keterangan ringkas album (opsional). Dipaparkan di bawah nama album.</FormDescription>
+              <FormDescription>Keterangan ringkas (opsional).</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -93,7 +125,7 @@ export function AlbumForm({
           control={form.control}
           name="coverImage"
           render={({ field }) => (
-            <FormItem>
+            <FormItem data-tour="gallery-form-cover">
               <FormLabel>Sampul Album</FormLabel>
               <FormControl>
                 <ImagePicker value={field.value} onChange={field.onChange} />
@@ -104,7 +136,7 @@ export function AlbumForm({
           )}
         />
 
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting} data-tour="gallery-form-submit">
           {isSubmitting ? "Menyimpan..." : "Simpan"}
         </Button>
       </form>

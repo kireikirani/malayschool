@@ -5,6 +5,8 @@ export const galleryAlbums = mysqlTable("gallery_albums", {
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description"),
   coverImage: varchar("cover_image", { length: 2048 }),
+  tarikh: varchar("tarikh", { length: 50 }),
+  linkGdrive: text("link_gdrive"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
 });

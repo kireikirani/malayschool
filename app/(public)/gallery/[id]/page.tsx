@@ -37,8 +37,9 @@ export default async function AlbumDetailPage({ params }: { params: Promise<{ id
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 md:py-14">
-      <div>
+      <div className="space-y-1">
         <h1 className="text-2xl font-semibold">{album.name}</h1>
+        {album.tarikh && <p className="text-sm text-muted-foreground">{album.tarikh}</p>}
         {album.description && <p className="text-muted-foreground">{album.description}</p>}
       </div>
 
@@ -48,6 +49,8 @@ export default async function AlbumDetailPage({ params }: { params: Promise<{ id
         <GalleryLightbox
           items={items.map((i) => ({ id: i.id, image: i.image, caption: i.caption }))}
           albumName={album.name}
+          tarikh={album.tarikh}
+          linkGdrive={album.linkGdrive}
         />
       )}
     </div>

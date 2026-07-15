@@ -5,6 +5,8 @@ export const createAlbumSchema = z.object({
   name: trimmedString(1, 255),
   description: optionalTrimmedString(2000),
   coverImage: imagePathSchema.optional(),
+  tarikh: optionalTrimmedString(50),
+  linkGdrive: optionalTrimmedString(2048),
 });
 
 export const updateAlbumSchema = createAlbumSchema.partial();

@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DeleteConfirmDialog } from "@/components/admin/delete-confirm-dialog";
+import { PageTour } from "@/components/admin/tour/page-tour";
+import { galleryAlbumItemsSteps } from "@/components/admin/tour/tour-steps";
 import { UploadDropzone } from "@/lib/uploadthing-client";
 import { apiGet, apiSend } from "@/lib/fetcher";
 
@@ -43,7 +45,6 @@ export default function AlbumItemsPage({ params }: { params: Promise<{ id: strin
         items.map((item, index) => ({ itemId: item.id, order: index })),
       );
     } catch {
-      // simplest correction path: refetch the authoritative order from the server
       load();
     }
   }
@@ -103,23 +104,34 @@ export default function AlbumItemsPage({ params }: { params: Promise<{ id: strin
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">{album.name}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">{album.name}</h1>
+        <PageTour tourKey={`gallery-album-items-${albumId}`} steps={galleryAlbumItemsSteps} />
+      </div>
 
-      <UploadDropzone
-        endpoint="mediaUploader"
-        onClientUploadComplete={(res) => handleUploadComplete(res.map((f) => f.ufsUrl))}
-        onUploadError={(err) => {
-          toast.error(err.message);
-        }}
-      />
+      <div data-tour="gallery-upload">
+        <UploadDropzone
+          endpoint="mediaUploader"
+          onClientUploadComplete={(res) => handleUploadComplete(res.map((f) => f.ufsUrl))}
+          onUploadError={(err) => {
+            toast.error(err.message);
+          }}
+        />
+      </div>
 
-      {album.items.length === 0 && <p className="text-sm text-muted-foreground">Belum ada foto di album ini.</p>}
+      {album.items.length === 0 && (
+        <p className="text-sm text-muted-foreground">Belum ada foto di album ini.</p>
+      )}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4" data-tour="gallery-items-grid">
         {album.items.map((item, index) => (
-          <div key={item.id} className="space-y-2 rounded-md border p-2">
+          <div
+            key={item.id}
+            className="space-y-2 rounded-md border p-2"
+            {...(index === 0 ? { "data-tour": "gallery-item-reorder" } : {})}
+          >
             <div className="relative aspect-square overflow-hidden rounded-md bg-muted">
-              <Image src={item.image} alt={item.caption ?? ""} fill className="object-cover" />
+              <Image src={item.image} alt={item.caption ?? ""} fill className="object-cover object-top" />
             </div>
             <Input
               placeholder="Keterangan..."
