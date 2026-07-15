@@ -10,15 +10,20 @@ import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { createPsikometrikSchema } from "@/lib/validations/psikometrik.schema";
 import { apiSend } from "@/lib/fetcher";
 import { setFormErrors } from "@/lib/set-form-errors";
 
-const formSchema = createPsikometrikSchema.extend({
-  scores: z.array(z.object({ key: z.string().trim().min(1, "Nama tret diperlukan"), value: z.coerce.number() })),
+const formSchema = z.object({
+  noPengenalan: z.string().min(6, "Minimum 6 aksara").max(20),
+  namaMurid: z.string().min(1, "Nama diperlukan").max(200),
+  kodSekolah: z.string().max(20).optional(),
+  namaSekolah: z.string().max(200).optional(),
+  namaKelas: z.string().max(50).optional(),
+  tarikh: z.string().max(30).optional(),
+  scores: z.array(z.object({ key: z.string().trim().min(1, "Nama tret diperlukan"), value: z.number() })),
 });
 
-type Values = z.input<typeof formSchema>;
+type Values = z.infer<typeof formSchema>;
 
 type InitialData = {
   noPengenalan?: string;
@@ -202,7 +207,12 @@ export function PsikometrikForm({ recordId, initialData }: { recordId?: number; 
                   render={({ field }) => (
                     <FormItem className="w-24">
                       <FormControl>
-                        <Input type="number" placeholder="Skor" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="Skor"
+                          {...field}
+                          onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
