@@ -15,6 +15,7 @@ import {
   PanelsTopLeft,
   Users,
   Sparkles,
+  BrainCircuit,
 } from "lucide-react";
 
 export type SidebarNavItem = {
@@ -74,6 +75,13 @@ export const navGroups: SidebarNavGroup[] = [
     label: "Jawatankuasa",
     items: [
       { title: "Ahli JK", path: "/admin/unit-jk", icon: <Users className="size-4" /> },
+    ],
+  },
+  {
+    label: "UBK",
+    items: [
+      { title: "Dashboard UBK", path: "/admin/ubk", icon: <BrainCircuit className="size-4" /> },
+      { title: "Rekod Psikometrik", path: "/admin/psikometrik", icon: <FileSpreadsheet className="size-4" /> },
     ],
   },
 ];

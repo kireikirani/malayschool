@@ -332,6 +332,59 @@ export const gallerySteps: Step[] = [
   },
 ];
 
+// ─── UBK Dashboard ───────────────────────────────────────────────────────────
+export const ubkDashboardSteps: Step[] = [
+  {
+    target: "[data-tour='ubk-intro']",
+    title: "Dashboard UBK",
+    content: "Di sini anda urus semua pautan Google Sheets ITP. Sistem akan ambil data dari sheet tersebut supaya pelajar boleh semak keputusan di halaman awam /ubk.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='ubk-add-btn']",
+    title: "Langkah 1 — Tambah Pautan Sheet",
+    content: "Klik butang ini untuk menambah pautan Google Sheets yang mengandungi data ITP pelajar. Satu tingkatan boleh mempunyai lebih daripada satu pautan.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='ubk-form']",
+    title: "Isi Maklumat Pautan",
+    content: "Pilih tingkatan, isi label (contoh: 'ITP Sesi 2025'), dan tampal URL Google Sheets. Pastikan sheet disetkan kepada 'Anyone with the link can view' supaya sistem boleh membacanya.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='ubk-groups']",
+    title: "Pautan Mengikut Tingkatan",
+    content: "Semua pautan tersusun mengikut tingkatan. Satu tingkatan boleh mempunyai beberapa sesi atau kumpulan yang berbeza.",
+    placement: "top",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='ubk-import-btn']",
+    title: "Langkah 2 — Import Data",
+    content: "Klik 'Import Sekarang' untuk sistem mengambil data dari Google Sheets dan menyimpannya ke pangkalan data. Rekod sedia ada dikemaskini berdasarkan No. Pengenalan — tiada duplikat.",
+    placement: "left",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='ubk-last-import']",
+    title: "Status Import Terakhir",
+    content: "Selepas import, tarikh dan bilangan rekod yang diproses dipaparkan di sini. Import boleh dijalankan semula bila-bila masa untuk mengemas kini data terbaru.",
+    placement: "left",
+    skipBeacon: true,
+  },
+  {
+    target: "[data-tour='ubk-records-link']",
+    title: "Langkah 3 — Semak Rekod",
+    content: "Klik 'Lihat Semua Rekod' untuk menyemak data yang telah diimport. Anda boleh cari, edit, atau padam rekod individu di sana.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+];
+
 // ─── Advertisements (Iklan) ───────────────────────────────────────────────────
 export const advertisementsSteps: Step[] = [
   {
