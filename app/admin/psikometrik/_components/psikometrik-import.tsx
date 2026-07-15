@@ -12,7 +12,14 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const ALLOWED_MIME = new Set(["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel", "text/csv", "application/csv"]);
 const ALLOWED_EXT = /\.(xlsx|xls|csv)$/i;
 
-const FIXED_COLS = ["noPengenalan", "namaMurid", "kodSekolah", "namaSekolah", "namaKelas", "tarikh"] as const;
+const FIXED_COLS = new Set([
+  "noPengenalan", "no pengenalan", "no_pengenalan", "id pengenalan", "id_pengenalan",
+  "namaMurid", "nama murid", "nama_murid", "nama",
+  "kodSekolah", "kod sekolah", "kod_sekolah",
+  "namaSekolah", "nama sekolah", "nama_sekolah",
+  "namaKelas", "nama kelas", "nama_kelas",
+  "tarikh", "jantina", "bil", "skor keseluruhan", "skor_keseluruhan", "status taksir", "status_taksir", "catatan",
+].map((s) => s.toLowerCase()));
 
 type ImportRow = {
   noPengenalan: string;
@@ -49,13 +56,21 @@ export function PsikometrikImport({ onSuccess }: { onSuccess: () => void }) {
         }
 
         const headers = Object.keys(json[0]);
-        const scoreHeaders = headers.filter((h) => !FIXED_COLS.includes(h as (typeof FIXED_COLS)[number]));
+        const scoreHeaders = headers.filter((h) => !FIXED_COLS.has(h.toLowerCase().trim()));
+
+        function resolveField(raw: Record<string, unknown>, ...candidates: string[]): string {
+          for (const key of candidates) {
+            const found = Object.keys(raw).find((k) => k.toLowerCase().trim() === key.toLowerCase());
+            if (found !== undefined && String(raw[found] ?? "").trim()) return sanitizeCell(String(raw[found]));
+          }
+          return "";
+        }
 
         const rows: ImportRow[] = json.map((raw, i) => {
           const cell = (val: unknown) => sanitizeCell(String(val ?? ""));
 
-          const noPengenalan = cell(raw["noPengenalan"] ?? raw["No Pengenalan"] ?? raw["no_pengenalan"]);
-          const namaMurid = cell(raw["namaMurid"] ?? raw["Nama Murid"] ?? raw["nama_murid"]);
+          const noPengenalan = resolveField(raw, "noPengenalan", "No Pengenalan", "no_pengenalan", "ID Pengenalan", "id_pengenalan");
+          const namaMurid = resolveField(raw, "namaMurid", "Nama Murid", "nama_murid", "Nama");
 
           if (!noPengenalan || noPengenalan.length < 6) {
             throw new Error(`Baris ${i + 2}: noPengenalan tidak sah — "${noPengenalan}"`);

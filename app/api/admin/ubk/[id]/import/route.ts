@@ -8,12 +8,12 @@ import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { sanitizeCell, sanitizeScores, normalizeIc } from "@/lib/sanitize";
 
 const FIXED_COLS = new Set([
-  "nopengenalan", "no pengenalan", "no_pengenalan",
-  "namamurid", "nama murid", "nama_murid",
+  "nopengenalan", "no pengenalan", "no_pengenalan", "id pengenalan", "id_pengenalan",
+  "namamurid", "nama murid", "nama_murid", "nama",
   "kodsekolah", "kod sekolah", "kod_sekolah",
   "namasekolah", "nama sekolah", "nama_sekolah",
   "namakelas", "nama kelas", "nama_kelas",
-  "tarikh",
+  "tarikh", "jantina", "bil", "skor keseluruhan", "skor_keseluruhan", "status taksir", "status_taksir", "catatan",
 ]);
 
 function sheetUrlToCsvUrl(rawUrl: string): string {
@@ -108,8 +108,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     const records: PsikRecord[] = [];
     for (const row of csvRows) {
-      const noPengenalan = normalizeIc(resolveField(row, "noPengenalan", "No Pengenalan", "no_pengenalan"));
-      const namaMurid = resolveField(row, "namaMurid", "Nama Murid", "nama_murid");
+      const noPengenalan = normalizeIc(resolveField(row, "noPengenalan", "No Pengenalan", "no_pengenalan", "ID Pengenalan", "id_pengenalan"));
+      const namaMurid = resolveField(row, "namaMurid", "Nama Murid", "nama_murid", "Nama");
       if (!noPengenalan || noPengenalan.length < 6 || !namaMurid) continue;
 
       const rawScores: Record<string, number> = {};
