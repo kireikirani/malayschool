@@ -8,7 +8,7 @@ export const user = mysqlTable(
     email: varchar("email", { length: 255 }).notNull(),
     emailVerified: boolean("email_verified").notNull().default(false),
     image: varchar("image", { length: 2048 }),
-    role: mysqlEnum("role", ["admin", "teacher", "visitor"]).notNull().default("visitor"),
+    role: mysqlEnum("role", ["admin", "teacher", "visitor", "guard"]).notNull().default("visitor"),
     isApproved: boolean("is_approved").notNull().default(false),
     rejectionReason: text("rejection_reason"),
     // Teacher registration metadata (captured at sign-up, used by admin during approval)

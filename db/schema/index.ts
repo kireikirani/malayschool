@@ -16,4 +16,6 @@ export * from "./public-content.schema";
 export * from "./unit-sections.schema";
 export * from "./psikometrik.schema";
 export * from "./ubk-links.schema";
+export * from "./asrama-permohonan.schema";
+export * from "./asrama-guards.schema";
 export * from "./relations";

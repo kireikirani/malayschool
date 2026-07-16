@@ -11,6 +11,7 @@ import { DeleteConfirmDialog } from "@/components/admin/delete-confirm-dialog";
 import { PageTour } from "@/components/admin/tour/page-tour";
 import { ubkDashboardSteps } from "@/components/admin/tour/tour-steps";
 import { apiSend } from "@/lib/fetcher";
+import * as brand from "@/lib/brand";
 import Link from "next/link";
 
 const TINGKATAN_OPTIONS = [
@@ -144,6 +145,25 @@ export default function UbkAdminPage() {
             Tambah Link
           </Button>
         </div>
+      </div>
+
+      {/* Maklumat sekolah (tetap) */}
+      <div data-tour="ubk-school-info" className="rounded-lg border bg-muted/30 p-4">
+        <p className="mb-3 text-sm font-semibold">Maklumat Sekolah</p>
+        <dl className="grid grid-cols-1 gap-x-6 gap-y-2 text-sm sm:grid-cols-3">
+          <div className="flex gap-2">
+            <dt className="w-28 shrink-0 font-medium uppercase text-muted-foreground">Kod Sekolah</dt>
+            <dd className="font-mono font-semibold">{brand.SCHOOL_CODE}</dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="w-28 shrink-0 font-medium uppercase text-muted-foreground">Nama Sekolah</dt>
+            <dd className="font-medium">{brand.SCHOOL_FULL_NAME}</dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="w-28 shrink-0 font-medium uppercase text-muted-foreground">Kod Kelas</dt>
+            <dd className="text-muted-foreground italic">—</dd>
+          </div>
+        </dl>
       </div>
 
       {/* Add form */}

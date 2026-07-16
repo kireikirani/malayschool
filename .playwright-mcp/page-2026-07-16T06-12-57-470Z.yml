@@ -1,0 +1,9 @@
+- main [ref=e4]:
+  - generic [ref=e7]:
+    - iframe [ref=e26]
+    - generic [ref=e29]:
+      - button "Terms & Support" [ref=e30]
+      - button "Privacy Policy" [ref=e31]
+      - link "Designed with Canva" [ref=e32] [cursor=pointer]:
+        - /url: https://www.canva.com
+        - text: Designed with

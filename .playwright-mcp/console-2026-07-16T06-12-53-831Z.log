@@ -1,0 +1,9 @@
+[    2188ms] [WARNING] `WebAssembly.instantiateStreaming` failed because your server does not serve Wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:
+ TypeError: Failed to execute 'compile' on 'WebAssembly': Incorrect response MIME type. Expected 'application/wasm'. @ https://ask-f2.my.canva.site/borang-permohonanbalik/_assets/eae109deb8ab4eee.vendor.js:0
+[    3702ms] [INFO] [CLIENT (Telemetry)] Telemetry SDK initialized {"extra":{"isSystem":true}} @ https://c0265by7zk9cn229.canvacode.com/_sdk/f432b76fb310b513.telemetry_sdk.js:0
+[    3892ms] [WARNING] cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation @ https://c0265by7zk9cn229.canvacode.com/_sdk/f432b76fb310b513.telemetry_sdk.js:0
+[    4009ms] [INFO] [CLIENT (Telemetry:Element)] Successfully connected to parent @ https://c0265by7zk9cn229.canvacode.com/_sdk/f432b76fb310b513.telemetry_sdk.js:0
+[    4011ms] [INFO] [CLIENT (Telemetry:Data)] Successfully connected to parent @ https://c0265by7zk9cn229.canvacode.com/_sdk/f432b76fb310b513.telemetry_sdk.js:0
+[    4016ms] [INFO] [CLIENT (Telemetry:Data)] Data SDK initialized @ https://c0265by7zk9cn229.canvacode.com/_sdk/f432b76fb310b513.telemetry_sdk.js:0
+[    4018ms] [INFO] [CLIENT (Telemetry:Element)] Initializing Element @ https://c0265by7zk9cn229.canvacode.com/_sdk/f432b76fb310b513.telemetry_sdk.js:0
+[    4172ms] [INFO] [CLIENT (Telemetry:Element)] Processing queued request after initialization @ https://c0265by7zk9cn229.canvacode.com/_sdk/f432b76fb310b513.telemetry_sdk.js:0

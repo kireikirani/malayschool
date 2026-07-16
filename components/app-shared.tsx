@@ -16,6 +16,8 @@ import {
   Users,
   Sparkles,
   BrainCircuit,
+  ClipboardList,
+  ShieldCheck,
 } from "lucide-react";
 
 export type SidebarNavItem = {
@@ -69,6 +71,8 @@ export const navGroups: SidebarNavGroup[] = [
       { title: "Pelajar Asrama", path: "/admin/asrama-pelajar", icon: <BedDouble className="size-4" /> },
       { title: "Fasiliti Asrama", path: "/admin/asrama-fasiliti", icon: <Sparkles className="size-4" /> },
       { title: "Warden Asrama", path: "/admin/asrama-warden", icon: <Users className="size-4" /> },
+      { title: "Permohonan Keluar", path: "/admin/asrama-permohonan", icon: <ClipboardList className="size-4" /> },
+      { title: "Pengawal Asrama", path: "/admin/asrama-guard", icon: <ShieldCheck className="size-4" /> },
     ],
   },
   {
@@ -101,8 +105,25 @@ export const teacherNavGroups: SidebarNavGroup[] = [
   },
 ];
 
+export const guardNavGroups: SidebarNavGroup[] = [
+  {
+    label: "Utama",
+    items: [
+      { title: "Dashboard Pengawal", path: "/guard", icon: <LayoutDashboard className="size-4" /> },
+    ],
+  },
+];
+
 export const teacherNavLinks: SidebarNavItem[] = [
   ...teacherNavGroups.flatMap((group) =>
+    group.items.flatMap((item) =>
+      item.subItems?.length ? [item, ...item.subItems] : [item]
+    )
+  ),
+];
+
+export const guardNavLinks: SidebarNavItem[] = [
+  ...guardNavGroups.flatMap((group) =>
     group.items.flatMap((item) =>
       item.subItems?.length ? [item, ...item.subItems] : [item]
     )
@@ -121,4 +142,5 @@ export const navLinks: SidebarNavItem[] = [
   ),
   ...footerNavLinks,
   ...teacherNavLinks,
+  ...guardNavLinks,
 ];

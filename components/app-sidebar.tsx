@@ -12,14 +12,19 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { NavGroup } from "@/components/nav-group";
-import { footerNavLinks, navGroups, teacherNavGroups } from "@/components/app-shared";
+import { footerNavLinks, navGroups, teacherNavGroups, guardNavGroups } from "@/components/app-shared";
 import { SchoolLogo } from "@/components/public/school-logo";
 import { SCHOOL_SHORT_NAME } from "@/lib/brand";
 
 export function AppSidebar({ role }: { role?: string }) {
   const pathname = usePathname();
 
-  const activeGroups = role === "teacher" ? teacherNavGroups : navGroups;
+  const activeGroups =
+    role === "teacher"
+      ? teacherNavGroups
+      : role === "guard"
+      ? guardNavGroups
+      : navGroups;
 
   const groupsWithActive = activeGroups.map((group) => ({
     ...group,
@@ -37,7 +42,7 @@ export function AppSidebar({ role }: { role?: string }) {
     <Sidebar collapsible="icon" variant="floating">
       <SidebarHeader className="h-14 justify-center">
         <SidebarMenuButton asChild className="gap-2.5">
-          <a href={role === "teacher" ? "/teacher" : "/admin/dashboard"}>
+          <a href={role === "teacher" ? "/teacher" : role === "guard" ? "/guard" : "/admin/dashboard"}>
             <SchoolLogo className="size-5 shrink-0" />
             <span className="font-semibold truncate">{SCHOOL_SHORT_NAME}</span>
           </a>

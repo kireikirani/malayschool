@@ -1,4 +1,6 @@
+export const SCHOOL_CODE = "BEA1069";
 export const SCHOOL_NAME = "SMK Telok Panglima Garang";
+export const SCHOOL_FULL_NAME = "Sekolah Menengah Kebangsaan Telok Panglima Garang";
 export const SCHOOL_SHORT_NAME = "SMK TPG";
 export const SCHOOL_TAGLINE = "Melahirkan Generasi Berilmu dan Berakhlak";
 export const SCHOOL_VISION = "Pendidikan Berkualiti Insan Terdidik Negara Sejahtera";
