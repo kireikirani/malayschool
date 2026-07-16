@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,8 +33,10 @@ import { apiSend } from "@/lib/fetcher";
 
 type FormValues = z.infer<typeof createPermohonanSchema>;
 
-export default function BorangPermohonanPage() {
+function BorangPermohonanContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const queryJenis = searchParams.get("jenis");
   const [loading, setLoading] = useState(false);
 
   const form = useForm<FormValues>({
@@ -49,16 +51,22 @@ export default function BorangPermohonanPage() {
     },
   });
 
+  useEffect(() => {
+    if (queryJenis === "outing" || queryJenis === "pulang_bermalam" || queryJenis === "mc_sakit") {
+      form.setValue("jenis", queryJenis);
+    }
+  }, [queryJenis, form]);
+
   const watchJenis = form.watch("jenis");
   const watchTarikhKeluar = form.watch("tarikhKeluar");
 
   async function onSubmit(values: FormValues) {
     setLoading(true);
     try {
-      // If outing, tarikhPulang is snapshot of tarikhKeluar
+      // If outing, tarikhPulang is snapshot of tarikhKeluar. If mc_sakit, tarikhPulang is null.
       const payload = {
         ...values,
-        tarikhPulang: values.jenis === "outing" ? values.tarikhKeluar : values.tarikhPulang,
+        tarikhPulang: values.jenis === "outing" ? values.tarikhKeluar : values.jenis === "mc_sakit" ? null : values.tarikhPulang,
       };
 
       await apiSend("/api/permohonan", "POST", payload);
@@ -167,6 +175,7 @@ export default function BorangPermohonanPage() {
                       <SelectContent>
                         <SelectItem value="outing">Outing (Keluar Sebentar & Pulang Hari Sama)</SelectItem>
                         <SelectItem value="pulang_bermalam">Pulang Bermalam</SelectItem>
+                        <SelectItem value="mc_sakit">Rawatan / Sakit (MC)</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -184,7 +193,7 @@ export default function BorangPermohonanPage() {
                       <FormControl>
                         <Input
                           type="date"
-                          min={getMinDate()}
+                          min={watchJenis === "mc_sakit" ? new Date().toISOString().split("T")[0] : getMinDate()}
                           {...field}
                           disabled={loading}
                         />
@@ -257,5 +266,13 @@ export default function BorangPermohonanPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function BorangPermohonanPage() {
+  return (
+    <Suspense fallback={<div className="text-center py-12 text-muted-foreground">Memuatkan borang...</div>}>
+      <BorangPermohonanContent />
+    </Suspense>
   );
 }

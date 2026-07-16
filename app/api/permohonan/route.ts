@@ -56,10 +56,7 @@ export async function POST(req: Request) {
 
     const body = await parseBody(req, createPermohonanSchema);
 
-    // Block mc_sakit on public endpoint
-    if (body.jenis as string === "mc_sakit") {
-      throw new ApiError("Pendaftaran MC hanya boleh dilakukan oleh pihak sekolah.", 400);
-    }
+
 
     // 1. Verify identity against asramaPelajar
     const inputNama = body.nama.trim().toLowerCase();

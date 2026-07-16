@@ -33,6 +33,10 @@ const NEWS_GALLERY_LINKS = [
 const ASRAMA_LINKS = [
   { href: "/asrama", label: "Maklumat Asrama" },
   { href: "/asrama/senarai-pelajar", label: "Senarai Pelajar" },
+  { href: "/asrama/permohonan?jenis=pulang_bermalam", label: "Borang Pulang" },
+  { href: "/asrama/permohonan?jenis=outing", label: "Borang Outing" },
+  { href: "/asrama/permohonan?jenis=mc_sakit", label: "Borang Rawatan (MC)" },
+  { href: "/asrama/permohonan/semak", label: "Semak Status" },
 ];
 
 const MANAGEMENT_LINKS = [
@@ -135,7 +139,7 @@ export function SiteHeader() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 {ASRAMA_LINKS.map((link) => {
-                  const isLinkActive = pathname === link.href;
+                  const isLinkActive = pathname === link.href.split("?")[0];
                   return (
                     <DropdownMenuItem key={link.href} asChild className={cn(isLinkActive && "bg-muted font-medium")}>
                       <Link href={link.href}>{link.label}</Link>
@@ -265,7 +269,7 @@ export function SiteHeader() {
                   </p>
                   <div className="flex flex-col gap-2 pl-3 border-l border-border">
                     {ASRAMA_LINKS.map((link) => {
-                      const isLinkActive = pathname === link.href;
+                      const isLinkActive = pathname === link.href.split("?")[0];
                       return (
                         <Link
                           key={link.href}
