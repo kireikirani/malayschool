@@ -1,6 +1,7 @@
 import { eq, and, desc } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { asramaPelajar, asramaPermohonan } from "@/db/schema";
+import { asramaPelajar, asramaPermohonan, asramaWardens, teachers, user } from "@/db/schema";
+import { sendEmail, getNewPermohonanEmailHtml } from "@/lib/email";
 import { handleApiError, ApiError } from "@/lib/api/error-handler";
 import { created, fail, ok } from "@/lib/api/response";
 import { parseBody } from "@/lib/api/validate-request";
@@ -35,6 +36,7 @@ export async function GET(req: Request) {
         noPendaftaran: asramaPermohonan.noPendaftaran,
         guardNama: asramaPermohonan.guardNama,
         tarikhDiambil: asramaPermohonan.tarikhDiambil,
+        emailWaris: asramaPermohonan.emailWaris,
         createdAt: asramaPermohonan.createdAt,
       })
       .from(asramaPermohonan)
@@ -95,7 +97,44 @@ export async function POST(req: Request) {
       sebab: body.sebab,
       status: "menunggu",
       noWarisPengirim: inputNoWaris,
+      emailWaris: body.emailWaris,
     });
+
+    // 3. Send email notification to all wardens
+    try {
+      const wardens = await db
+        .select({
+          email: user.email,
+          name: user.name,
+        })
+        .from(asramaWardens)
+        .leftJoin(teachers, eq(asramaWardens.teacherId, teachers.id))
+        .leftJoin(user, eq(teachers.userId, user.id));
+
+      const wardenEmails = wardens
+        .map(w => w.email)
+        .filter((email): email is string => !!email);
+
+      if (wardenEmails.length > 0) {
+        const emailContent = getNewPermohonanEmailHtml({
+          namaPelajar: student.nama,
+          tingkatan: student.tingkatan,
+          dorm: student.dorm,
+          jenis: body.jenis,
+          tarikhKeluar: body.tarikhKeluar,
+          tarikhPulang: body.tarikhPulang ?? null,
+          sebab: body.sebab,
+        });
+
+        await sendEmail({
+          to: wardenEmails,
+          subject: `Permohonan Keluar Asrama Baru: ${student.nama}`,
+          html: emailContent,
+        });
+      }
+    } catch (emailErr) {
+      console.error("Gagal menghantar emel kepada warden:", emailErr);
+    }
 
     const [row] = await db.select().from(asramaPermohonan).where(eq(asramaPermohonan.id, result.insertId)).limit(1);
     return created(row);

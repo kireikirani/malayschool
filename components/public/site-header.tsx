@@ -11,6 +11,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AnnouncementBar } from "@/components/public/announcement-bar";
@@ -30,12 +33,15 @@ const NEWS_GALLERY_LINKS = [
   { href: "/gallery", label: "Galeri" },
 ];
 
-const ASRAMA_LINKS = [
-  { href: "/asrama", label: "Maklumat Asrama" },
-  { href: "/asrama/senarai-pelajar", label: "Senarai Pelajar" },
+const ASRAMA_PERMOHONAN_LINKS = [
   { href: "/asrama/permohonan?jenis=pulang_bermalam", label: "Borang Pulang" },
   { href: "/asrama/permohonan?jenis=outing", label: "Borang Outing" },
   { href: "/asrama/permohonan?jenis=mc_sakit", label: "Borang Rawatan (MC)" },
+];
+
+const ASRAMA_LINKS = [
+  { href: "/asrama", label: "Maklumat Asrama" },
+  { href: "/asrama/senarai-pelajar", label: "Senarai Pelajar" },
   { href: "/asrama/permohonan/semak", label: "Semak Status" },
 ];
 
@@ -138,7 +144,31 @@ export function SiteHeader() {
                 <ChevronDown className="size-3.5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                {ASRAMA_LINKS.map((link) => {
+                {ASRAMA_LINKS.slice(0, 2).map((link) => {
+                  const isLinkActive = pathname === link.href.split("?")[0];
+                  return (
+                    <DropdownMenuItem key={link.href} asChild className={cn(isLinkActive && "bg-muted font-medium")}>
+                      <Link href={link.href}>{link.label}</Link>
+                    </DropdownMenuItem>
+                  );
+                })}
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger
+                    className={cn(
+                      pathname === "/asrama/permohonan" && "bg-muted font-medium"
+                    )}
+                  >
+                    Borang Permohonan
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    {ASRAMA_PERMOHONAN_LINKS.map((link) => (
+                      <DropdownMenuItem key={link.href} asChild>
+                        <Link href={link.href}>{link.label}</Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+                {ASRAMA_LINKS.slice(2).map((link) => {
                   const isLinkActive = pathname === link.href.split("?")[0];
                   return (
                     <DropdownMenuItem key={link.href} asChild className={cn(isLinkActive && "bg-muted font-medium")}>
@@ -268,7 +298,38 @@ export function SiteHeader() {
                     Asrama
                   </p>
                   <div className="flex flex-col gap-2 pl-3 border-l border-border">
-                    {ASRAMA_LINKS.map((link) => {
+                    {ASRAMA_LINKS.slice(0, 2).map((link) => {
+                      const isLinkActive = pathname === link.href.split("?")[0];
+                      return (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          onClick={() => setOpen(false)}
+                          className={cn(
+                            "text-sm font-medium transition-colors",
+                            isLinkActive ? "text-primary font-bold" : "text-muted-foreground hover:text-primary"
+                          )}
+                        >
+                          {link.label}
+                        </Link>
+                      );
+                    })}
+                    <div className="space-y-1.5">
+                      <p className="text-sm font-medium text-muted-foreground">Borang Permohonan</p>
+                      <div className="flex flex-col gap-1.5 pl-3 border-l border-border/60">
+                        {ASRAMA_PERMOHONAN_LINKS.map((link) => (
+                          <Link
+                            key={link.href}
+                            href={link.href}
+                            onClick={() => setOpen(false)}
+                            className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                          >
+                            {link.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                    {ASRAMA_LINKS.slice(2).map((link) => {
                       const isLinkActive = pathname === link.href.split("?")[0];
                       return (
                         <Link

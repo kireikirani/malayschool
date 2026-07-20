@@ -19,7 +19,7 @@ export async function GET(req: Request) {
           id: galleryAlbums.id,
           name: galleryAlbums.name,
           description: galleryAlbums.description,
-          coverImage: galleryAlbums.coverImage,
+          coverImage: sql<string | null>`COALESCE(${galleryAlbums.coverImage}, (SELECT image FROM gallery_items WHERE album_id = ${galleryAlbums.id} ORDER BY \`order\` ASC LIMIT 1))`,
           createdAt: galleryAlbums.createdAt,
           updatedAt: galleryAlbums.updatedAt,
           itemCount: count(galleryItems.id),

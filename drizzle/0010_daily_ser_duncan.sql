@@ -1,0 +1,1 @@
+ALTER TABLE `asrama_permohonan` ADD `email_waris` varchar(255);

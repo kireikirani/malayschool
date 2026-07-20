@@ -44,6 +44,7 @@ function BorangPermohonanContent() {
     defaultValues: {
       nama: "",
       noWaris: "",
+      emailWaris: "",
       jenis: "outing",
       tarikhKeluar: "",
       tarikhPulang: "",
@@ -125,7 +126,7 @@ function BorangPermohonanContent() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-3">
                 <FormField
                   control={form.control}
                   name="nama"
@@ -149,7 +150,22 @@ function BorangPermohonanContent() {
                       <FormControl>
                         <Input placeholder="Contoh: 0123456789" {...field} disabled={loading} />
                       </FormControl>
-                      <FormDescription>Mesti padan dengan No. Waris berdaftar di sekolah.</FormDescription>
+                      <FormDescription>No. Waris berdaftar.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="emailWaris"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>E-mel Waris</FormLabel>
+                      <FormControl>
+                        <Input placeholder="waris@email.com" type="email" {...field} disabled={loading} />
+                      </FormControl>
+                      <FormDescription>Untuk terima keputusan e-mel.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

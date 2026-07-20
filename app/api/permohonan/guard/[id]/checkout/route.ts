@@ -1,12 +1,13 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { asramaPermohonan } from "@/db/schema";
+import { asramaPermohonan, asramaWardens, teachers, user } from "@/db/schema";
 import { handleApiError, ApiError } from "@/lib/api/error-handler";
 import { getSessionOrThrow } from "@/lib/api/with-auth";
 import { ok, fail } from "@/lib/api/response";
 import { parseBody } from "@/lib/api/validate-request";
 import { checkoutSchema } from "@/lib/validations/asrama-permohonan.schema";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { sendEmail, getCheckoutEmailHtml } from "@/lib/email";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -60,6 +61,45 @@ export async function POST(req: Request, { params }: RouteContext) {
       .from(asramaPermohonan)
       .where(eq(asramaPermohonan.id, Number(id)))
       .limit(1);
+
+    // Send email to waris (and wardens as CC-list) confirming checkout
+    try {
+      const wardens = await db
+        .select({ email: user.email })
+        .from(asramaWardens)
+        .leftJoin(teachers, eq(asramaWardens.teacherId, teachers.id))
+        .leftJoin(user, eq(teachers.userId, user.id));
+
+      const wardenEmails = wardens
+        .map((w) => w.email)
+        .filter((email): email is string => !!email);
+
+      const recipients = [updated.emailWaris, ...wardenEmails].filter(
+        (email): email is string => !!email
+      );
+
+      if (recipients.length > 0 && updated.tarikhDiambil) {
+        const emailContent = getCheckoutEmailHtml({
+          namaPelajar: updated.namaPelajar,
+          tingkatan: updated.tingkatan,
+          dorm: updated.dorm,
+          jenis: updated.jenis,
+          pengambil: updated.pengambil ?? body.pengambil,
+          noPendaftaran: updated.noPendaftaran ?? body.noPendaftaran,
+          guardNama: updated.guardNama ?? session.user.name,
+          tarikhDiambil: updated.tarikhDiambil,
+          noWarisPengirim: updated.noWarisPengirim,
+        });
+
+        await sendEmail({
+          to: recipients,
+          subject: `Pelajar Telah Diambil dari Asrama: ${updated.namaPelajar}`,
+          html: emailContent,
+        });
+      }
+    } catch (emailErr) {
+      console.error("Gagal menghantar emel pengesahan pengambilan:", emailErr);
+    }
 
     return ok(updated);
   } catch (err) {

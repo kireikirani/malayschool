@@ -3,6 +3,7 @@ import { z } from "zod";
 export const createPermohonanSchema = z.object({
   nama: z.string().min(3, "Nama pelajar mestilah sekurang-kurangnya 3 aksara"),
   noWaris: z.string().min(5, "Nombor telefon waris tidak sah"),
+  emailWaris: z.string().email("Format email tidak sah").min(1, "Email waris diperlukan"),
   jenis: z.enum(["pulang_bermalam", "outing", "mc_sakit"]),
   tarikhKeluar: z.string().min(1, "Tarikh keluar diperlukan"),
   tarikhPulang: z.string().optional().nullable(),
