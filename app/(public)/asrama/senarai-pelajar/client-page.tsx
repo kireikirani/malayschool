@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Lock, Search, Unlock, LogOut, ChevronLeft, ChevronRight, User, Phone, BookOpen, BedDouble, ZoomIn } from "lucide-react";
+import { Lock, Search, Unlock, LogOut, ChevronLeft, ChevronRight, User, Phone, BookOpen, BedDouble, ZoomIn, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { fetchStudentsAction, type StudentData } from "./actions";
+import { GdriveCarousel } from "@/components/public/gdrive-carousel";
 import { toast } from "sonner";
 
 type Student = StudentData;
@@ -31,6 +32,39 @@ const COLOR_SCHEMES = {
   },
 } as const;
 
+function WarisCard({
+  label,
+  nama,
+  no,
+  isLelaki,
+}: {
+  label: string;
+  nama: string | null;
+  no: string | null;
+  isLelaki: boolean;
+}) {
+  if (!nama && !no) return null;
+  return (
+    <div className="rounded-xl border border-border/60 p-3 space-y-1.5">
+      <div className="flex items-center gap-1.5">
+        <Phone className="size-3.5 text-muted-foreground" />
+        <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">{label}</span>
+      </div>
+      {nama && <p className="text-sm font-medium">{nama}</p>}
+      {no && (
+        <a
+          href={`https://wa.me/6${no.replace(/^0/, "")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`text-sm underline-offset-2 hover:underline ${isLelaki ? "text-blue-600" : "text-pink-600"}`}
+        >
+          {no}
+        </a>
+      )}
+    </div>
+  );
+}
+
 function StudentDetailDialog({
   student,
   open,
@@ -41,6 +75,7 @@ function StudentDetailDialog({
   onOpenChange: (v: boolean) => void;
 }) {
   const [photoOpen, setPhotoOpen] = useState(false);
+  const [carouselOpen, setCarouselOpen] = useState(false);
 
   if (!student) return null;
   const isLelaki = student.jantina === "lelaki";
@@ -99,19 +134,40 @@ function StudentDetailDialog({
             </div>
           </div>
 
-          {(student.namaWaris || student.noWaris) && (
-            <div className="rounded-xl border border-border/60 p-3 space-y-1.5">
-              <div className="flex items-center gap-1.5">
-                <Phone className="size-3.5 text-muted-foreground" />
-                <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Maklumat Waris</span>
-              </div>
-              {student.namaWaris && (
-                <p className="text-sm font-medium">{student.namaWaris}</p>
-              )}
-              {student.noWaris && (
-                <p className="text-sm text-muted-foreground">{student.noWaris}</p>
-              )}
-            </div>
+          {/* Waris 1 */}
+          <WarisCard
+            label="Waris 1"
+            nama={student.namaWaris}
+            no={student.noWaris}
+            isLelaki={isLelaki}
+          />
+
+          {/* Waris 2 */}
+          <WarisCard
+            label="Waris 2"
+            nama={student.namaWaris2}
+            no={student.noWaris2}
+            isLelaki={isLelaki}
+          />
+
+          {/* Waris 3 */}
+          <WarisCard
+            label="Waris 3"
+            nama={student.namaWaris3}
+            no={student.noWaris3}
+            isLelaki={isLelaki}
+          />
+
+          {/* Google Drive Carousel Button */}
+          {student.gdriveFolderLink && (
+            <Button
+              variant="outline"
+              className="w-full gap-2"
+              onClick={() => setCarouselOpen(true)}
+            >
+              <ImageIcon className="size-4" />
+              Lihat Gambar ({student.nama})
+            </Button>
           )}
         </div>
       </DialogContent>
@@ -132,6 +188,16 @@ function StudentDetailDialog({
           />
         </DialogContent>
       </Dialog>
+    )}
+
+    {/* Google Drive Carousel */}
+    {student.gdriveFolderLink && (
+      <GdriveCarousel
+        folderLink={student.gdriveFolderLink}
+        studentName={student.nama}
+        open={carouselOpen}
+        onOpenChange={setCarouselOpen}
+      />
     )}
     </>
   );

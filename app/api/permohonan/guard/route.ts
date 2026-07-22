@@ -48,10 +48,40 @@ export async function GET(req: Request) {
     };
 
     // 2. Fetch rows based on search query 'q'
-    let rows: (typeof asramaPermohonan.$inferSelect)[] = [];
+    let rows: {
+      id: number;
+      namaPelajar: string;
+      tingkatan: string;
+      dorm: string;
+      jenis: "pulang_bermalam" | "outing" | "mc_sakit";
+      tarikhKeluar: Date;
+      tarikhPulang: Date | null;
+      sebab: string;
+      status: "menunggu" | "diluluskan" | "ditolak" | "mc";
+      platKenderaan: string | null;
+      pengambil: string | null;
+      noPendaftaran: string | null;
+      tarikhDiambil: Date | null;
+      guardNama: string | null;
+    }[] = [];
     if (q) {
       rows = await db
-        .select()
+        .select({
+          id: asramaPermohonan.id,
+          namaPelajar: asramaPermohonan.namaPelajar,
+          tingkatan: asramaPermohonan.tingkatan,
+          dorm: asramaPermohonan.dorm,
+          jenis: asramaPermohonan.jenis,
+          tarikhKeluar: asramaPermohonan.tarikhKeluar,
+          tarikhPulang: asramaPermohonan.tarikhPulang,
+          sebab: asramaPermohonan.sebab,
+          status: asramaPermohonan.status,
+          platKenderaan: asramaPermohonan.platKenderaan,
+          pengambil: asramaPermohonan.pengambil,
+          noPendaftaran: asramaPermohonan.noPendaftaran,
+          tarikhDiambil: asramaPermohonan.tarikhDiambil,
+          guardNama: asramaPermohonan.guardNama,
+        })
         .from(asramaPermohonan)
         .where(
           and(

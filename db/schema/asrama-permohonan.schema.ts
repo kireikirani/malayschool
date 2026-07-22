@@ -42,6 +42,7 @@ export const asramaPermohonan = mysqlTable(
     // Pengecam waris saat menghantar borang publik (divalidasi vs asramaPelajar)
     noWarisPengirim: varchar("no_waris_pengirim", { length: 20 }).notNull(),
     emailWaris: varchar("email_waris", { length: 255 }),
+    platKenderaan: varchar("plat_kenderaan", { length: 20 }), // plat dari waris (untuk verifikasi guard)
 
     // Kelulusan (diisi warden/admin)
     diluluskanOleh: varchar("diluluskan_oleh", { length: 200 }), // snapshot nama approver

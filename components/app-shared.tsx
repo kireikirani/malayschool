@@ -112,6 +112,13 @@ export const guardNavGroups: SidebarNavGroup[] = [
       { title: "Dashboard Pengawal", path: "/guard", icon: <LayoutDashboard className="size-4" /> },
     ],
   },
+  {
+    label: "Asrama",
+    items: [
+      { title: "Senarai Pelajar", path: "/guard/senarai-pelajar", icon: <GraduationCap className="size-4" /> },
+      { title: "Permohonan Keluar", path: "/guard/permohonan", icon: <ClipboardList className="size-4" /> },
+    ],
+  },
 ];
 
 export const teacherNavLinks: SidebarNavItem[] = [

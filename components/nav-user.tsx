@@ -55,7 +55,7 @@ export function NavUser({ user }: { user: { name: string; email: string; role?: 
                 {user.email}
               </div>
               <div className="mt-0.5 text-[10px] text-muted-foreground">
-                {user.role === "admin" ? "Administrator" : user.role === "teacher" ? "Guru" : "Pengunjung"}
+                {user.role === "admin" ? "Administrator" : user.role === "teacher" ? "Guru" : user.role === "guard" ? "Pengawal" : "Pengunjung"}
               </div>
             </div>
           </DropdownMenuLabel>

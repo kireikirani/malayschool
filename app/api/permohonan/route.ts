@@ -98,6 +98,7 @@ export async function POST(req: Request) {
       status: "menunggu",
       noWarisPengirim: inputNoWaris,
       emailWaris: body.emailWaris,
+      platKenderaan: body.platKenderaan.toUpperCase().replace(/\s+/g, ""),
     });
 
     // 3. Send email notification to all wardens

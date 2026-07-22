@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DataTable } from "@/components/admin/data-table";
 import { DeleteConfirmDialog } from "@/components/admin/delete-confirm-dialog";
+import { TingkatanSelect } from "@/components/public/tingkatan-select";
 import { apiSend } from "@/lib/fetcher";
 
 type PelajarRow = {
@@ -30,7 +31,13 @@ type PelajarRow = {
   tingkatan: string;
   dorm: string;
   noWaris: string | null;
+  namaWaris: string | null;
+  noWaris2: string | null;
+  namaWaris2: string | null;
+  noWaris3: string | null;
+  namaWaris3: string | null;
   foto: string | null;
+  gdriveFolderLink: string | null;
   status: "active" | "inactive";
 };
 
@@ -40,9 +47,6 @@ async function fetchPelajar(params: URLSearchParams): Promise<{ rows: PelajarRow
   if (!res.ok) throw new Error(body.error?.message ?? "Gagal memuat data");
   return { rows: body.data, totalPages: body.pagination.totalPages };
 }
-
-// Tingkatan options used in school context
-const TINGKATAN_OPTIONS = ["Tingkatan 1", "Tingkatan 2", "Tingkatan 3", "Tingkatan 4", "Tingkatan 5"];
 
 export default function AsramaPelajarPage() {
   const router = useRouter();
@@ -216,17 +220,11 @@ export default function AsramaPelajarPage() {
               />
 
               {/* Tingkatan filter */}
-              <Select value={tingkatan} onValueChange={(v) => { setIsLoading(true); setPage(1); setTingkatan(v); }}>
-                <SelectTrigger className="w-[160px]">
-                  <SelectValue placeholder="Tingkatan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Semua Tingkatan</SelectItem>
-                  {TINGKATAN_OPTIONS.map((t) => (
-                    <SelectItem key={t} value={t}>{t}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <TingkatanSelect
+                value={tingkatan}
+                onValueChange={(v) => { setIsLoading(true); setPage(1); setTingkatan(v); }}
+                className="w-[160px]"
+              />
 
               {/* Status filter */}
               <Select value={status} onValueChange={(v) => { setIsLoading(true); setPage(1); setStatus(v); }}>

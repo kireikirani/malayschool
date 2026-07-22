@@ -33,7 +33,12 @@ export default function EditAsramaPelajarPage() {
           dorm: data.dorm as string,
           namaWaris: (data.namaWaris as string) ?? "",
           noWaris: (data.noWaris as string) ?? "",
+          namaWaris2: (data.namaWaris2 as string) ?? "",
+          noWaris2: (data.noWaris2 as string) ?? "",
+          namaWaris3: (data.namaWaris3 as string) ?? "",
+          noWaris3: (data.noWaris3 as string) ?? "",
           foto: (data.foto as string) ?? undefined,
+          gdriveFolderLink: (data.gdriveFolderLink as string) ?? "",
           status: data.status as "active" | "inactive",
         }}
       />

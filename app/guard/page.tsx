@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, ShieldAlert, CheckCircle2, Car, Clock, RefreshCw, ClipboardList } from "lucide-react";
+import { Search, ShieldAlert, CheckCircle2, Car, Clock, RefreshCw, ClipboardList, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,6 +30,7 @@ type PermohonanRow = {
   tarikhPulang: string | null;
   sebab: string;
   status: "menunggu" | "diluluskan" | "ditolak" | "mc";
+  platKenderaan: string | null;
   pengambil: string | null;
   noPendaftaran: string | null;
   tarikhDiambil: string | null;
@@ -259,6 +260,12 @@ export default function GuardDashboardPage() {
                         <strong className="text-foreground">Tarikh Pulang:</strong> {formatDate(item.tarikhPulang)}
                       </p>
                     )}
+                    {item.platKenderaan && (
+                      <p className="text-muted-foreground">
+                        <strong className="text-foreground">Plat Berdaftar:</strong>{" "}
+                        <span className="font-mono font-semibold text-foreground">{item.platKenderaan}</span>
+                      </p>
+                    )}
                   </div>
 
                   {item.tarikhDiambil ? (
@@ -309,10 +316,25 @@ export default function GuardDashboardPage() {
             <DialogTitle>Rekod Pengambilan Pelajar</DialogTitle>
           </DialogHeader>
           {selectedPermohonan && (
-            <div className="mb-2 text-sm bg-muted/50 p-2.5 rounded border">
-              <p><strong>Nama Pelajar:</strong> {selectedPermohonan.namaPelajar}</p>
-              <p className="text-xs text-muted-foreground">Tingkatan: {selectedPermohonan.tingkatan} • Dorm: {selectedPermohonan.dorm}</p>
-            </div>
+            <>
+              <div className="mb-2 text-sm bg-muted/50 p-2.5 rounded border">
+                <p><strong>Nama Pelajar:</strong> {selectedPermohonan.namaPelajar}</p>
+                <p className="text-xs text-muted-foreground">Tingkatan: {selectedPermohonan.tingkatan} • Dorm: {selectedPermohonan.dorm}</p>
+              </div>
+
+              {/* Registered Plate Display */}
+              {selectedPermohonan.platKenderaan && (
+                <div className="flex items-center gap-3 p-3 rounded-lg border bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900/30">
+                  <Car className="size-5 text-blue-600 dark:text-blue-400 shrink-0" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Plat Berdaftar (dari waris)</p>
+                    <p className="text-lg font-bold font-mono tracking-wider text-blue-700 dark:text-blue-400">
+                      {selectedPermohonan.platKenderaan}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </>
           )}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onCheckoutSubmit)} className="space-y-4">
@@ -335,10 +357,30 @@ export default function GuardDashboardPage() {
                 name="noPendaftaran"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>No. Pendaftaran Kenderaan (Plat)</FormLabel>
+                    <FormLabel>No. Plat Kenderaan (Sahkan)</FormLabel>
                     <FormControl>
-                      <Input placeholder="Contoh: WXX 1234" {...field} disabled={isSubmitLoading} />
+                      <Input
+                        placeholder="Contoh: WXX 1234"
+                        {...field}
+                        disabled={isSubmitLoading}
+                        className="uppercase font-mono"
+                      />
                     </FormControl>
+                    {selectedPermohonan?.platKenderaan && field.value && (
+                      <div className="flex items-center gap-1.5 mt-1">
+                        {field.value.toUpperCase().replace(/\s+/g, "") === selectedPermohonan.platKenderaan.toUpperCase().replace(/\s+/g, "") ? (
+                          <>
+                            <CheckCircle2 className="size-3.5 text-emerald-600" />
+                            <span className="text-xs text-emerald-600 font-medium">Plat sepadan</span>
+                          </>
+                        ) : (
+                          <>
+                            <AlertTriangle className="size-3.5 text-amber-600" />
+                            <span className="text-xs text-amber-600 font-medium">Plat tidak sepadan — sila sahkan</span>
+                          </>
+                        )}
+                      </div>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}

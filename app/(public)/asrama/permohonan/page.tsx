@@ -28,6 +28,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { TingkatanSelect } from "@/components/public/tingkatan-select";
+import { StudentSearchInput } from "@/components/public/student-search-input";
 import { createPermohonanSchema } from "@/lib/validations/asrama-permohonan.schema";
 import { apiSend } from "@/lib/fetcher";
 
@@ -38,6 +40,7 @@ function BorangPermohonanContent() {
   const searchParams = useSearchParams();
   const queryJenis = searchParams.get("jenis");
   const [loading, setLoading] = useState(false);
+  const [tingkatanFilter, setTingkatanFilter] = useState("all");
 
   const form = useForm<FormValues>({
     resolver: zodResolver(createPermohonanSchema),
@@ -45,6 +48,7 @@ function BorangPermohonanContent() {
       nama: "",
       noWaris: "",
       emailWaris: "",
+      platKenderaan: "",
       jenis: "outing",
       tarikhKeluar: "",
       tarikhPulang: "",
@@ -64,7 +68,6 @@ function BorangPermohonanContent() {
   async function onSubmit(values: FormValues) {
     setLoading(true);
     try {
-      // If outing, tarikhPulang is snapshot of tarikhKeluar. If mc_sakit, tarikhPulang is null.
       const payload = {
         ...values,
         tarikhPulang: values.jenis === "outing" ? values.tarikhKeluar : values.jenis === "mc_sakit" ? null : values.tarikhPulang,
@@ -73,7 +76,6 @@ function BorangPermohonanContent() {
       await apiSend("/api/permohonan", "POST", payload);
       toast.success("Permohonan berjaya dihantar! Sila tunggu kelulusan warden.");
       
-      // Redirect to check status page, passing the noWaris as a query param
       router.push(`/asrama/permohonan/semak?noWaris=${encodeURIComponent(values.noWaris)}`);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Gagal menghantar permohonan. Semak maklumat pelajar.");
@@ -82,7 +84,6 @@ function BorangPermohonanContent() {
     }
   }
 
-  // Calculate 3 days notice
   const getMinDate = () => {
     const today = new Date();
     today.setDate(today.getDate() + 3);
@@ -126,7 +127,19 @@ function BorangPermohonanContent() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-              <div className="grid gap-4 sm:grid-cols-3">
+              {/* Tingkatan filter + Nama pelajar search */}
+              <div className="space-y-4">
+                <div>
+                  <FormLabel className="text-sm font-medium">Tingkatan (untapis carian)</FormLabel>
+                  <TingkatanSelect
+                    value={tingkatanFilter}
+                    onValueChange={setTingkatanFilter}
+                    placeholder="Semua Tingkatan"
+                    className="mt-1.5"
+                    disabled={loading}
+                  />
+                </div>
+
                 <FormField
                   control={form.control}
                   name="nama"
@@ -134,13 +147,27 @@ function BorangPermohonanContent() {
                     <FormItem>
                       <FormLabel>Nama Penuh Pelajar</FormLabel>
                       <FormControl>
-                        <Input placeholder="Nama penuh seperti dalam IC" {...field} disabled={loading} />
+                        <StudentSearchInput
+                          tingkatanFilter={tingkatanFilter === "all" ? undefined : tingkatanFilter}
+                          value={field.value}
+                          onSelect={(student) => {
+                            form.setValue("nama", student.nama);
+                            if (student.noWaris) {
+                              form.setValue("noWaris", student.noWaris);
+                            }
+                          }}
+                          placeholder="Cari nama pelajar..."
+                          disabled={loading}
+                        />
                       </FormControl>
+                      <FormDescription>Cari dan pilih nama pelajar dari senarai asrama.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              </div>
 
+              <div className="grid gap-4 sm:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="noWaris"
@@ -171,6 +198,21 @@ function BorangPermohonanContent() {
                   )}
                 />
               </div>
+
+              <FormField
+                control={form.control}
+                name="platKenderaan"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>No. Plat Kenderaan</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Contoh: WXX 1234" {...field} disabled={loading} className="uppercase" />
+                    </FormControl>
+                    <FormDescription>No. plat kenderaan yang akan mengambil pelajar. Pengawal akan mengesahkan plat ini semasa pengambilan.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}

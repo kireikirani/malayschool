@@ -8,7 +8,12 @@ const asramaPelajarFields = z.object({
   dorm: trimmedString(1, 100),
   namaWaris: optionalTrimmedString(200),
   noWaris: optionalTrimmedString(20),
+  namaWaris2: optionalTrimmedString(200),
+  noWaris2: optionalTrimmedString(20),
+  namaWaris3: optionalTrimmedString(200),
+  noWaris3: optionalTrimmedString(20),
   foto: imagePathSchema.optional(),
+  gdriveFolderLink: optionalTrimmedString(2048),
   status: z.enum(["active", "inactive"]),
 });
 

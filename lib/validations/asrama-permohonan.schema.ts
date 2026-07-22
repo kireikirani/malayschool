@@ -4,6 +4,10 @@ export const createPermohonanSchema = z.object({
   nama: z.string().min(3, "Nama pelajar mestilah sekurang-kurangnya 3 aksara"),
   noWaris: z.string().min(5, "Nombor telefon waris tidak sah"),
   emailWaris: z.string().email("Format email tidak sah").min(1, "Email waris diperlukan"),
+  platKenderaan: z.string().trim().min(1, "No. plat kenderaan diperlukan").max(20).regex(
+    /^[A-Z]{1,3}\s?\d{1,4}$/i,
+    "Format plat tidak sah (contoh: WXX 1234, ABC1234, KV 123)"
+  ),
   jenis: z.enum(["pulang_bermalam", "outing", "mc_sakit"]),
   tarikhKeluar: z.string().min(1, "Tarikh keluar diperlukan"),
   tarikhPulang: z.string().optional().nullable(),
